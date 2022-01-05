@@ -10,11 +10,16 @@
         "type": "git",
         "url": "git+https://github.com/hotequil/clean-code-nodejs-api.git"
     },
-    "keywords": ["nodejs"],
+    "keywords": [
+        "nodejs"
+    ],
     "author": "hotequil",
     "license": "ISC",
     "bugs": {
         "url": "https://github.com/hotequil/clean-code-nodejs-api/issues"
     },
-    "homepage": "https://github.com/hotequil/clean-code-nodejs-api#readme"
+    "homepage": "https://github.com/hotequil/clean-code-nodejs-api#readme",
+    "devDependencies": {
+        "git-commit-msg-linter": "^3.2.8"
+    }
 }
