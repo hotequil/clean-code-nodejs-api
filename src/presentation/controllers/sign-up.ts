@@ -6,17 +6,12 @@ import { badRequest } from "../helpers/http-helper";
 
 export class SignUpController {
     handle ({ body }: HttpRequest): HttpResponse {
-        let error: HttpResponse = { statusCode: StatusCode.SuccessOK, body: null };
+        const requiredFields = ["name", "email"];
 
-        switch (true) {
-            case !body.name:
-                error = badRequest(new MissingParamsError("name"));
-                break;
-            case !body.email:
-                error = badRequest(new MissingParamsError("email"));
-                break;
+        for (const field of requiredFields) {
+            if (!body[field]) return badRequest(new MissingParamsError(field));
         }
 
-        return error;
+        return { statusCode: StatusCode.SuccessOK, body: null };
     }
 }
