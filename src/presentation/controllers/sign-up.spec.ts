@@ -4,7 +4,6 @@ describe("SignUpController", () => {
     it("Should return code 400 when name is not provided", () => {
         const request = {
             body: {
-                name: "name",
                 email: "email@email.email",
                 password: "passwordAndConfirmation",
                 passwordConfirmation: "passwordAndConfirmation"
@@ -15,5 +14,6 @@ describe("SignUpController", () => {
         const response = controller.handle(request);
 
         expect(response.statusCode).toBe(400);
+        expect(response.body).toEqual(new Error("Missing param: name"));
     });
 });
