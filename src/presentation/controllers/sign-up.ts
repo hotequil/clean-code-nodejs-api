@@ -1,6 +1,8 @@
+import { HttpRequest, HttpResponse } from "../protocols/http";
+
 export class SignUpController {
-    handle (request: any): any {
-        const error = { statusCode: 400 };
+    handle (request: HttpRequest): HttpResponse {
+        const error: HttpResponse = { statusCode: 400, body: null };
 
         switch (true) {
             case !request.body.name:
