@@ -14,10 +14,10 @@ describe("SignUpController", () => {
             }
         };
 
-        const response = controller.handle(request);
+        const { body, statusCode } = controller.handle(request);
 
-        expect(response.statusCode).toBe(400);
-        expect(response.body).toEqual(new Error("Missing param: name"));
+        expect(statusCode).toBe(400);
+        expect(body).toEqual(new Error("Missing param: name"));
     });
 
     it("Should return code 400 when email is not provided", () => {
@@ -29,9 +29,9 @@ describe("SignUpController", () => {
             }
         };
 
-        const response = controller.handle(request);
+        const { statusCode, body } = controller.handle(request);
 
-        expect(response.statusCode).toBe(400);
-        expect(response.body).toEqual(new Error("Missing param: email"));
+        expect(statusCode).toBe(400);
+        expect(body).toEqual(new Error("Missing param: email"));
     });
 });
