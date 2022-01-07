@@ -1,4 +1,5 @@
 import { SignUpController } from "./sign-up";
+import { HttpRequest } from "../protocols/http";
 
 let controller: SignUpController;
 
@@ -6,7 +7,7 @@ describe("SignUpController", () => {
     beforeEach(() => controller = new SignUpController());
 
     it("Should return code 400 when name is not provided", () => {
-        const request = {
+        const request: HttpRequest = {
             body: {
                 email: "email@email.email",
                 password: "passwordAndConfirmation",
@@ -21,7 +22,7 @@ describe("SignUpController", () => {
     });
 
     it("Should return code 400 when email is not provided", () => {
-        const request = {
+        const request: HttpRequest = {
             body: {
                 name: "name@name.name",
                 password: "passwordAndConfirmation",
