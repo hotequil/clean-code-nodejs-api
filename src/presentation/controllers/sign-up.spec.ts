@@ -68,4 +68,19 @@ describe("SignUpController", () => {
         expect(statusCode).toBe(StatusCode.ClientErrorBadRequest);
         expect(body).toEqual(new MissingParamsError("password"));
     });
+
+    it(`Should return code ${StatusCode.ClientErrorBadRequest} when passwordConfirmation was not provided`, () => {
+        const request: HttpRequest = {
+            body: {
+                name: "name@name.name",
+                email: "email@email.email",
+                password: "passwordAndConfirmation"
+            }
+        };
+
+        const { statusCode, body } = controller.handle(request);
+
+        expect(statusCode).toBe(StatusCode.ClientErrorBadRequest);
+        expect(body).toEqual(new MissingParamsError("passwordConfirmation"));
+    });
 });
