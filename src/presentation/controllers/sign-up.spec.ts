@@ -1,12 +1,15 @@
+import { StatusCode } from "status-code-enum";
+
 import { SignUpController } from "./sign-up";
 import { HttpRequest } from "../protocols/http";
+import { MissingParamsError } from "../errors/missing-params-error";
 
 let controller: SignUpController;
 
 describe("SignUpController", () => {
     beforeEach(() => controller = new SignUpController());
 
-    it("Should return code 400 when name is not provided", () => {
+    it(`Should return code ${StatusCode.ClientErrorBadRequest} when name is not provided`, () => {
         const request: HttpRequest = {
             body: {
                 email: "email@email.email",
@@ -17,11 +20,11 @@ describe("SignUpController", () => {
 
         const { body, statusCode } = controller.handle(request);
 
-        expect(statusCode).toBe(400);
-        expect(body).toEqual(new Error("Missing param: name"));
+        expect(statusCode).toBe(StatusCode.ClientErrorBadRequest);
+        expect(body).toEqual(new MissingParamsError("name"));
     });
 
-    it("Should return code 400 when email is not provided", () => {
+    it(`Should return code ${StatusCode.ClientErrorBadRequest} when email is not provided`, () => {
         const request: HttpRequest = {
             body: {
                 name: "name@name.name",
@@ -32,7 +35,7 @@ describe("SignUpController", () => {
 
         const { statusCode, body } = controller.handle(request);
 
-        expect(statusCode).toBe(400);
-        expect(body).toEqual(new Error("Missing param: email"));
+        expect(statusCode).toBe(StatusCode.ClientErrorBadRequest);
+        expect(body).toEqual(new MissingParamsError("email"));
     });
 });
