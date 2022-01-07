@@ -38,4 +38,19 @@ describe("SignUpController", () => {
         expect(statusCode).toBe(StatusCode.ClientErrorBadRequest);
         expect(body).toEqual(new MissingParamsError("email"));
     });
+
+    it(`Should return code ${StatusCode.SuccessOK} when all fields was provided`, () => {
+        const request: HttpRequest = {
+            body: {
+                name: "name@name.name",
+                email: "email@email.email",
+                password: "passwordAndConfirmation",
+                passwordConfirmation: "passwordAndConfirmation"
+            }
+        };
+
+        const { statusCode } = controller.handle(request);
+
+        expect(statusCode).toBe(StatusCode.SuccessOK);
+    });
 });
