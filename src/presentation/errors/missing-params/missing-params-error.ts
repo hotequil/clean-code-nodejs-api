@@ -1,7 +1,7 @@
-export class MissingParamsError extends Error {
-    constructor (...errors: string[]) {
-        super(`Missing ${errors.length >= 2 ? "params" : "param"}: ${errors.join(", ")}`);
+import { BaseError } from "../base/base-error";
 
-        this.name = "MissingParamsError";
+export class MissingParamsError extends BaseError {
+    constructor (name: string, ...errors: string[]) {
+        super(name, errors);
     }
 }
