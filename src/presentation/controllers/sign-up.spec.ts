@@ -2,12 +2,26 @@ import { StatusCode } from "status-code-enum";
 
 import { SignUpController } from "./sign-up";
 import { HttpRequest } from "../protocols/http";
-import { MissingParamsError } from "../errors/missing-params-error";
+import { MissingParamsError } from "../errors/missing-params/missing-params-error";
+import { InvalidParamsError } from "../errors/invalid-params/invalid-params-error";
+import { EmailValidator } from "../protocols/email-validator";
 
 let controller: SignUpController;
+let emailValidatorStub: EmailValidator;
 
 describe("SignUpController", () => {
-    beforeEach(() => controller = new SignUpController());
+    beforeEach(() => {
+        class EmailValidatorStub implements EmailValidator {
+            isValid (email: string): boolean {
+                console.log(email);
+
+                return true;
+            }
+        }
+
+        emailValidatorStub = new EmailValidatorStub();
+        controller = new SignUpController(emailValidatorStub);
+    });
 
     it(`Should return code ${StatusCode.ClientErrorBadRequest} when name is not provided`, () => {
         const request: HttpRequest = {
@@ -27,7 +41,7 @@ describe("SignUpController", () => {
     it(`Should return code ${StatusCode.ClientErrorBadRequest} when email is not provided`, () => {
         const request: HttpRequest = {
             body: {
-                name: "name@name.name",
+                name: "name",
                 password: "passwordAndConfirmation",
                 passwordConfirmation: "passwordAndConfirmation"
             }
@@ -42,7 +56,7 @@ describe("SignUpController", () => {
     it(`Should return code ${StatusCode.SuccessOK} when all fields was provided`, () => {
         const request: HttpRequest = {
             body: {
-                name: "name@name.name",
+                name: "name",
                 email: "email@email.email",
                 password: "passwordAndConfirmation",
                 passwordConfirmation: "passwordAndConfirmation"
@@ -57,7 +71,7 @@ describe("SignUpController", () => {
     it(`Should return code ${StatusCode.ClientErrorBadRequest} when password was not provided`, () => {
         const request: HttpRequest = {
             body: {
-                name: "name@name.name",
+                name: "name",
                 email: "email@email.email",
                 passwordConfirmation: "passwordAndConfirmation"
             }
@@ -72,7 +86,7 @@ describe("SignUpController", () => {
     it(`Should return code ${StatusCode.ClientErrorBadRequest} when passwordConfirmation was not provided`, () => {
         const request: HttpRequest = {
             body: {
-                name: "name@name.name",
+                name: "name",
                 email: "email@email.email",
                 password: "passwordAndConfirmation"
             }
@@ -82,5 +96,23 @@ describe("SignUpController", () => {
 
         expect(statusCode).toBe(StatusCode.ClientErrorBadRequest);
         expect(body).toEqual(new MissingParamsError("passwordConfirmation"));
+    });
+
+    it(`Should return code ${StatusCode.ClientErrorBadRequest} when email is not valid`, () => {
+        jest.spyOn(emailValidatorStub, "isValid").mockReturnValueOnce(false);
+
+        const request: HttpRequest = {
+            body: {
+                name: "name",
+                email: "invalidEmail",
+                password: "passwordAndConfirmation",
+                passwordConfirmation: "passwordAndConfirmation"
+            }
+        };
+
+        const { statusCode, body } = controller.handle(request);
+
+        expect(statusCode).toBe(StatusCode.ClientErrorBadRequest);
+        expect(body).toEqual(new InvalidParamsError("email"));
     });
 });
