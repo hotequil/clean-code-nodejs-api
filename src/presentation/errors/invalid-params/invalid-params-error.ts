@@ -1,7 +1,7 @@
 import { BaseError } from "../base/base-error";
 
-export class MissingParamsError extends BaseError {
+export class InvalidParamsError extends BaseError {
     constructor (...errors: string[]) {
-        super("MissingParamsError", errors);
+        super("InvalidParamsError", errors);
     }
 }
