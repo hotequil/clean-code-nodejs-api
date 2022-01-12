@@ -10,6 +10,7 @@
         "no-trailing-spaces": "off",
         "no-return-assign": "off",
         "@typescript-eslint/strict-boolean-expressions": "off",
-        "@typescript-eslint/consistent-type-definitions": "off"
+        "@typescript-eslint/consistent-type-definitions": "off",
+        "curly": "off"
     }
 }
