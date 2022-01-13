@@ -5,20 +5,29 @@ import { HttpRequest } from "../protocols/http";
 import { MissingParamsError } from "../errors/missing-params/missing-params-error";
 import { InvalidParamsError } from "../errors/invalid-params/invalid-params-error";
 import { EmailValidator } from "../protocols/email-validator";
+import { ServerError } from "../errors/server/server-error";
 
 let controller: SignUpController;
 let emailValidatorStub: EmailValidator;
 
+class EmailValidatorStub implements EmailValidator {
+    isValid (email: string): boolean {
+        console.log(email);
+
+        return true;
+    }
+}
+
+class EmailValidatorServerErrorStub implements EmailValidator {
+    isValid (email: string): boolean {
+        console.log(email);
+
+        throw Error();
+    }
+}
+
 describe("SignUpController", () => {
     beforeEach(() => {
-        class EmailValidatorStub implements EmailValidator {
-            isValid (email: string): boolean {
-                console.log(email);
-
-                return true;
-            }
-        }
-
         emailValidatorStub = new EmailValidatorStub();
         controller = new SignUpController(emailValidatorStub);
     });
@@ -132,5 +141,24 @@ describe("SignUpController", () => {
         controller.handle(request);
 
         expect(isValidSpy).toHaveBeenCalledWith(email);
+    });
+
+    it(`Should throw an exception with code ${StatusCode.ServerErrorInternal} from EmailValidator when was called`, () => {
+        emailValidatorStub = new EmailValidatorServerErrorStub();
+        controller = new SignUpController(emailValidatorStub);
+
+        const request = {
+            body: {
+                name: "name",
+                email: "email@email.email",
+                password: "passwordAndConfirmation",
+                passwordConfirmation: "passwordAndConfirmation"
+            }
+        };
+
+        const { body, statusCode } = controller.handle(request);
+
+        expect(statusCode).toBe(StatusCode.ServerErrorInternal);
+        expect(body).toEqual(new ServerError());
     });
 });
