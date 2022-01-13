@@ -2,11 +2,10 @@ import { StatusCode } from "status-code-enum";
 
 import { HttpRequest, HttpResponse } from "../protocols/http";
 import { MissingParamsError } from "../errors/missing-params/missing-params-error";
-import { badRequest } from "../helpers/http-helper";
+import { badRequest, serverError } from "../helpers/http-helper";
 import { Controller } from "../protocols/controller";
 import { EmailValidator } from "../protocols/email-validator";
 import { InvalidParamsError } from "../errors/invalid-params/invalid-params-error";
-import { ServerError } from "../errors/server/server-error";
 
 export class SignUpController implements Controller {
     private readonly emailValidator: EmailValidator;
@@ -30,10 +29,7 @@ export class SignUpController implements Controller {
         } catch (error) {
             console.log(error);
 
-            return {
-                statusCode: StatusCode.ServerErrorInternal,
-                body: new ServerError()
-            }
+            return serverError();
         }
     }
 }
