@@ -1,8 +1,6 @@
-import { StatusCode } from "status-code-enum";
-
 import { HttpRequest, HttpResponse, Controller, EmailValidator } from "../protocols";
 import { MissingParamsError, InvalidParamsError } from "../errors";
-import { badRequest, serverError } from "../helpers/http-helper";
+import { badRequest, serverError, success } from "../helpers/http-helper";
 
 export class SignUpController implements Controller {
     private readonly emailValidator: EmailValidator;
@@ -22,7 +20,7 @@ export class SignUpController implements Controller {
             if (!this.emailValidator.isValid(body.email))
                 return badRequest(new InvalidParamsError("email"));
 
-            return { statusCode: StatusCode.SuccessOK, body: null };
+            return success(null);
         } catch (error) {
             console.log(error);
 

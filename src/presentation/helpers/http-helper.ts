@@ -14,3 +14,7 @@ export const serverError = (): HttpResponse => ({
     statusCode: StatusCode.ServerErrorInternal,
     body: new ServerError()
 })
+
+export const success = (body: any): HttpResponse => ({
+    statusCode: StatusCode.SuccessOK, body
+});
