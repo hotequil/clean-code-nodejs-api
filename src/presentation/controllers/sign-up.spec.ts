@@ -22,7 +22,7 @@ class EmailValidatorServerErrorStub implements EmailValidator {
     isValid (email: string): boolean {
         console.log(email);
 
-        throw Error();
+        throw new Error();
     }
 }
 
