@@ -1,8 +1,7 @@
 import { StatusCode } from "status-code-enum";
 
-import { MissingParamsError } from "../errors/missing-params/missing-params-error";
+import { MissingParamsError, ServerError } from "../errors";
 import { HttpResponse } from "../protocols/http";
-import { ServerError } from "../errors/server/server-error";
 
 export const badRequest = (error: MissingParamsError): HttpResponse => {
     return {
