@@ -1,10 +1,8 @@
 import { StatusCode } from "status-code-enum";
 
 import { SignUpController } from "./sign-up";
-import { HttpRequest, EmailValidator } from "../protocols";
-import { InvalidParamsError, ServerError, MissingParamsError } from "../errors";
-import { AddAccount, AddAccountModel } from "../../domain/use-cases/add-account";
-import { AccountModel } from "../../domain/models/account";
+import { HttpRequest, EmailValidator, AccountModel, AddAccount, AddAccountModel } from "./sign-up-protocols";
+import { InvalidParamsError, ServerError, MissingParamsError } from "../../errors";
 
 let controller: SignUpController;
 let emailValidatorStub: EmailValidator;

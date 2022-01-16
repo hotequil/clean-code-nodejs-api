@@ -7,8 +7,8 @@
         "start": "node .",
         "eslint": "eslint 'src/**'",
         "eslint:staged": "eslint 'src/**' --fix",
-        "test": "jest --watch",
-        "test:staged": "jest --passWithNoTests"
+        "test": "jest --clearCache && jest --watch",
+        "test:staged": "jest --clearCache && jest --passWithNoTests"
     },
     "repository": {
         "type": "git",
