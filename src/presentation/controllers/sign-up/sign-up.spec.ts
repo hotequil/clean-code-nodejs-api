@@ -180,6 +180,26 @@ describe("SignUpController", () => {
         expect(body).toEqual(new ServerError());
     });
 
+    it(`Should return an AddAccount exception with code ${StatusCode.ServerErrorInternal} when was called`, () => {
+        jest.spyOn(addAccountStub, "add").mockImplementationOnce(() => {
+            throw new Error();
+        });
+
+        const request = {
+            body: {
+                name: "name",
+                email: "email@email.email",
+                password: "passwordAndConfirmation",
+                passwordConfirmation: "passwordAndConfirmation"
+            }
+        };
+
+        const { statusCode, body } = controller.handle(request);
+
+        expect(statusCode).toBe(StatusCode.ServerErrorInternal);
+        expect(body).toEqual(new ServerError());
+    });
+
     it("Should call AddAccount with correct values when was called", () => {
         const name = "name";
         const email = "email@email.email";
