@@ -15,14 +15,6 @@ class EmailValidatorStub implements EmailValidator {
     }
 }
 
-class EmailValidatorServerErrorStub implements EmailValidator {
-    isValid (email: string): boolean {
-        console.log(email);
-
-        throw new Error();
-    }
-}
-
 describe("SignUpController", () => {
     beforeEach(() => {
         emailValidatorStub = new EmailValidatorStub();
@@ -141,8 +133,10 @@ describe("SignUpController", () => {
     });
 
     it(`Should throw an exception with code ${StatusCode.ServerErrorInternal} from EmailValidator when was called`, () => {
-        emailValidatorStub = new EmailValidatorServerErrorStub();
-        controller = new SignUpController(emailValidatorStub);
+        jest.spyOn(emailValidatorStub, "isValid")
+            .mockImplementationOnce(() => {
+                throw new Error()
+            });
 
         const request = {
             body: {
