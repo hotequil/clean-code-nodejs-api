@@ -11,6 +11,7 @@
         "no-return-assign": "off",
         "@typescript-eslint/strict-boolean-expressions": "off",
         "@typescript-eslint/consistent-type-definitions": "off",
-        "curly": "off"
+        "curly": "off",
+        "import/no-named-default": "off"
     }
 }
