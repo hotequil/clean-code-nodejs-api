@@ -3,9 +3,12 @@ import { StatusCode } from "status-code-enum";
 import { SignUpController } from "./sign-up";
 import { HttpRequest, EmailValidator } from "../protocols";
 import { InvalidParamsError, ServerError, MissingParamsError } from "../errors";
+import { AddAccount, AddAccountModel } from "../../domain/use-cases/add-account";
+import { AccountModel } from "../../domain/models/account";
 
 let controller: SignUpController;
 let emailValidatorStub: EmailValidator;
+let addAccountStub: AddAccount;
 
 class EmailValidatorStub implements EmailValidator {
     isValid (email: string): boolean {
@@ -15,10 +18,20 @@ class EmailValidatorStub implements EmailValidator {
     }
 }
 
+class AddAccountStub implements AddAccount {
+    add (account: AddAccountModel): AccountModel {
+        return {
+            ...account,
+            id: "id"
+        };
+    }
+}
+
 describe("SignUpController", () => {
     beforeEach(() => {
         emailValidatorStub = new EmailValidatorStub();
-        controller = new SignUpController(emailValidatorStub);
+        addAccountStub = new AddAccountStub();
+        controller = new SignUpController(emailValidatorStub, addAccountStub);
     });
 
     it(`Should return code ${StatusCode.ClientErrorBadRequest} when name is not provided`, () => {
@@ -167,5 +180,25 @@ describe("SignUpController", () => {
 
         expect(statusCode).toBe(StatusCode.ServerErrorInternal);
         expect(body).toEqual(new ServerError());
+    });
+
+    it("Should call AddAccount with correct values when was called", () => {
+        const name = "name";
+        const email = "email@email.email";
+        const password = "passwordAndConfirmation";
+        const addSpy = jest.spyOn(addAccountStub, "add");
+
+        const request = {
+            body: {
+                name,
+                email,
+                password,
+                passwordConfirmation: password
+            }
+        };
+
+        controller.handle(request);
+
+        expect(addSpy).toHaveBeenCalledWith({ name, email, password })
     });
 });
