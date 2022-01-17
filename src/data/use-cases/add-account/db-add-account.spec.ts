@@ -31,4 +31,19 @@ describe("DbAddAccount", () => {
 
         expect(encryptSpy).toHaveBeenCalledWith(password);
     });
+
+    it("Should throw an error when Encrypter throws", async () => {
+        jest.spyOn(encrypterSub, "encrypt")
+            .mockReturnValueOnce(new Promise((resolve, reject) => reject(new Error())));
+
+        const data = {
+            name: "name",
+            email: "email@email.email",
+            password: "password"
+        };
+
+        const promise = db.add(data);
+
+        await expect(promise).rejects.toThrow();
+    });
 });
