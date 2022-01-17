@@ -10,7 +10,8 @@ const config: Config.InitialOptions = {
     },
     collectCoverageFrom: [
         "<rootDir>/src/presentation/controllers/sign-up/sign-up.ts",
-        "<rootDir>/src/utils/adapters/email-validator/email-validator-adapter.ts"
+        "<rootDir>/src/utils/adapters/email-validator/email-validator-adapter.ts",
+        "<rootDir>/src/data/use-cases/add-account/db-add-account.ts"
     ]
 };
 
