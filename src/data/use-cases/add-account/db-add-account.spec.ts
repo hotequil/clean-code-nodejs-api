@@ -1,6 +1,5 @@
-import { Encrypter } from "../../protocols/encrypter";
 import { DbAddAccount } from "./db-add-account";
-import { AddAccount } from "../../../domain/use-cases/add-account";
+import { AddAccount, Encrypter } from "./db-add-account-protocols";
 
 let db: AddAccount;
 let encrypterSub: Encrypter;
