@@ -76,4 +76,19 @@ describe("DbAddAccount", () => {
 
         expect(addSpy).toHaveBeenCalledWith({ ...data, password: HASHED_PASSWORD });
     });
+
+    it("Should throw an error when AddAccountRepository throws", async () => {
+        jest.spyOn(addAccountRepositoryStub, "add")
+            .mockReturnValueOnce(new Promise((resolve, reject) => reject(new Error())));
+
+        const data = {
+            name: "name",
+            email: "email@email.email",
+            password: "password"
+        };
+
+        const promise = db.add(data);
+
+        await expect(promise).rejects.toThrow();
+    });
 });
