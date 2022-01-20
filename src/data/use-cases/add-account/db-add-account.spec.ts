@@ -5,6 +5,7 @@ let db: AddAccount;
 let encrypterSub: Encrypter;
 let addAccountRepositoryStub: AddAccountRepository;
 const HASHED_PASSWORD = "12345678";
+const ID = "123";
 
 class EncrypterStub implements Encrypter {
     async encrypt (value: string): Promise<string> {
@@ -19,7 +20,7 @@ class AddAccountRepositoryStub implements AddAccountRepository {
         const fakeAccount: AccountModel = {
             ...account,
             password: HASHED_PASSWORD,
-            id: "123"
+            id: ID
         };
 
         return await new Promise(resolve => resolve(fakeAccount));
@@ -90,5 +91,17 @@ describe("DbAddAccount", () => {
         const promise = db.add(data);
 
         await expect(promise).rejects.toThrow();
+    });
+
+    it("Should return an account on success when DbAddAccount was called", async () => {
+        const data = {
+            name: "name",
+            email: "email@email.email",
+            password: "password"
+        };
+
+        const account = await db.add(data);
+
+        expect(account).toEqual({ ...account, id: ID, password: HASHED_PASSWORD });
     });
 });
