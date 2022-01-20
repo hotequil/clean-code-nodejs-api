@@ -1,19 +1,36 @@
 import { DbAddAccount } from "./db-add-account";
-import { AddAccount, Encrypter } from "./db-add-account-protocols";
+import { AccountModel, AddAccount, AddAccountModel, AddAccountRepository, Encrypter } from "./db-add-account-protocols";
 
 let db: AddAccount;
 let encrypterSub: Encrypter;
+let addAccountRepositoryStub: AddAccountRepository;
+const HASHED_PASSWORD = "12345678";
 
 class EncrypterStub implements Encrypter {
     async encrypt (value: string): Promise<string> {
-        return await new Promise(resolve => resolve(value));
+        console.log(value);
+
+        return await new Promise(resolve => resolve(HASHED_PASSWORD));
+    }
+}
+
+class AddAccountRepositoryStub implements AddAccountRepository {
+    async add (account: AddAccountModel): Promise<AccountModel> {
+        const fakeAccount: AccountModel = {
+            ...account,
+            password: HASHED_PASSWORD,
+            id: "123"
+        };
+
+        return await new Promise(resolve => resolve(fakeAccount));
     }
 }
 
 describe("DbAddAccount", () => {
     beforeEach(() => {
         encrypterSub = new EncrypterStub();
-        db = new DbAddAccount(encrypterSub);
+        addAccountRepositoryStub = new AddAccountRepositoryStub();
+        db = new DbAddAccount(encrypterSub, addAccountRepositoryStub);
     });
 
     it("Should call Encrypter with correct password", async () => {
@@ -44,5 +61,19 @@ describe("DbAddAccount", () => {
         const promise = db.add(data);
 
         await expect(promise).rejects.toThrow();
+    });
+
+    it("Should call AddAccountRepository with correct values when was called", async () => {
+        const addSpy = jest.spyOn(addAccountRepositoryStub, "add");
+
+        const data = {
+            name: "name",
+            email: "email@email.email",
+            password: "password"
+        };
+
+        await db.add(data);
+
+        expect(addSpy).toHaveBeenCalledWith({ ...data, password: HASHED_PASSWORD });
     });
 });
