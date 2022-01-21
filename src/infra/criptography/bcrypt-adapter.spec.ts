@@ -30,4 +30,13 @@ describe("BcryptAdapter", () => {
 
         expect(hash).toBe(DEFAULT_VALUE);
     });
+
+    it("Should throw an error when Bcrypt throws", async () => {
+        jest.spyOn(bcrypt, "hash")
+            .mockReturnValueOnce(new Promise((resolve, reject) => reject(new Error())) as unknown as any);
+
+        const promise = bcryptAdapter.encrypt("hash");
+
+        await expect(promise).rejects.toThrow();
+    });
 });
