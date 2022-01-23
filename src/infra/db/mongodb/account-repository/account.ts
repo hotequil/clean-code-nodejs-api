@@ -2,16 +2,14 @@ import { AddAccountRepository } from "../../../../data/protocols/add-account-rep
 import { AddAccountModel } from "../../../../domain/use-cases/add-account";
 import { AccountModel } from "../../../../domain/models/account";
 import { MongodbHelper } from "../helpers/mongodb-helper";
+import { map } from "./account-mapper";
 
 export class Account implements AddAccountRepository {
     async add (account: AddAccountModel): Promise<AccountModel> {
         const collection = MongodbHelper.collection("accounts");
-
         const { insertedId } = await collection.insertOne(account);
+        const response = await collection.findOne({ _id: insertedId });
 
-        // @ts-ignore
-        delete account._id;
-
-        return { ...account, id: insertedId.toJSON() };
+        return map(response);
     }
 }

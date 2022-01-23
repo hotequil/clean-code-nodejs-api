@@ -1,5 +1,6 @@
 import { MongodbHelper } from "../helpers/mongodb-helper";
 import { Account } from "./account";
+import { copy } from "../../../../presentation/helpers/manipulator-helper";
 
 describe("AccountMongoDBRepository", () => {
     let repository: Account;
@@ -18,7 +19,7 @@ describe("AccountMongoDBRepository", () => {
 
     it("Should return a new account when was called", async () => {
         const account = { name: "name", email: "email@email.email", password: "password" };
-        const { id, name, email, password } = await repository.add(account);
+        const { id, name, email, password } = await repository.add(copy(account));
 
         expect(id).toBeTruthy();
         expect(account).toEqual({ name, email, password });
