@@ -5,6 +5,7 @@ const config: Config.InitialOptions = {
     collectCoverage: true,
     coverageDirectory: "coverage",
     testEnvironment: "node",
+    preset: "@shelf/jest-mongodb",
     transform: {
         ".+\\.ts$": "ts-jest"
     },
