@@ -1,4 +1,4 @@
-import { MongoClient } from "mongodb";
+import { MongoClient, Collection } from "mongodb";
 
 let client!: MongoClient;
 
@@ -18,5 +18,9 @@ export class MongodbHelper {
         if (!client) return;
 
         await client.close();
+    }
+
+    static collection (name: string): Collection {
+        return client.db().collection(name);
     }
 }
