@@ -23,4 +23,10 @@ export class MongodbHelper {
     static collection (name: string): Collection {
         return client.db().collection(name);
     }
+
+    static map<T = any> (item: any): T {
+        const { _id, ...newItem } = item;
+
+        return { id: _id, ...newItem };
+    }
 }
