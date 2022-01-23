@@ -8,7 +8,13 @@ describe("AccountMongoDBRepository", () => {
 
     afterAll(async () => await MongodbHelper.disconnect());
 
-    beforeEach(() => repository = new Account());
+    beforeEach(async () => {
+        const collection = MongodbHelper.collection("accounts");
+
+        await collection.deleteMany({});
+
+        repository = new Account();
+    });
 
     it("Should return a new account when was called", async () => {
         const account = { name: "name", email: "email@email.email", password: "password" };
