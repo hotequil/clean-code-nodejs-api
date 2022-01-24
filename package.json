@@ -4,7 +4,7 @@
     "description": "Clean code NodeJS API.",
     "main": "./src/main/server.ts",
     "scripts": {
-        "start": "node .",
+        "start": "sucrase-node .",
         "eslint": "eslint 'src/**'",
         "eslint:staged": "eslint 'src/**' --fix",
         "test": "jest --clearCache && jest --passWithNoTests --runInBand",
