@@ -7,14 +7,10 @@ const config: Config.InitialOptions = {
     testEnvironment: "node",
     preset: "@shelf/jest-mongodb",
     watchPathIgnorePatterns: ["globalConfig"],
+    collectCoverageFrom: ["<rootDir>/**/*.ts"],
     transform: {
         ".+\\.ts$": "ts-jest"
-    },
-    collectCoverageFrom: [
-        "<rootDir>/src/presentation/controllers/sign-up/sign-up.ts",
-        "<rootDir>/src/utils/adapters/email-validator/email-validator-adapter.ts",
-        "<rootDir>/src/data/use-cases/add-account/db-add-account.ts"
-    ]
+    }
 };
 
 export default config;
