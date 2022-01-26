@@ -1,5 +1,7 @@
 import { MongoClient, Collection } from "mongodb";
 
+import env from "../../../../main/config/env";
+
 let client!: MongoClient;
 
 export class MongodbHelper {
@@ -11,7 +13,7 @@ export class MongodbHelper {
         if (client) return;
 
         // @ts-ignore
-        client = await MongoClient.connect(process.env.MONGO_URL, { useNewUrlParser: true, useUnifiedTopology: true });
+        client = await MongoClient.connect(env.MONGO_URL, { useNewUrlParser: true, useUnifiedTopology: true });
     }
 
     static async disconnect (): Promise<void> {
