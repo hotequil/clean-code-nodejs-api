@@ -7,7 +7,7 @@ const config: Config.InitialOptions = {
     testEnvironment: "node",
     preset: "@shelf/jest-mongodb",
     watchPathIgnorePatterns: ["globalConfig"],
-    collectCoverageFrom: ["<rootDir>/**/*.ts"],
+    collectCoverageFrom: ["<rootDir>/src/**/*.ts", "!<rootDir>/src/main/**"],
     transform: {
         ".+\\.ts$": "ts-jest"
     }
