@@ -15,4 +15,12 @@ describe("MongoDBHelper", () => {
 
         expect(accountsDisconnected).toBeTruthy();
     });
+
+    it("Should return a correct object after map when was called", () => {
+        const beforeObject = { _id: 1, name: "name" };
+        const afterObject = { id: 1, name: "name" };
+        const afterMap = MongodbHelper.map(beforeObject);
+
+        expect(afterMap).toEqual(afterObject);
+    });
 });
