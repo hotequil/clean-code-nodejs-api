@@ -1,9 +1,8 @@
-import { Request, Response, Router } from "express";
-import StatusCode from "status-code-enum";
+import { Router } from "express";
+
+import { adaptRoute } from "../adapters/express-route-adapter";
+import { makeSignUpController } from "../factories/sign-up";
 
 export default (router: Router): void => {
-    router.post("/sign-up", (request: Request, response: Response) => {
-        response.status(StatusCode.SuccessOK);
-        response.end();
-    });
+    router.post("/sign-up", adaptRoute(makeSignUpController()));
 };
