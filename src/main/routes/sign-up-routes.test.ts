@@ -9,7 +9,7 @@ describe("SignUpRoutes", () => {
     afterAll(async () => await MongodbHelper.disconnect());
 
     beforeEach(async () => {
-        const collection = MongodbHelper.collection("accounts");
+        const collection = await MongodbHelper.collection("accounts");
 
         await collection.deleteMany({});
     });

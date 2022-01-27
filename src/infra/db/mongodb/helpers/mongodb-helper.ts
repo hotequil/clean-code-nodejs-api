@@ -1,14 +1,12 @@
-import { MongoClient, Collection } from "mongodb";
+import { MongoClient, Collection, Db } from "mongodb";
 
 import env from "../../../../main/config/env";
 
-let client!: MongoClient;
+type Client = MongoClient|null;
+
+let client: Client = null;
 
 export class MongodbHelper {
-    static client (): MongoClient {
-        return client;
-    };
-
     static async connect (): Promise<void> {
         if (client) return;
 
@@ -20,10 +18,20 @@ export class MongodbHelper {
         if (!client) return;
 
         await client.close();
+
+        client = null;
     }
 
-    static collection (name: string): Collection {
-        return client.db().collection(name);
+    static async collection (name: string): Promise<Collection> {
+        const db = await MongodbHelper.db();
+
+        return db.collection(name);
+    }
+
+    static async db (): Promise<Db> {
+        if (!client) await MongodbHelper.connect();
+
+        return (client as MongoClient).db();
     }
 
     static map<T = any> (item: any): T {
