@@ -10,9 +10,9 @@ export const badRequest = (error: MissingParamsError): HttpResponse => {
     };
 };
 
-export const serverError = (): HttpResponse => ({
+export const serverError = (error: Error): HttpResponse => ({
     statusCode: StatusCode.ServerErrorInternal,
-    body: new ServerError()
+    body: new ServerError(error.stack)
 })
 
 export const success = (body: any): HttpResponse => ({

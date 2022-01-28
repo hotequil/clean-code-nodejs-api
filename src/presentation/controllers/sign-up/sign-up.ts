@@ -29,9 +29,7 @@ export class SignUpController implements Controller {
 
             return success(await this.addAccount.add({ name, email, password }));
         } catch (error) {
-            console.log(error);
-
-            return serverError();
+            return serverError(error as Error);
         }
     }
 }
