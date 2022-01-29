@@ -110,15 +110,7 @@ describe("SignUpController", () => {
     it(`Should return code ${StatusCode.ClientErrorBadRequest} when email is not valid`, async () => {
         jest.spyOn(emailValidatorStub, "isValid").mockReturnValueOnce(false);
 
-        const request: HttpRequest = {
-            body: {
-                name: "name",
-                email: "invalidEmail",
-                password: "passwordAndConfirmation",
-                passwordConfirmation: "passwordAndConfirmation"
-            }
-        };
-
+        const request: HttpRequest = makeDefaultHttpRequest();
         const { statusCode, body } = await controller.handle(request);
 
         expect(statusCode).toBe(StatusCode.ClientErrorBadRequest);
@@ -143,16 +135,8 @@ describe("SignUpController", () => {
 
     it("Should receive a valid email when EmailValidator was called", async () => {
         const isValidSpy = jest.spyOn(emailValidatorStub, "isValid");
-        const email = "email@email.email";
-
-        const request: HttpRequest = {
-            body: {
-                name: "name",
-                email,
-                password: "passwordAndConfirmation",
-                passwordConfirmation: "passwordAndConfirmation"
-            }
-        };
+        const request: HttpRequest = makeDefaultHttpRequest();
+        const { email } = request.body;
 
         await controller.handle(request);
 
