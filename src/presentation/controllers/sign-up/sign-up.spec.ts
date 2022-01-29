@@ -8,6 +8,17 @@ let controller: SignUpController;
 let emailValidatorStub: EmailValidator;
 let addAccountStub: AddAccount;
 
+const makeDefaultHttpRequest = (): HttpRequest => (
+    {
+        body: {
+            name: "name",
+            email: "email@email.email",
+            password: "passwordAndConfirmation",
+            passwordConfirmation: "passwordAndConfirmation"
+        }
+    }
+);
+
 class EmailValidatorStub implements EmailValidator {
     isValid (email: string): boolean {
         console.log(email);
@@ -60,15 +71,7 @@ describe("SignUpController", () => {
     });
 
     it(`Should return code ${StatusCode.SuccessOK} when all fields was provided`, async () => {
-        const request: HttpRequest = {
-            body: {
-                name: "name",
-                email: "email@email.email",
-                password: "passwordAndConfirmation",
-                passwordConfirmation: "passwordAndConfirmation"
-            }
-        };
-
+        const request: HttpRequest = makeDefaultHttpRequest();
         const { statusCode } = await controller.handle(request);
 
         expect(statusCode).toBe(StatusCode.SuccessOK);
@@ -162,15 +165,7 @@ describe("SignUpController", () => {
                 throw new Error()
             });
 
-        const request = {
-            body: {
-                name: "name",
-                email: "email@email.email",
-                password: "passwordAndConfirmation",
-                passwordConfirmation: "passwordAndConfirmation"
-            }
-        };
-
+        const request = makeDefaultHttpRequest();
         const { body, statusCode } = await controller.handle(request);
 
         expect(statusCode).toBe(StatusCode.ServerErrorInternal);
@@ -181,15 +176,7 @@ describe("SignUpController", () => {
         jest.spyOn(addAccountStub, "add")
             .mockImplementationOnce(async () => await new Promise((resolve, reject) => reject(new Error())));
 
-        const request = {
-            body: {
-                name: "name",
-                email: "email@email.email",
-                password: "passwordAndConfirmation",
-                passwordConfirmation: "passwordAndConfirmation"
-            }
-        };
-
+        const request = makeDefaultHttpRequest();
         const { statusCode, body } = await controller.handle(request);
 
         expect(statusCode).toBe(StatusCode.ServerErrorInternal);
