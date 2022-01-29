@@ -10,6 +10,15 @@ const RESPONSE_MOCK = {
     body: null
 };
 
+const makeHttpRequest = (): HttpRequest => (
+    {
+        body: {
+            name: "name",
+            email: "email@email.email"
+        }
+    }
+);
+
 class ControllerStub implements Controller {
     async handle (request: HttpRequest): Promise<HttpResponse> {
         console.log(request);
@@ -41,13 +50,7 @@ describe("LogDecorator", () => {
 
     it("Should call handle and send data when was called", async () => {
         const controllerStubHandleSpy = jest.spyOn(controllerStub, "handle");
-
-        const request: HttpRequest = {
-            body: {
-                name: "name",
-                email: "email@email.email"
-            }
-        }
+        const request: HttpRequest = makeHttpRequest();
 
         await logDecorator.handle(request);
 
@@ -55,12 +58,7 @@ describe("LogDecorator", () => {
     });
 
     it("Should return the same value in ControllerStub and LogDecorator when was called", async () => {
-        const request: HttpRequest = {
-            body: {
-                name: "name"
-            }
-        };
-
+        const request: HttpRequest = makeHttpRequest();
         const httpResponse = await logDecorator.handle(request);
 
         expect(httpResponse).toBe(RESPONSE_MOCK);
@@ -68,7 +66,7 @@ describe("LogDecorator", () => {
 
     it(`Should get a stack trace when throw an error with code ${StatusCode.ServerErrorInternal}`, async () => {
         const logSpy = jest.spyOn(logErrorRepositoryStub, "log");
-        const httpRequest: HttpRequest = { body: { name: "name" } };
+        const httpRequest: HttpRequest = makeHttpRequest();
         const error = new Error();
         const stack = "Error from server";
 
