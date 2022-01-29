@@ -2,7 +2,8 @@ import { StatusCode } from "status-code-enum";
 
 import { SignUpController } from "./sign-up";
 import { HttpRequest, EmailValidator, AccountModel, AddAccount, AddAccountModel } from "./sign-up-protocols";
-import { InvalidParamsError, ServerError, MissingParamsError } from "../../errors";
+import { InvalidParamsError, MissingParamsError, ServerError } from "../../errors";
+import { badRequest, serverError } from "../../helpers/http-helper";
 
 let controller: SignUpController;
 let emailValidatorStub: EmailValidator;
@@ -49,10 +50,9 @@ describe("SignUpController", () => {
             }
         };
 
-        const { body, statusCode } = await controller.handle(request);
+        const response = await controller.handle(request);
 
-        expect(statusCode).toBe(StatusCode.ClientErrorBadRequest);
-        expect(body).toEqual(new MissingParamsError("name"));
+        expect(response).toEqual(badRequest(new MissingParamsError("name")));
     });
 
     it(`Should return code ${StatusCode.ClientErrorBadRequest} when email is not provided`, async () => {
@@ -64,10 +64,9 @@ describe("SignUpController", () => {
             }
         };
 
-        const { statusCode, body } = await controller.handle(request);
+        const response = await controller.handle(request);
 
-        expect(statusCode).toBe(StatusCode.ClientErrorBadRequest);
-        expect(body).toEqual(new MissingParamsError("email"));
+        expect(response).toEqual(badRequest(new MissingParamsError("email")));
     });
 
     it(`Should return code ${StatusCode.SuccessOK} when all fields was provided`, async () => {
@@ -86,10 +85,9 @@ describe("SignUpController", () => {
             }
         };
 
-        const { statusCode, body } = await controller.handle(request);
+        const response = await controller.handle(request);
 
-        expect(statusCode).toBe(StatusCode.ClientErrorBadRequest);
-        expect(body).toEqual(new MissingParamsError("password"));
+        expect(response).toEqual(badRequest(new MissingParamsError("password")));
     });
 
     it(`Should return code ${StatusCode.ClientErrorBadRequest} when passwordConfirmation was not provided`, async () => {
@@ -101,20 +99,18 @@ describe("SignUpController", () => {
             }
         };
 
-        const { statusCode, body } = await controller.handle(request);
+        const response = await controller.handle(request);
 
-        expect(statusCode).toBe(StatusCode.ClientErrorBadRequest);
-        expect(body).toEqual(new MissingParamsError("passwordConfirmation"));
+        expect(response).toEqual(badRequest(new MissingParamsError("passwordConfirmation")));
     });
 
     it(`Should return code ${StatusCode.ClientErrorBadRequest} when email is not valid`, async () => {
         jest.spyOn(emailValidatorStub, "isValid").mockReturnValueOnce(false);
 
         const request: HttpRequest = makeDefaultHttpRequest();
-        const { statusCode, body } = await controller.handle(request);
+        const response = await controller.handle(request);
 
-        expect(statusCode).toBe(StatusCode.ClientErrorBadRequest);
-        expect(body).toEqual(new InvalidParamsError("email"));
+        expect(response).toEqual(badRequest(new InvalidParamsError("email")));
     });
 
     it(`Should return code ${StatusCode.ClientErrorBadRequest} when password is different passwordConfirmation`, async () => {
@@ -127,10 +123,9 @@ describe("SignUpController", () => {
             }
         };
 
-        const { statusCode, body } = await controller.handle(request);
+        const response = await controller.handle(request);
 
-        expect(statusCode).toBe(StatusCode.ClientErrorBadRequest);
-        expect(body).toEqual(new InvalidParamsError("passwordConfirmation"));
+        expect(response).toEqual(badRequest(new InvalidParamsError("passwordConfirmation")));
     })
 
     it("Should receive a valid email when EmailValidator was called", async () => {
@@ -150,10 +145,9 @@ describe("SignUpController", () => {
             });
 
         const request = makeDefaultHttpRequest();
-        const { body, statusCode } = await controller.handle(request);
+        const response = await controller.handle(request);
 
-        expect(statusCode).toBe(StatusCode.ServerErrorInternal);
-        expect(body).toEqual(new ServerError());
+        expect(response).toEqual(serverError(new ServerError()));
     });
 
     it(`Should return an AddAccount exception with code ${StatusCode.ServerErrorInternal} when was called`, async () => {
@@ -161,10 +155,9 @@ describe("SignUpController", () => {
             .mockImplementationOnce(async () => await new Promise((resolve, reject) => reject(new Error())));
 
         const request = makeDefaultHttpRequest();
-        const { statusCode, body } = await controller.handle(request);
+        const response = await controller.handle(request);
 
-        expect(statusCode).toBe(StatusCode.ServerErrorInternal);
-        expect(body).toEqual(new ServerError());
+        expect(response).toEqual(serverError(new ServerError()));
     });
 
     it("Should call AddAccount with correct values when was called", async () => {
