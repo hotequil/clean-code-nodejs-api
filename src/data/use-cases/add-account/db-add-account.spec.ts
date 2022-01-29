@@ -7,6 +7,14 @@ let addAccountRepositoryStub: AddAccountRepository;
 const HASHED_PASSWORD = "12345678";
 const ID = "123";
 
+const makeFakeAccount = (): any => (
+    {
+        name: "name",
+        email: "email@email.email",
+        password: "password"
+    }
+);
+
 class EncrypterStub implements Encrypter {
     async encrypt (value: string): Promise<string> {
         console.log(value);
@@ -36,13 +44,8 @@ describe("DbAddAccount", () => {
 
     it("Should call Encrypter with correct password", async () => {
         const encryptSpy = jest.spyOn(encrypterSub, "encrypt");
-        const password = "password";
-
-        const data = {
-            name: "name",
-            email: "email@email.email",
-            password
-        };
+        const data = makeFakeAccount();
+        const { password } = data;
 
         await db.add(data);
 
@@ -53,25 +56,14 @@ describe("DbAddAccount", () => {
         jest.spyOn(encrypterSub, "encrypt")
             .mockReturnValueOnce(new Promise((resolve, reject) => reject(new Error())));
 
-        const data = {
-            name: "name",
-            email: "email@email.email",
-            password: "password"
-        };
-
-        const promise = db.add(data);
+        const promise = db.add(makeFakeAccount());
 
         await expect(promise).rejects.toThrow();
     });
 
     it("Should call AddAccountRepository with correct values when was called", async () => {
         const addSpy = jest.spyOn(addAccountRepositoryStub, "add");
-
-        const data = {
-            name: "name",
-            email: "email@email.email",
-            password: "password"
-        };
+        const data = makeFakeAccount();
 
         await db.add(data);
 
@@ -82,25 +74,13 @@ describe("DbAddAccount", () => {
         jest.spyOn(addAccountRepositoryStub, "add")
             .mockReturnValueOnce(new Promise((resolve, reject) => reject(new Error())));
 
-        const data = {
-            name: "name",
-            email: "email@email.email",
-            password: "password"
-        };
-
-        const promise = db.add(data);
+        const promise = db.add(makeFakeAccount());
 
         await expect(promise).rejects.toThrow();
     });
 
     it("Should return an account on success when DbAddAccount was called", async () => {
-        const data = {
-            name: "name",
-            email: "email@email.email",
-            password: "password"
-        };
-
-        const account = await db.add(data);
+        const account = await db.add(makeFakeAccount());
 
         expect(account).toEqual({ ...account, id: ID, password: HASHED_PASSWORD });
     });
