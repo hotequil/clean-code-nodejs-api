@@ -9,7 +9,7 @@ export class LogDecorator implements Controller {
     async handle (request: HttpRequest): Promise<HttpResponse> {
         const response = await this.controller.handle(request);
 
-        if (response.statusCode === StatusCode.ServerErrorInternal) await this.logErrorRepository.log(response.body.stack);
+        if (response.statusCode === StatusCode.ServerErrorInternal) await this.logErrorRepository.logError(response.body.stack);
 
         return response;
     }

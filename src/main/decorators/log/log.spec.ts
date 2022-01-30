@@ -30,7 +30,7 @@ class ControllerStub implements Controller {
 }
 
 class LogErrorRepositoryStub implements LogErrorRepository {
-    async log (stack: string): Promise<void> {
+    async logError (stack: string): Promise<void> {
         console.log(stack);
 
         return await new Promise(resolve => resolve());
@@ -65,7 +65,7 @@ describe("LogDecorator", () => {
     });
 
     it(`Should get a stack trace when throw an error with code ${StatusCode.ServerErrorInternal}`, async () => {
-        const logSpy = jest.spyOn(logErrorRepositoryStub, "log");
+        const logSpy = jest.spyOn(logErrorRepositoryStub, "logError");
         const httpRequest: HttpRequest = makeHttpRequest();
         const error = new Error();
         const stack = "Error from server";
