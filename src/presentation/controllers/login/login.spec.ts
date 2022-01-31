@@ -2,8 +2,8 @@ import StatusCode from "status-code-enum";
 
 import { LoginController } from "./login";
 import { badRequest } from "../../helpers/http-helper";
-import { MissingParamsError } from "../../errors";
-import { HttpRequest } from "../../protocols";
+import { InvalidParamsError, MissingParamsError } from "../../errors";
+import { HttpRequest, HttpResponse } from "../../protocols";
 import { EmailValidator } from "../../protocols/email-validator";
 
 class EmailValidatorStub implements EmailValidator {
@@ -51,5 +51,20 @@ describe("LoginController", () => {
         await loginController.handle(request);
 
         expect(isValid).toHaveBeenCalledWith(email);
+    });
+
+    it("Should call EmailValidator if email is not valid when was called", async () => {
+        jest.spyOn(emailValidator, "isValid").mockReturnValueOnce(false);
+
+        const request: HttpRequest = {
+            body: {
+                email: "invalid-email",
+                password: "password"
+            }
+        };
+
+        const response: HttpResponse = await loginController.handle(request);
+
+        expect(response).toEqual(badRequest(new InvalidParamsError("email")));
     });
 });
