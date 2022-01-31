@@ -4,11 +4,24 @@ import { LoginController } from "./login";
 import { badRequest } from "../../helpers/http-helper";
 import { MissingParamsError } from "../../errors";
 import { HttpRequest } from "../../protocols";
+import { EmailValidator } from "../../protocols/email-validator";
+
+class EmailValidatorStub implements EmailValidator {
+    isValid (email: string): boolean {
+        console.log(email);
+
+        return true;
+    }
+}
 
 describe("LoginController", () => {
     let loginController: LoginController;
+    let emailValidator: EmailValidator;
 
-    beforeEach(() => loginController = new LoginController());
+    beforeEach(() => {
+        emailValidator = new EmailValidatorStub();
+        loginController = new LoginController(emailValidator);
+    });
 
     it(`Should return code ${StatusCode.ClientErrorBadRequest} if email is not provided when was called`, async () => {
         const request: HttpRequest = { body: { password: "password" } };
@@ -22,5 +35,21 @@ describe("LoginController", () => {
         const response = await loginController.handle(request);
 
         expect(response).toEqual(badRequest(new MissingParamsError("password")));
+    });
+
+    it("Should call EmailValidator with a correct email when was called", async () => {
+        const isValid = jest.spyOn(emailValidator, "isValid");
+        const email = "email@email.email";
+
+        const request: HttpRequest = {
+            body: {
+                email,
+                password: "password"
+            }
+        };
+
+        await loginController.handle(request);
+
+        expect(isValid).toHaveBeenCalledWith(email);
     });
 });
