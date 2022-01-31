@@ -4,8 +4,14 @@ import { MissingParamsError } from "../../errors";
 
 export class LoginController implements Controller {
     async handle (request: HttpRequest): Promise<HttpResponse> {
-        console.log(request);
+        return await new Promise(resolve => {
+            const { password, email } = request.body;
+            let error: MissingParamsError|null = null;
 
-        return await new Promise(resolve => resolve(badRequest(new MissingParamsError("email"))));
+            if (!email) error = new MissingParamsError("email");
+            else if (!password) error = new MissingParamsError("password");
+
+            if (error) resolve(badRequest(error));
+        });
     }
 }
