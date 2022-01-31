@@ -6,6 +6,15 @@ import { InvalidParamsError, MissingParamsError } from "../../errors";
 import { HttpRequest, HttpResponse } from "../../protocols";
 import { EmailValidator } from "../../protocols/email-validator";
 
+const makeHttpRequest = (): HttpRequest => (
+    {
+        body: {
+            email: "email@email.email",
+            password: "password"
+        }
+    }
+);
+
 class EmailValidatorStub implements EmailValidator {
     isValid (email: string): boolean {
         console.log(email);
@@ -39,14 +48,8 @@ describe("LoginController", () => {
 
     it("Should call EmailValidator with a correct email when was called", async () => {
         const isValid = jest.spyOn(emailValidator, "isValid");
-        const email = "email@email.email";
-
-        const request: HttpRequest = {
-            body: {
-                email,
-                password: "password"
-            }
-        };
+        const request: HttpRequest = makeHttpRequest();
+        const { email } = request.body;
 
         await loginController.handle(request);
 
@@ -56,13 +59,7 @@ describe("LoginController", () => {
     it("Should call EmailValidator if email is not valid when was called", async () => {
         jest.spyOn(emailValidator, "isValid").mockReturnValueOnce(false);
 
-        const request: HttpRequest = {
-            body: {
-                email: "invalid-email",
-                password: "password"
-            }
-        };
-
+        const request: HttpRequest = makeHttpRequest();
         const response: HttpResponse = await loginController.handle(request);
 
         expect(response).toEqual(badRequest(new InvalidParamsError("email")));
