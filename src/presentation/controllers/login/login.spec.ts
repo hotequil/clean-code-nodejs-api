@@ -3,9 +3,7 @@ import StatusCode from "status-code-enum";
 import { LoginController } from "./login";
 import { badRequest, serverError, unauthorized } from "../../helpers/http-helper";
 import { InvalidParamsError, MissingParamsError, ServerError } from "../../errors";
-import { HttpRequest, HttpResponse } from "../../protocols";
-import { EmailValidator } from "../../protocols/email-validator";
-import { Authentication } from "../../../domain/use-cases/authentication";
+import { HttpRequest, HttpResponse, EmailValidator, Authentication } from "./login-protocols";
 
 const makeHttpRequest = (): HttpRequest => (
     {
