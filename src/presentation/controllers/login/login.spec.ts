@@ -100,4 +100,13 @@ describe("LoginController", () => {
 
         expect(response).toEqual(unauthorized());
     });
+
+    it(`Should return code ${StatusCode.ServerErrorInternal} if Authentication throws when was called`, async () => {
+        jest.spyOn(authentication, "auth").mockImplementationOnce(() => { throw new Error(); });
+
+        const request: HttpRequest = makeHttpRequest();
+        const response: HttpResponse = await loginController.handle(request);
+
+        expect(response).toEqual(serverError(new ServerError()))
+    });
 });
