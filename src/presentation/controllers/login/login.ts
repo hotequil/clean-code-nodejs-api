@@ -20,7 +20,7 @@ export class LoginController implements Controller {
 
             if (!token) return unauthorized();
 
-            return success(token);
+            return success({ token });
         } catch (error) {
             return serverError(error as Error);
         }
