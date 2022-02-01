@@ -1,9 +1,11 @@
 import StatusCode from "status-code-enum";
 
 import { LoginController } from "./login";
-import { badRequest, serverError, unauthorized } from "../../helpers/http-helper";
+import { badRequest, serverError, success, unauthorized } from "../../helpers/http-helper";
 import { InvalidParamsError, MissingParamsError, ServerError } from "../../errors";
 import { HttpRequest, HttpResponse, EmailValidator, Authentication } from "./login-protocols";
+
+const TOKEN = "token";
 
 const makeHttpRequest = (): HttpRequest => (
     {
@@ -18,7 +20,7 @@ class AuthenticationStub implements Authentication {
     async auth (email: string, password: string): Promise<string> {
         console.log(email, password);
 
-        return await new Promise(resolve => resolve("token"));
+        return await new Promise(resolve => resolve(TOKEN));
     }
 }
 
@@ -108,5 +110,12 @@ describe("LoginController", () => {
         const response: HttpResponse = await loginController.handle(request);
 
         expect(response).toEqual(serverError(new ServerError()))
+    });
+
+    it(`Should return code ${StatusCode.SuccessOK} when was called with correct values`, async () => {
+        const request: HttpRequest = makeHttpRequest();
+        const response: HttpResponse = await loginController.handle(request);
+
+        expect(response).toEqual(success({ token: TOKEN }));
     });
 });
