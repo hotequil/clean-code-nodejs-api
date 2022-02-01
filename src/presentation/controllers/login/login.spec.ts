@@ -1,8 +1,8 @@
 import StatusCode from "status-code-enum";
 
 import { LoginController } from "./login";
-import { badRequest } from "../../helpers/http-helper";
-import { InvalidParamsError, MissingParamsError } from "../../errors";
+import { badRequest, serverError } from "../../helpers/http-helper";
+import { InvalidParamsError, MissingParamsError, ServerError } from "../../errors";
 import { HttpRequest, HttpResponse } from "../../protocols";
 import { EmailValidator } from "../../protocols/email-validator";
 
@@ -63,5 +63,14 @@ describe("LoginController", () => {
         const response: HttpResponse = await loginController.handle(request);
 
         expect(response).toEqual(badRequest(new InvalidParamsError("email")));
+    });
+
+    it(`Should return code ${StatusCode.ServerErrorInternal} if EmailValidator throws when was called`, async () => {
+        jest.spyOn(emailValidator, "isValid").mockImplementationOnce(() => { throw new Error(); });
+
+        const request: HttpRequest = makeHttpRequest();
+        const response = await loginController.handle(request);
+
+        expect(response).toEqual(serverError(new ServerError()));
     });
 });
