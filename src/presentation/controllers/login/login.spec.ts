@@ -1,7 +1,7 @@
 import StatusCode from "status-code-enum";
 
 import { LoginController } from "./login";
-import { badRequest, serverError } from "../../helpers/http-helper";
+import { badRequest, serverError, unauthorized } from "../../helpers/http-helper";
 import { InvalidParamsError, MissingParamsError, ServerError } from "../../errors";
 import { HttpRequest, HttpResponse } from "../../protocols";
 import { EmailValidator } from "../../protocols/email-validator";
@@ -92,5 +92,14 @@ describe("LoginController", () => {
         await loginController.handle(request);
 
         expect(spy).toHaveBeenCalledWith(request.body.email, request.body.password);
+    });
+
+    it(`Should return code ${StatusCode.ClientErrorUnauthorized} if auth is invalid when was called`, async () => {
+        jest.spyOn(authentication, "auth").mockReturnValueOnce(new Promise(resolve => resolve("")));
+
+        const request: HttpRequest = makeHttpRequest();
+        const response = await loginController.handle(request);
+
+        expect(response).toEqual(unauthorized());
     });
 });
