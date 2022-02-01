@@ -5,6 +5,7 @@ import { badRequest, serverError } from "../../helpers/http-helper";
 import { InvalidParamsError, MissingParamsError, ServerError } from "../../errors";
 import { HttpRequest, HttpResponse } from "../../protocols";
 import { EmailValidator } from "../../protocols/email-validator";
+import { Authentication } from "../../../domain/use-cases/authentication";
 
 const makeHttpRequest = (): HttpRequest => (
     {
@@ -14,6 +15,14 @@ const makeHttpRequest = (): HttpRequest => (
         }
     }
 );
+
+class AuthenticationStub implements Authentication {
+    async auth (email: string, password: string): Promise<string> {
+        console.log(email, password);
+
+        return await new Promise(resolve => resolve("token"));
+    }
+}
 
 class EmailValidatorStub implements EmailValidator {
     isValid (email: string): boolean {
@@ -26,10 +35,12 @@ class EmailValidatorStub implements EmailValidator {
 describe("LoginController", () => {
     let loginController: LoginController;
     let emailValidator: EmailValidator;
+    let authentication: Authentication;
 
     beforeEach(() => {
         emailValidator = new EmailValidatorStub();
-        loginController = new LoginController(emailValidator);
+        authentication = new AuthenticationStub();
+        loginController = new LoginController(emailValidator, authentication);
     });
 
     it(`Should return code ${StatusCode.ClientErrorBadRequest} if email is not provided when was called`, async () => {
@@ -72,5 +83,14 @@ describe("LoginController", () => {
         const response = await loginController.handle(request);
 
         expect(response).toEqual(serverError(new ServerError()));
+    });
+
+    it("Should call Authentication with correct values", async () => {
+        const request: HttpRequest = makeHttpRequest();
+        const spy = jest.spyOn(authentication, "auth");
+
+        await loginController.handle(request);
+
+        expect(spy).toHaveBeenCalledWith(request.body.email, request.body.password);
     });
 });
