@@ -5,6 +5,7 @@ import { HttpRequest, EmailValidator, AccountModel, AddAccount, AddAccountModel 
 import { InvalidParamsError, MissingParamsError, ServerError } from "../../errors";
 import { badRequest, serverError } from "../../helpers/http-helper";
 import { Validation } from "../../validators/validation";
+import { AnyObject } from "../../../utils/helpers";
 
 let controller: SignUpController;
 let emailValidatorStub: EmailValidator;
@@ -37,7 +38,7 @@ class AddAccountStub implements AddAccount {
 }
 
 class ValidationStub implements Validation {
-    validate (value: any): Error|null {
+    validate (value: AnyObject): Error|null {
         console.log(value);
 
         return null;
@@ -50,69 +51,6 @@ describe("SignUpController", () => {
         addAccountStub = new AddAccountStub();
         validationStub = new ValidationStub();
         controller = new SignUpController(emailValidatorStub, addAccountStub, validationStub);
-    });
-
-    it(`Should return code ${StatusCode.ClientErrorBadRequest} when name is not provided`, async () => {
-        const request: HttpRequest = {
-            body: {
-                email: "email@email.email",
-                password: "passwordAndConfirmation",
-                passwordConfirmation: "passwordAndConfirmation"
-            }
-        };
-
-        const response = await controller.handle(request);
-
-        expect(response).toEqual(badRequest(new MissingParamsError("name")));
-    });
-
-    it(`Should return code ${StatusCode.ClientErrorBadRequest} when email is not provided`, async () => {
-        const request: HttpRequest = {
-            body: {
-                name: "name",
-                password: "passwordAndConfirmation",
-                passwordConfirmation: "passwordAndConfirmation"
-            }
-        };
-
-        const response = await controller.handle(request);
-
-        expect(response).toEqual(badRequest(new MissingParamsError("email")));
-    });
-
-    it(`Should return code ${StatusCode.SuccessOK} when all fields was provided`, async () => {
-        const request: HttpRequest = makeDefaultHttpRequest();
-        const { statusCode } = await controller.handle(request);
-
-        expect(statusCode).toBe(StatusCode.SuccessOK);
-    });
-
-    it(`Should return code ${StatusCode.ClientErrorBadRequest} when password was not provided`, async () => {
-        const request: HttpRequest = {
-            body: {
-                name: "name",
-                email: "email@email.email",
-                passwordConfirmation: "passwordAndConfirmation"
-            }
-        };
-
-        const response = await controller.handle(request);
-
-        expect(response).toEqual(badRequest(new MissingParamsError("password")));
-    });
-
-    it(`Should return code ${StatusCode.ClientErrorBadRequest} when passwordConfirmation was not provided`, async () => {
-        const request: HttpRequest = {
-            body: {
-                name: "name",
-                email: "email@email.email",
-                password: "passwordAndConfirmation"
-            }
-        };
-
-        const response = await controller.handle(request);
-
-        expect(response).toEqual(badRequest(new MissingParamsError("passwordConfirmation")));
     });
 
     it(`Should return code ${StatusCode.ClientErrorBadRequest} when email is not valid`, async () => {
