@@ -12,7 +12,9 @@ export class SignUpController implements Controller {
 
     async handle ({ body }: HttpRequest): Promise<HttpResponse> {
         try {
-            this.validation.validate(body);
+            const error = this.validation.validate(body);
+
+            if (error instanceof Error) return badRequest(error);
 
             const requiredFields = ["name", "email", "password", "passwordConfirmation"];
 
