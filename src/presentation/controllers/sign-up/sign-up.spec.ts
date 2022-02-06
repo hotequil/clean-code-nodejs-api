@@ -191,7 +191,7 @@ describe("SignUpController", () => {
         expect(addSpy).toHaveBeenCalledWith({ name, email, password })
     });
 
-    it("Should call Validation with correct values", async () => {
+    it("Should call Validation with correct values when was called", async () => {
         const spy = jest.spyOn(validationStub, "validate");
         const request = makeDefaultHttpRequest();
 
@@ -199,4 +199,15 @@ describe("SignUpController", () => {
 
         expect(spy).toHaveBeenCalledWith(request.body);
     });
+
+    it(`Should return code ${StatusCode.ClientErrorBadRequest} if Validation throws an error when was called`, async () => {
+        const error = new MissingParamsError("field");
+
+        jest.spyOn(validationStub, "validate").mockReturnValueOnce(error);
+
+        const request = makeDefaultHttpRequest();
+        const response = await controller.handle(request);
+
+        expect(response).toEqual(badRequest(error));
+    })
 });
