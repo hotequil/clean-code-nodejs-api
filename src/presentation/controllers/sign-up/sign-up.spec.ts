@@ -4,10 +4,12 @@ import { SignUpController } from "./sign-up";
 import { HttpRequest, EmailValidator, AccountModel, AddAccount, AddAccountModel } from "./sign-up-protocols";
 import { InvalidParamsError, MissingParamsError, ServerError } from "../../errors";
 import { badRequest, serverError } from "../../helpers/http-helper";
+import { Validation } from "../../validators/validation";
 
 let controller: SignUpController;
 let emailValidatorStub: EmailValidator;
 let addAccountStub: AddAccount;
+let validationStub: Validation;
 
 const makeDefaultHttpRequest = (): HttpRequest => (
     {
@@ -34,11 +36,20 @@ class AddAccountStub implements AddAccount {
     }
 }
 
+class ValidationStub implements Validation {
+    validate (value: any): Error|null {
+        console.log(value);
+
+        return null;
+    }
+}
+
 describe("SignUpController", () => {
     beforeEach(() => {
         emailValidatorStub = new EmailValidatorStub();
         addAccountStub = new AddAccountStub();
-        controller = new SignUpController(emailValidatorStub, addAccountStub);
+        validationStub = new ValidationStub();
+        controller = new SignUpController(emailValidatorStub, addAccountStub, validationStub);
     });
 
     it(`Should return code ${StatusCode.ClientErrorBadRequest} when name is not provided`, async () => {
@@ -178,5 +189,14 @@ describe("SignUpController", () => {
         await controller.handle(request);
 
         expect(addSpy).toHaveBeenCalledWith({ name, email, password })
+    });
+
+    it("Should call Validation with correct values", async () => {
+        const spy = jest.spyOn(validationStub, "validate");
+        const request = makeDefaultHttpRequest();
+
+        await controller.handle(request);
+
+        expect(spy).toHaveBeenCalledWith(request.body);
     });
 });
