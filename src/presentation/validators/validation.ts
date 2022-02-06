@@ -1,3 +1,5 @@
+import { AnyObject } from "../../utils/helpers";
+
 export interface Validation {
-    validate: (value: any) => Error|null
+    validate: (value: AnyObject) => Error|null
 }
