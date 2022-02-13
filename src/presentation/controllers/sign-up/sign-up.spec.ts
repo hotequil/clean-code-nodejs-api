@@ -1,14 +1,13 @@
 import { StatusCode } from "status-code-enum";
 
 import { SignUpController } from "./sign-up";
-import { HttpRequest, EmailValidator, AccountModel, AddAccount, AddAccountModel } from "./sign-up-protocols";
-import { InvalidParamsError, MissingParamsError, ServerError } from "../../errors";
+import { HttpRequest, AccountModel, AddAccount, AddAccountModel } from "./sign-up-protocols";
+import { MissingParamsError, ServerError } from "../../errors";
 import { badRequest, serverError } from "../../helpers/http-helper";
 import { Validation } from "../../validators/validation";
 import { AnyObject } from "../../../utils/helpers";
 
 let controller: SignUpController;
-let emailValidatorStub: EmailValidator;
 let addAccountStub: AddAccount;
 let validationStub: Validation;
 
@@ -22,14 +21,6 @@ const makeDefaultHttpRequest = (): HttpRequest => (
         }
     }
 );
-
-class EmailValidatorStub implements EmailValidator {
-    isValid (email: string): boolean {
-        console.log(email);
-
-        return true;
-    }
-}
 
 class AddAccountStub implements AddAccount {
     async add (account: AddAccountModel): Promise<AccountModel> {
@@ -47,41 +38,9 @@ class ValidationStub implements Validation {
 
 describe("SignUpController", () => {
     beforeEach(() => {
-        emailValidatorStub = new EmailValidatorStub();
         addAccountStub = new AddAccountStub();
         validationStub = new ValidationStub();
-        controller = new SignUpController(emailValidatorStub, addAccountStub, validationStub);
-    });
-
-    it(`Should return code ${StatusCode.ClientErrorBadRequest} when email is not valid`, async () => {
-        jest.spyOn(emailValidatorStub, "isValid").mockReturnValueOnce(false);
-
-        const request: HttpRequest = makeDefaultHttpRequest();
-        const response = await controller.handle(request);
-
-        expect(response).toEqual(badRequest(new InvalidParamsError("email")));
-    });
-
-    it("Should receive a valid email when EmailValidator was called", async () => {
-        const isValidSpy = jest.spyOn(emailValidatorStub, "isValid");
-        const request: HttpRequest = makeDefaultHttpRequest();
-        const { email } = request.body;
-
-        await controller.handle(request);
-
-        expect(isValidSpy).toHaveBeenCalledWith(email);
-    });
-
-    it(`Should throw an exception with code ${StatusCode.ServerErrorInternal} from EmailValidator when was called`, async () => {
-        jest.spyOn(emailValidatorStub, "isValid")
-            .mockImplementationOnce(() => {
-                throw new Error()
-            });
-
-        const request = makeDefaultHttpRequest();
-        const response = await controller.handle(request);
-
-        expect(response).toEqual(serverError(new ServerError()));
+        controller = new SignUpController(addAccountStub, validationStub);
     });
 
     it(`Should return an AddAccount exception with code ${StatusCode.ServerErrorInternal} when was called`, async () => {
