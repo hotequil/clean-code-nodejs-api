@@ -10,6 +10,7 @@ export class LogDecorator implements Controller {
         const response = await this.controller.handle(request);
 
         if (response.statusCode === StatusCode.ServerErrorInternal) await this.logErrorRepository.logError(response.body.stack);
+        if (response.statusCode !== StatusCode.SuccessOK) response.body = { error: response.body.message };
 
         return response;
     }
