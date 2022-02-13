@@ -62,21 +62,6 @@ describe("SignUpController", () => {
         expect(response).toEqual(badRequest(new InvalidParamsError("email")));
     });
 
-    it(`Should return code ${StatusCode.ClientErrorBadRequest} when password is different passwordConfirmation`, async () => {
-        const request = {
-            body: {
-                name: "name",
-                email: "email@email.email",
-                password: "passwordAndConfirmation",
-                passwordConfirmation: "invalidPassword"
-            }
-        };
-
-        const response = await controller.handle(request);
-
-        expect(response).toEqual(badRequest(new InvalidParamsError("passwordConfirmation")));
-    })
-
     it("Should receive a valid email when EmailValidator was called", async () => {
         const isValidSpy = jest.spyOn(emailValidatorStub, "isValid");
         const request: HttpRequest = makeDefaultHttpRequest();
