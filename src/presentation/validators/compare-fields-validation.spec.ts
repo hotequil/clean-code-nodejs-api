@@ -13,4 +13,11 @@ describe("CompareFieldsValidation", () => {
 
         expect(response).toEqual(new InvalidParamsError(SECOND_FIELD));
     });
+
+    it("Should return null if fields are equal when validate was called", () => {
+        const VALUE = 1234;
+        const response = validation.validate({ [FIRST_FIELD]: VALUE, [SECOND_FIELD]: VALUE });
+
+        expect(response).toBe(null);
+    });
 });
