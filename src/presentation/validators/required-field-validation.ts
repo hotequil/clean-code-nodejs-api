@@ -5,7 +5,7 @@ import { MissingParamsError } from "../errors";
 export class RequiredFieldValidation implements Validation {
     constructor (private readonly fieldName: string) {}
 
-    validate (value: AnyObject): Error|null {
+    validate (value: AnyObject): MissingParamsError|null {
         if (!value[this.fieldName]) return new MissingParamsError(this.fieldName);
 
         return null;
