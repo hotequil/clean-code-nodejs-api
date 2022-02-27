@@ -9,4 +9,12 @@ describe("RequiredFieldValidation", () => {
 
         expect(response).toEqual(new MissingParamsError(FIELD));
     });
+
+    it("Should return null if validate is correct when was called", () => {
+        const FIELD = "id";
+        const validation = new RequiredFieldValidation(FIELD);
+        const response = validation.validate({ [FIELD]: 1 });
+
+        expect(response).toEqual(null);
+    });
 });
