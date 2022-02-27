@@ -5,7 +5,7 @@ import { InvalidParamsError } from "../errors";
 export class CompareFieldsValidation implements Validation {
     constructor (private readonly firstField: string, private readonly secondField: string) {}
 
-    validate (value: AnyObject): Error|null {
+    validate (value: AnyObject): InvalidParamsError|null {
         if (value[this.firstField] !== value[this.secondField])
             return new InvalidParamsError(this.secondField);
 
