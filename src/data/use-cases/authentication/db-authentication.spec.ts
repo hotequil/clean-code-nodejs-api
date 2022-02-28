@@ -3,15 +3,17 @@ import { AccountModel } from "../../../domain/models/account";
 import { LoadAccountByEmailRepository } from "../../protocols/db/load-account-by-email-repository";
 import { DbAuthentication } from "./db-authentication";
 import { HashComparer } from "../../protocols/criptography/hash-comparer";
+import { TokenGenerator } from "../../protocols/criptography/token-generator";
 
 const DEFAULT_EMAIL = "email@email.email";
 const DEFAULT_PASSWORD = "1a2b3c4d";
 const ACCOUNT_PASSWORD = "password";
+const ACCOUNT_ID = "id";
 const createAuthModel = (): AuthenticationModel => ({ email: DEFAULT_EMAIL, password: DEFAULT_PASSWORD });
 
 class LoadAccountByEmailRepositoryStub implements LoadAccountByEmailRepository {
     async load (email: string): Promise<AccountModel> {
-        const account = { email, id: "id", name: "name", password: ACCOUNT_PASSWORD };
+        const account = { email, id: ACCOUNT_ID, name: "name", password: ACCOUNT_PASSWORD };
 
         return await new Promise(resolve => resolve(account));
     }
@@ -25,15 +27,25 @@ class HashComparerStub implements HashComparer {
     }
 }
 
+class TokenGeneratorStub implements TokenGenerator {
+    async generate (id: string): Promise<string> {
+        console.log(id);
+
+        return await new Promise(resolve => resolve("token"));
+    }
+}
+
 describe("DbAuthentication", () => {
     let db: Authentication;
     let loadAccountByEmailRepositoryStub: LoadAccountByEmailRepository;
     let hashComparerStub: HashComparer;
+    let tokenGeneratorStub: TokenGenerator;
 
     beforeEach(() => {
         loadAccountByEmailRepositoryStub = new LoadAccountByEmailRepositoryStub();
         hashComparerStub = new HashComparerStub();
-        db = new DbAuthentication(loadAccountByEmailRepositoryStub, hashComparerStub);
+        tokenGeneratorStub = new TokenGeneratorStub();
+        db = new DbAuthentication(loadAccountByEmailRepositoryStub, hashComparerStub, tokenGeneratorStub);
     });
 
     it("Should call LoadAccountByEmailRepository with correct email when was called", async () => {
@@ -84,5 +96,13 @@ describe("DbAuthentication", () => {
         const response = await db.auth(createAuthModel());
 
         expect(response).toBeNull();
+    });
+
+    it("Should call TokenGenerator with correct id when was called", async () => {
+        const generateSpy = jest.spyOn(tokenGeneratorStub, "generate");
+
+        await db.auth(createAuthModel());
+
+        expect(generateSpy).toHaveBeenCalledWith(ACCOUNT_ID);
     });
 });
