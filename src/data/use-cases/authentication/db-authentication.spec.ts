@@ -105,4 +105,13 @@ describe("DbAuthentication", () => {
 
         expect(generateSpy).toHaveBeenCalledWith(ACCOUNT_ID);
     });
+
+    it("Should return an error if TokenGenerator throws when was called", async () => {
+        jest.spyOn(tokenGeneratorStub, "generate")
+            .mockReturnValueOnce(new Promise((resolve, reject) => reject(new Error())));
+
+        const promise = db.auth(createAuthModel());
+
+        await expect(promise).rejects.toThrow();
+    });
 });
