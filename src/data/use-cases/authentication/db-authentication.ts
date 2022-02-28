@@ -2,12 +2,14 @@ import { Authentication, AuthenticationModel } from "../../../domain/use-cases/a
 import { LoadAccountByEmailRepository } from "../../protocols/db/load-account-by-email-repository";
 import { HashComparer } from "../../protocols/criptography/hash-comparer";
 import { TokenGenerator } from "../../protocols/criptography/token-generator";
+import { UpdateAccessTokenRepository } from "../../protocols/db/update-access-token-repository";
 
 export class DbAuthentication implements Authentication {
     constructor (
         private readonly loadAccountByEmailRepository: LoadAccountByEmailRepository,
         private readonly hashComparer: HashComparer,
-        private readonly tokenGenerator: TokenGenerator
+        private readonly tokenGenerator: TokenGenerator,
+        private readonly updateAccessTokenRepository: UpdateAccessTokenRepository
     ) {}
 
     async auth (model: AuthenticationModel): Promise<string|null> {
@@ -19,9 +21,12 @@ export class DbAuthentication implements Authentication {
 
         if (!valid) return null;
 
-        const token = await this.tokenGenerator.generate(account.id);
+        const { id } = account;
+        const token = await this.tokenGenerator.generate(id);
 
         if (!token) return null;
+
+        await this.updateAccessTokenRepository.update(id, token);
 
         return token;
     }
