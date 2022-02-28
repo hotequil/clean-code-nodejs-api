@@ -1,7 +1,7 @@
 import StatusCode from "status-code-enum";
 
 import { Controller, HttpRequest, HttpResponse } from "../../../presentation/protocols";
-import { LogErrorRepository } from "../../../data/protocols/log-error-repository";
+import { LogErrorRepository } from "../../../data/protocols/db/log-error-repository";
 
 export class LogDecorator implements Controller {
     constructor (private readonly controller: Controller, private readonly logErrorRepository: LogErrorRepository) {}
