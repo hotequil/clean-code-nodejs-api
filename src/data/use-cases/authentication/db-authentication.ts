@@ -5,8 +5,10 @@ export class DbAuthentication implements Authentication {
     constructor (private readonly loadAccountByEmailRepository: LoadAccountByEmailRepository) {}
 
     async auth (model: AuthenticationModel): Promise<string|null> {
-        await this.loadAccountByEmailRepository.load(model.email);
+        const account = await this.loadAccountByEmailRepository.load(model.email);
 
-        return null;
+        if (!account) return null;
+
+        return "TOKEN";
     }
 }
