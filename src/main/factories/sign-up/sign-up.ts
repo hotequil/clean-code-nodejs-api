@@ -10,8 +10,8 @@ import { makeSignUpValidationComposite } from "./sign-up-validation-composite";
 export const makeSignUpController = (): Controller => {
     const SALT = 12;
     const account = new Account();
-    const encrypter = new BcryptAdapter(SALT);
-    const dbAddAccount = new DbAddAccount(encrypter, account);
+    const hasher = new BcryptAdapter(SALT);
+    const dbAddAccount = new DbAddAccount(hasher, account);
     const validationComposite = makeSignUpValidationComposite();
     const signUpController = new SignUpController(dbAddAccount, validationComposite);
     const logMongoRepository = new LogMongoRepository();

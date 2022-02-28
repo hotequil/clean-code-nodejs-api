@@ -1,9 +1,9 @@
 import bcrypt from "bcrypt";
 
-import { Encrypter } from "../../data/protocols/criptography/encrypter";
+import { Hasher } from "../../data/protocols/criptography/hasher";
 import { BcryptAdapter } from "./bcrypt-adapter";
 
-let bcryptAdapter: Encrypter;
+let bcryptAdapter: Hasher;
 const SALT = 12;
 const DEFAULT_VALUE = "test";
 
@@ -20,13 +20,13 @@ describe("BcryptAdapter", () => {
         const spyHash = jest.spyOn(bcrypt, "hash");
         const value = "1234";
 
-        await bcryptAdapter.encrypt(value);
+        await bcryptAdapter.hash(value);
 
         expect(spyHash).toHaveBeenCalledWith(value, SALT);
     });
 
     it("Should return a hash when was called on success", async () => {
-        const hash = await bcryptAdapter.encrypt("aleatory");
+        const hash = await bcryptAdapter.hash("aleatory");
 
         expect(hash).toBe(DEFAULT_VALUE);
     });
@@ -35,7 +35,7 @@ describe("BcryptAdapter", () => {
         jest.spyOn(bcrypt, "hash")
             .mockReturnValueOnce(new Promise((resolve, reject) => reject(new Error())) as unknown as any);
 
-        const promise = bcryptAdapter.encrypt("hash");
+        const promise = bcryptAdapter.hash("hash");
 
         await expect(promise).rejects.toThrow();
     });

@@ -1,8 +1,8 @@
 import { DbAddAccount } from "./db-add-account";
-import { AccountModel, AddAccount, AddAccountModel, AddAccountRepository, Encrypter } from "./db-add-account-protocols";
+import { AccountModel, AddAccount, AddAccountModel, AddAccountRepository, Hasher } from "./db-add-account-protocols";
 
 let db: AddAccount;
-let encrypterSub: Encrypter;
+let hasherSub: Hasher;
 let addAccountRepositoryStub: AddAccountRepository;
 const HASHED_PASSWORD = "12345678";
 const ID = "123";
@@ -15,8 +15,8 @@ const makeFakeAccount = (): any => (
     }
 );
 
-class EncrypterStub implements Encrypter {
-    async encrypt (value: string): Promise<string> {
+class HasherStub implements Hasher {
+    async hash (value: string): Promise<string> {
         console.log(value);
 
         return await new Promise(resolve => resolve(HASHED_PASSWORD));
@@ -37,23 +37,23 @@ class AddAccountRepositoryStub implements AddAccountRepository {
 
 describe("DbAddAccount", () => {
     beforeEach(() => {
-        encrypterSub = new EncrypterStub();
+        hasherSub = new HasherStub();
         addAccountRepositoryStub = new AddAccountRepositoryStub();
-        db = new DbAddAccount(encrypterSub, addAccountRepositoryStub);
+        db = new DbAddAccount(hasherSub, addAccountRepositoryStub);
     });
 
-    it("Should call Encrypter with correct password", async () => {
-        const encryptSpy = jest.spyOn(encrypterSub, "encrypt");
+    it("Should call Hasher with correct password", async () => {
+        const hashSpy = jest.spyOn(hasherSub, "hash");
         const data = makeFakeAccount();
         const { password } = data;
 
         await db.add(data);
 
-        expect(encryptSpy).toHaveBeenCalledWith(password);
+        expect(hashSpy).toHaveBeenCalledWith(password);
     });
 
-    it("Should throw an error when Encrypter throws", async () => {
-        jest.spyOn(encrypterSub, "encrypt")
+    it("Should throw an error when Hasher throws", async () => {
+        jest.spyOn(hasherSub, "hash")
             .mockReturnValueOnce(new Promise((resolve, reject) => reject(new Error())));
 
         const promise = db.add(makeFakeAccount());
