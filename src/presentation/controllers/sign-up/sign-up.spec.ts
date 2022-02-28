@@ -4,7 +4,7 @@ import { SignUpController } from "./sign-up";
 import { HttpRequest, AccountModel, AddAccount, AddAccountModel } from "./sign-up-protocols";
 import { MissingParamsError, ServerError } from "../../errors";
 import { badRequest, serverError } from "../../helpers/http-helper";
-import { Validation } from "../../validators/validation";
+import { Validation } from "../../protocols/validation";
 import { AnyObject } from "../../../utils/helpers";
 
 let controller: SignUpController;

@@ -1,4 +1,4 @@
-import { Validation } from "./validation";
+import { Validation } from "../protocols/validation";
 import { AnyObject } from "../../utils/helpers";
 import { MissingParamsError } from "../errors";
 
