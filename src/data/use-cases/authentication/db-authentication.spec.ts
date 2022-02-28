@@ -1,10 +1,13 @@
-import { Authentication, AuthenticationModel } from "../../../domain/use-cases/authentication";
-import { AccountModel } from "../../../domain/models/account";
-import { LoadAccountByEmailRepository } from "../../protocols/db/load-account-by-email-repository";
 import { DbAuthentication } from "./db-authentication";
-import { HashComparer } from "../../protocols/criptography/hash-comparer";
-import { TokenGenerator } from "../../protocols/criptography/token-generator";
-import { UpdateAccessTokenRepository } from "../../protocols/db/update-access-token-repository";
+import {
+    Authentication,
+    AuthenticationModel,
+    AccountModel,
+    LoadAccountByEmailRepository,
+    HashComparer,
+    TokenGenerator,
+    UpdateAccessTokenRepository
+} from "./db-authentication-protocols";
 
 const DEFAULT_EMAIL = "email@email.email";
 const DEFAULT_PASSWORD = "1a2b3c4d";
