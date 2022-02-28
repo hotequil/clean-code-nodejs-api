@@ -1,5 +1,5 @@
 import { ValidationComposite } from "./validation-composite";
-import { MissingParamsError } from "../errors";
+import { InvalidParamsError, MissingParamsError } from "../errors";
 import { Validation } from "./validation";
 import { AnyObject } from "../../utils/helpers";
 
@@ -29,6 +29,19 @@ describe("ValidationComposite", () => {
         const response = validation.validate({});
 
         expect(response).toEqual(value);
+    });
+
+    it("Should return first error if there are more errors when was called", () => {
+        const firstError = new InvalidParamsError("name");
+        const firstValidation = validations[0];
+        const secondValidation = validations[1];
+
+        jest.spyOn(firstValidation, "validate").mockReturnValueOnce(firstError);
+        jest.spyOn(secondValidation, "validate").mockReturnValueOnce(new MissingParamsError("email"));
+
+        const response = validation.validate({});
+
+        expect(response).toEqual(firstError);
     });
 
     it("Should return null if all validations are correct when was called", () => {
