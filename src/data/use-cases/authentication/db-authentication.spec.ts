@@ -9,6 +9,7 @@ const DEFAULT_EMAIL = "email@email.email";
 const DEFAULT_PASSWORD = "1a2b3c4d";
 const ACCOUNT_PASSWORD = "password";
 const ACCOUNT_ID = "id";
+const TOKEN = "token";
 const createAuthModel = (): AuthenticationModel => ({ email: DEFAULT_EMAIL, password: DEFAULT_PASSWORD });
 
 class LoadAccountByEmailRepositoryStub implements LoadAccountByEmailRepository {
@@ -31,7 +32,7 @@ class TokenGeneratorStub implements TokenGenerator {
     async generate (id: string): Promise<string> {
         console.log(id);
 
-        return await new Promise(resolve => resolve("token"));
+        return await new Promise(resolve => resolve(TOKEN));
     }
 }
 
@@ -113,5 +114,11 @@ describe("DbAuthentication", () => {
         const promise = db.auth(createAuthModel());
 
         await expect(promise).rejects.toThrow();
+    });
+
+    it("Should return token on success when TokenGenerator was called", async () => {
+        const token = await db.auth(createAuthModel());
+
+        expect(token).toBe(TOKEN);
     });
 });
