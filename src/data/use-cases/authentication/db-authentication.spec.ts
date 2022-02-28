@@ -39,4 +39,12 @@ describe("DbAuthentication", () => {
 
         await expect(promise).rejects.toThrow();
     });
+
+    it("Should return null if LoadAccountByEmailRepository returns null when was called", async () => {
+        jest.spyOn(loadAccountByEmailRepositoryStub, "load").mockReturnValueOnce(new Promise(resolve => resolve(null)));
+
+        const response = await db.auth(createAuthModel());
+
+        expect(response).toBeNull();
+    });
 });
