@@ -4,5 +4,5 @@ export type AuthenticationModel = {
 }
 
 export interface Authentication {
-    auth: (model: AuthenticationModel) => Promise<string>
+    auth: (model: AuthenticationModel) => Promise<string|null>
 }
