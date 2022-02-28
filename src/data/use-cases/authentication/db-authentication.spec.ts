@@ -140,4 +140,13 @@ describe("DbAuthentication", () => {
 
         expect(updateSpy).toHaveBeenCalledWith(ACCOUNT_ID, TOKEN);
     });
+
+    it("Should return an error if UpdateAccessTokenRepository throws when was called", async () => {
+        jest.spyOn(updateAccessTokenRepositoryStub, "update")
+            .mockReturnValueOnce(new Promise((resolve, reject) => reject(new Error())));
+
+        const promise = db.auth(createAuthModel());
+
+        await expect(promise).rejects.toThrow();
+    });
 });
