@@ -5,7 +5,7 @@ import {
     AccountModel,
     LoadAccountByEmailRepository,
     HashComparer,
-    TokenGenerator,
+    Encrypter,
     UpdateAccessTokenRepository
 } from "./db-authentication-protocols";
 
@@ -32,9 +32,9 @@ class HashComparerStub implements HashComparer {
     }
 }
 
-class TokenGeneratorStub implements TokenGenerator {
-    async generate (id: string): Promise<string> {
-        console.log(id);
+class EncrypterStub implements Encrypter {
+    async encrypt (value: string): Promise<string> {
+        console.log(value);
 
         return await new Promise(resolve => resolve(TOKEN));
     }
@@ -52,15 +52,15 @@ describe("DbAuthentication", () => {
     let db: Authentication;
     let loadAccountByEmailRepositoryStub: LoadAccountByEmailRepository;
     let hashComparerStub: HashComparer;
-    let tokenGeneratorStub: TokenGenerator;
+    let encrypterStub: Encrypter;
     let updateAccessTokenRepositoryStub: UpdateAccessTokenRepository;
 
     beforeEach(() => {
         loadAccountByEmailRepositoryStub = new LoadAccountByEmailRepositoryStub();
         hashComparerStub = new HashComparerStub();
-        tokenGeneratorStub = new TokenGeneratorStub();
+        encrypterStub = new EncrypterStub();
         updateAccessTokenRepositoryStub = new UpdateAccessTokenRepositoryStub();
-        db = new DbAuthentication(loadAccountByEmailRepositoryStub, hashComparerStub, tokenGeneratorStub, updateAccessTokenRepositoryStub);
+        db = new DbAuthentication(loadAccountByEmailRepositoryStub, hashComparerStub, encrypterStub, updateAccessTokenRepositoryStub);
     });
 
     it("Should call LoadAccountByEmailRepository with correct email when was called", async () => {
@@ -113,16 +113,16 @@ describe("DbAuthentication", () => {
         expect(response).toBeNull();
     });
 
-    it("Should call TokenGenerator with correct id when was called", async () => {
-        const generateSpy = jest.spyOn(tokenGeneratorStub, "generate");
+    it("Should call Encrypter with correct id when was called", async () => {
+        const encryptSpy = jest.spyOn(encrypterStub, "encrypt");
 
         await db.auth(createAuthModel());
 
-        expect(generateSpy).toHaveBeenCalledWith(ACCOUNT_ID);
+        expect(encryptSpy).toHaveBeenCalledWith(ACCOUNT_ID);
     });
 
-    it("Should return an error if TokenGenerator throws when was called", async () => {
-        jest.spyOn(tokenGeneratorStub, "generate")
+    it("Should return an error if Encrypter throws when was called", async () => {
+        jest.spyOn(encrypterStub, "encrypt")
             .mockReturnValueOnce(new Promise((resolve, reject) => reject(new Error())));
 
         const promise = db.auth(createAuthModel());
@@ -130,7 +130,7 @@ describe("DbAuthentication", () => {
         await expect(promise).rejects.toThrow();
     });
 
-    it("Should return token on success when TokenGenerator was called", async () => {
+    it("Should return token on success when Encrypter was called", async () => {
         const token = await db.auth(createAuthModel());
 
         expect(token).toBe(TOKEN);
