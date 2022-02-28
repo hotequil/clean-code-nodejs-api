@@ -77,4 +77,12 @@ describe("DbAuthentication", () => {
 
         await expect(promise).rejects.toThrow();
     });
+
+    it("Should return null if HashComparer returns false when was called", async () => {
+        jest.spyOn(hashComparerStub, "compare").mockReturnValueOnce(new Promise(resolve => resolve(false)));
+
+        const response = await db.auth(createAuthModel());
+
+        expect(response).toBeNull();
+    });
 });
