@@ -4,6 +4,7 @@ import { LoadAccountByEmailRepository } from "../../protocols/db/load-account-by
 import { DbAuthentication } from "./db-authentication";
 import { HashComparer } from "../../protocols/criptography/hash-comparer";
 import { TokenGenerator } from "../../protocols/criptography/token-generator";
+import { UpdateAccessTokenRepository } from "../../protocols/db/update-access-token-repository";
 
 const DEFAULT_EMAIL = "email@email.email";
 const DEFAULT_PASSWORD = "1a2b3c4d";
@@ -36,17 +37,27 @@ class TokenGeneratorStub implements TokenGenerator {
     }
 }
 
+class UpdateAccessTokenRepositoryStub implements UpdateAccessTokenRepository {
+    async update (id: string, token: string): Promise<void> {
+        console.log(id, token);
+
+        await new Promise<void>(resolve => resolve());
+    }
+}
+
 describe("DbAuthentication", () => {
     let db: Authentication;
     let loadAccountByEmailRepositoryStub: LoadAccountByEmailRepository;
     let hashComparerStub: HashComparer;
     let tokenGeneratorStub: TokenGenerator;
+    let updateAccessTokenRepositoryStub: UpdateAccessTokenRepository;
 
     beforeEach(() => {
         loadAccountByEmailRepositoryStub = new LoadAccountByEmailRepositoryStub();
         hashComparerStub = new HashComparerStub();
         tokenGeneratorStub = new TokenGeneratorStub();
-        db = new DbAuthentication(loadAccountByEmailRepositoryStub, hashComparerStub, tokenGeneratorStub);
+        updateAccessTokenRepositoryStub = new UpdateAccessTokenRepositoryStub();
+        db = new DbAuthentication(loadAccountByEmailRepositoryStub, hashComparerStub, tokenGeneratorStub, updateAccessTokenRepositoryStub);
     });
 
     it("Should call LoadAccountByEmailRepository with correct email when was called", async () => {
@@ -120,5 +131,13 @@ describe("DbAuthentication", () => {
         const token = await db.auth(createAuthModel());
 
         expect(token).toBe(TOKEN);
+    });
+
+    it("Should call UpdateAccessTokenRepository with correct values when was called", async () => {
+        const updateSpy = jest.spyOn(updateAccessTokenRepositoryStub, "update");
+
+        await db.auth(createAuthModel());
+
+        expect(updateSpy).toHaveBeenCalledWith(ACCOUNT_ID, TOKEN);
     });
 });
