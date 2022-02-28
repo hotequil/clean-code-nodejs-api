@@ -30,4 +30,13 @@ describe("DbAuthentication", () => {
 
         expect(loadSpy).toHaveBeenCalledWith(DEFAULT_EMAIL);
     });
+
+    it("Should throw an error if LoadAccountByEmailRepository throws when was called", async () => {
+        jest.spyOn(loadAccountByEmailRepositoryStub, "load")
+            .mockReturnValueOnce(new Promise((resolve, reject) => reject(new Error())));
+
+        const promise = db.auth(createAuthModel());
+
+        await expect(promise).rejects.toThrow();
+    });
 });
