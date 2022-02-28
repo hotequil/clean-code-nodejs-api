@@ -61,11 +61,20 @@ describe("DbAuthentication", () => {
         expect(response).toBeNull();
     });
 
-    it("Should call HashComparer with correct passwords when was called", async () => {
+    it("Should call HashComparer with correct values when was called", async () => {
         const compareSpy = jest.spyOn(hashComparerStub, "compare");
 
         await db.auth(createAuthModel());
 
         expect(compareSpy).toHaveBeenCalledWith(ACCOUNT_PASSWORD, DEFAULT_PASSWORD);
+    });
+
+    it("Should return an error if HashComparer throws when was called", async () => {
+        jest.spyOn(hashComparerStub, "compare")
+            .mockReturnValueOnce(new Promise((resolve, reject) => reject(new Error())));
+
+        const promise = db.auth(createAuthModel());
+
+        await expect(promise).rejects.toThrow();
     });
 });
