@@ -26,4 +26,10 @@ describe("ValidationComposite", () => {
 
         expect(response).toEqual(value);
     });
+
+    it("Should return null if all validations are correct when was called", () => {
+        const response = validation.validate({});
+
+        expect(response).toBe(null);
+    });
 });
