@@ -21,7 +21,7 @@ jest.mock("bcrypt", () => ({
 describe("BcryptAdapter", () => {
     beforeEach(() => bcryptAdapter = new BcryptAdapter(SALT));
 
-    it("Should call Bcrypt with correct values when was called", async () => {
+    it("Should call hash with correct values when was called", async () => {
         const spyHash = jest.spyOn(bcrypt, "hash");
         const value = "1234";
 
@@ -36,7 +36,7 @@ describe("BcryptAdapter", () => {
         expect(hash).toBe(DEFAULT_VALUE);
     });
 
-    it("Should throw an error when Bcrypt throws", async () => {
+    it("Should throw an error when hash throws", async () => {
         jest.spyOn(bcrypt, "hash")
             .mockReturnValueOnce(new Promise((resolve, reject) => reject(new Error())) as unknown as any);
 
@@ -66,5 +66,14 @@ describe("BcryptAdapter", () => {
         const response = await bcryptAdapter.compare(DEFAULT_VALUE, DEFAULT_HASH);
 
         expect(response).toBe(false);
+    });
+
+    it("Should throw an error when compare throws", async () => {
+        // @ts-ignore
+        jest.spyOn(bcrypt, "compare").mockReturnValueOnce(new Promise((resolve, reject) => reject(new Error())));
+
+        const promise = bcryptAdapter.compare(DEFAULT_VALUE, DEFAULT_HASH);
+
+        await expect(promise).rejects.toThrow();
     });
 });
