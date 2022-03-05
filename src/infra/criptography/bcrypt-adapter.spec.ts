@@ -57,5 +57,14 @@ describe("BcryptAdapter", () => {
         const response = await bcryptAdapter.compare(DEFAULT_VALUE, DEFAULT_HASH);
 
         expect(response).toBe(true);
-    })
+    });
+
+    it("Should return false when compare fails", async () => {
+        // @ts-ignore
+        jest.spyOn(bcrypt, "compare").mockReturnValueOnce(new Promise(resolve => resolve(false)));
+
+        const response = await bcryptAdapter.compare(DEFAULT_VALUE, DEFAULT_HASH);
+
+        expect(response).toBe(false);
+    });
 });
