@@ -52,4 +52,10 @@ describe("BcryptAdapter", () => {
 
         expect(compareSpy).toHaveBeenCalledWith(DEFAULT_VALUE, DEFAULT_HASH);
     });
+
+    it("Should return true when compare was called", async () => {
+        const response = await bcryptAdapter.compare(DEFAULT_VALUE, DEFAULT_HASH);
+
+        expect(response).toBe(true);
+    })
 });
