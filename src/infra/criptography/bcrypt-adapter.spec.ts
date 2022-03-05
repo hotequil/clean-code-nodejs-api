@@ -1,15 +1,20 @@
 import bcrypt from "bcrypt";
 
-import { Hasher } from "../../data/protocols/criptography/hasher";
 import { BcryptAdapter } from "./bcrypt-adapter";
 
-let bcryptAdapter: Hasher;
+let bcryptAdapter: BcryptAdapter;
 const SALT = 12;
 const DEFAULT_VALUE = "test";
+const DEFAULT_HASH = "1a2b3c4d";
 
 jest.mock("bcrypt", () => ({
     async hash () {
         return await new Promise(resolve => resolve(DEFAULT_VALUE));
+    },
+    async compare (value: string, hash: string) {
+        console.log(value, hash);
+
+        return await new Promise(resolve => resolve(true));
     }
 }));
 
@@ -38,5 +43,13 @@ describe("BcryptAdapter", () => {
         const promise = bcryptAdapter.hash("hash");
 
         await expect(promise).rejects.toThrow();
+    });
+
+    it("Should call compare with correct values when was called", async () => {
+        const compareSpy = jest.spyOn(bcrypt, "compare");
+
+        await bcryptAdapter.compare(DEFAULT_VALUE, DEFAULT_HASH);
+
+        expect(compareSpy).toHaveBeenCalledWith(DEFAULT_VALUE, DEFAULT_HASH);
     });
 });
