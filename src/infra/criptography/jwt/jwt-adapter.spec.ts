@@ -27,9 +27,12 @@ describe("JwtAdapter", () => {
         expect(signSpy).toHaveBeenCalledWith(VALUE, SECRET);
     });
 
-    it("Should return a token when encrypt was called", async () => {
-        const token = await adapter.encrypt(ID);
+    it("Should throw if sign throws when encrypt was called", async () => {
+        // @ts-ignore
+        jest.spyOn(jwt, "sign").mockReturnValueOnce(new Promise((resolve, reject) => reject(new Error())));
 
-        expect(token).toBe(TOKEN);
+        const promise = adapter.encrypt(ID);
+
+        await expect(promise).rejects.toThrow();
     });
 });
