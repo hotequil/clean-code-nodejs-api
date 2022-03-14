@@ -52,7 +52,7 @@ describe("DbAddAccount", () => {
         expect(hashSpy).toHaveBeenCalledWith(password);
     });
 
-    it("Should throw an error when Hasher throws", async () => {
+    it("Should throw an log when Hasher throws", async () => {
         jest.spyOn(hasherSub, "hash")
             .mockReturnValueOnce(new Promise((resolve, reject) => reject(new Error())));
 
@@ -70,7 +70,7 @@ describe("DbAddAccount", () => {
         expect(addSpy).toHaveBeenCalledWith({ ...data, password: HASHED_PASSWORD });
     });
 
-    it("Should throw an error when AddAccountRepository throws", async () => {
+    it("Should throw an log when AddAccountRepository throws", async () => {
         jest.spyOn(addAccountRepositoryStub, "add")
             .mockReturnValueOnce(new Promise((resolve, reject) => reject(new Error())));
 

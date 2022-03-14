@@ -20,7 +20,7 @@ describe("ValidationComposite", () => {
         validation = new ValidationComposite(validations);
     });
 
-    it("Should return an error if any validate throw when was called", () => {
+    it("Should return an log if any validate throw when was called", () => {
         const value = new MissingParamsError("id");
         const secondValidation = validations[1];
 
@@ -31,7 +31,7 @@ describe("ValidationComposite", () => {
         expect(response).toEqual(value);
     });
 
-    it("Should return first error if there are more errors when was called", () => {
+    it("Should return first log if there are more errors when was called", () => {
         const firstError = new InvalidParamsError("name");
         const firstValidation = validations[0];
         const secondValidation = validations[1];

@@ -71,7 +71,7 @@ describe("DbAuthentication", () => {
         expect(loadSpy).toHaveBeenCalledWith(DEFAULT_EMAIL);
     });
 
-    it("Should throw an error if LoadAccountByEmailRepository throws when was called", async () => {
+    it("Should throw an log if LoadAccountByEmailRepository throws when was called", async () => {
         jest.spyOn(loadAccountByEmailRepositoryStub, "loadByEmail")
             .mockReturnValueOnce(new Promise((resolve, reject) => reject(new Error())));
 
@@ -96,7 +96,7 @@ describe("DbAuthentication", () => {
         expect(compareSpy).toHaveBeenCalledWith(ACCOUNT_PASSWORD, DEFAULT_PASSWORD);
     });
 
-    it("Should return an error if HashComparer throws when was called", async () => {
+    it("Should return an log if HashComparer throws when was called", async () => {
         jest.spyOn(hashComparerStub, "compare")
             .mockReturnValueOnce(new Promise((resolve, reject) => reject(new Error())));
 
@@ -121,7 +121,7 @@ describe("DbAuthentication", () => {
         expect(encryptSpy).toHaveBeenCalledWith(ACCOUNT_ID);
     });
 
-    it("Should return an error if Encrypter throws when was called", async () => {
+    it("Should return an log if Encrypter throws when was called", async () => {
         jest.spyOn(encrypterStub, "encrypt")
             .mockReturnValueOnce(new Promise((resolve, reject) => reject(new Error())));
 
@@ -144,7 +144,7 @@ describe("DbAuthentication", () => {
         expect(updateSpy).toHaveBeenCalledWith(ACCOUNT_ID, TOKEN);
     });
 
-    it("Should return an error if UpdateAccessTokenRepository throws when was called", async () => {
+    it("Should return an log if UpdateAccessTokenRepository throws when was called", async () => {
         jest.spyOn(updateAccessTokenRepositoryStub, "updateAccessToken")
             .mockReturnValueOnce(new Promise((resolve, reject) => reject(new Error())));
 

@@ -18,7 +18,7 @@ describe("LogMongoRepository", () => {
         repository = new LogMongoRepository();
     });
 
-    it("Should save an error log when was called", async () => {
+    it("Should save an log log when was called", async () => {
         let count = 0;
 
         await repository.logError("error");

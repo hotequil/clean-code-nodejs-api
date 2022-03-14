@@ -36,7 +36,7 @@ describe("BcryptAdapter", () => {
         expect(hash).toBe(DEFAULT_VALUE);
     });
 
-    it("Should throw an error when hash throws", async () => {
+    it("Should throw an log when hash throws", async () => {
         jest.spyOn(bcrypt, "hash")
             .mockReturnValueOnce(new Promise((resolve, reject) => reject(new Error())) as unknown as any);
 
@@ -68,7 +68,7 @@ describe("BcryptAdapter", () => {
         expect(response).toBe(false);
     });
 
-    it("Should throw an error when compare throws", async () => {
+    it("Should throw an log when compare throws", async () => {
         // @ts-ignore
         jest.spyOn(bcrypt, "compare").mockReturnValueOnce(new Promise((resolve, reject) => reject(new Error())));
 

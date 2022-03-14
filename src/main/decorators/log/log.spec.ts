@@ -3,7 +3,7 @@ import StatusCode from "status-code-enum";
 import { Controller, HttpRequest, HttpResponse } from "../../../presentation/protocols";
 import { LogDecorator } from "./log";
 import { serverError } from "../../../presentation/helpers/http-helper";
-import { LogErrorRepository } from "../../../data/protocols/db/log-error-repository";
+import { LogErrorRepository } from "../../../data/protocols/db/log/log-error-repository";
 
 const RESPONSE_MOCK = {
     statusCode: StatusCode.SuccessOK,
