@@ -17,7 +17,7 @@ describe("AccountMongoDBRepository", () => {
         repository = new Account();
     });
 
-    it("Should return a new account when was called", async () => {
+    it("Should return a new account when add was called", async () => {
         const account = { name: "name", email: "email@email.email", password: "password" };
         const { id, name, email, password } = await repository.add(copy(account));
 
