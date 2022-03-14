@@ -38,4 +38,10 @@ describe("AccountMongoDBRepository", () => {
         expect(id).toBeTruthy();
         expect(ACCOUNT).toEqual({ name, email, password });
     });
+
+    it("Should return null if there is no account with email when was called", async () => {
+        const account = await repository.loadByEmail(ACCOUNT.email);
+
+        expect(account).toBe(null);
+    });
 });
