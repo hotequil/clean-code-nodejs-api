@@ -1,7 +1,7 @@
 import { Collection } from "mongodb";
 
 import { MongodbHelper } from "../helpers/mongodb-helper";
-import { LogMongoRepository } from "./log";
+import { LogMongoRepository } from "./log-mongo-repository";
 
 describe("LogMongoRepository", () => {
     let repository: LogMongoRepository;
