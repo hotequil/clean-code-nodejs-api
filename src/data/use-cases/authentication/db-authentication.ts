@@ -29,7 +29,7 @@ export class DbAuthentication implements Authentication {
 
         if (!token) return null;
 
-        await this.updateAccessTokenRepository.update(id, token);
+        await this.updateAccessTokenRepository.updateAccessToken(id, token);
 
         return token;
     }
