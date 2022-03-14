@@ -17,6 +17,8 @@ export class Account implements AddAccountRepository, LoadAccountByEmailReposito
         const collection = await MongodbHelper.collection("accounts");
         const account = await collection.findOne<AccountModel>({ email });
 
-        return MongodbHelper.map<AccountModel>(account);
+        if (account) return MongodbHelper.map<AccountModel>(account);
+
+        return null;
     }
 }
