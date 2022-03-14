@@ -6,6 +6,7 @@ import { copy } from "../../../../presentation/helpers/manipulator-helper";
 import { AccountModel } from "../../../../domain/models/account";
 
 const ACCOUNT = { name: "name", email: "email@email.email", password: "password" };
+const TOKEN = "user1234";
 
 describe("AccountMongoDBRepository", () => {
     let repository: Account;
@@ -43,5 +44,15 @@ describe("AccountMongoDBRepository", () => {
         const account = await repository.loadByEmail(ACCOUNT.email);
 
         expect(account).toBe(null);
+    });
+
+    it("Should update the accessToken when updateAccessToken was called", async () => {
+        const { insertedId } = await collection.insertOne(copy(ACCOUNT));
+
+        await repository.updateAccessToken(insertedId, TOKEN);
+
+        const { accessToken } = await collection.findOne<AccountModel>({ _id: insertedId }) as AccountModel;
+
+        expect(accessToken).toBe(TOKEN);
     });
 });
