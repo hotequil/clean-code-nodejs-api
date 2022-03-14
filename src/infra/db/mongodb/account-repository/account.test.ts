@@ -1,16 +1,22 @@
+import { Collection } from "mongodb";
+
 import { MongodbHelper } from "../helpers/mongodb-helper";
 import { Account } from "./account";
 import { copy } from "../../../../presentation/helpers/manipulator-helper";
+import { AccountModel } from "../../../../domain/models/account";
+
+const ACCOUNT = { name: "name", email: "email@email.email", password: "password" };
 
 describe("AccountMongoDBRepository", () => {
     let repository: Account;
+    let collection: Collection;
 
     beforeAll(async () => await MongodbHelper.connect());
 
     afterAll(async () => await MongodbHelper.disconnect());
 
     beforeEach(async () => {
-        const collection = await MongodbHelper.collection("accounts");
+        collection = await MongodbHelper.collection("accounts");
 
         await collection.deleteMany({});
 
@@ -18,10 +24,18 @@ describe("AccountMongoDBRepository", () => {
     });
 
     it("Should return a new account when add was called", async () => {
-        const account = { name: "name", email: "email@email.email", password: "password" };
-        const { id, name, email, password } = await repository.add(copy(account));
+        const { id, name, email, password } = await repository.add(copy(ACCOUNT));
 
         expect(id).toBeTruthy();
-        expect(account).toEqual({ name, email, password });
+        expect(ACCOUNT).toEqual({ name, email, password });
+    });
+
+    it("Should return an account when loadByEmail was called", async () => {
+        await collection.insertOne(copy(ACCOUNT));
+
+        const { id, name, email, password } = await repository.loadByEmail(ACCOUNT.email) as AccountModel;
+
+        expect(id).toBeTruthy();
+        expect(ACCOUNT).toEqual({ name, email, password });
     });
 });
