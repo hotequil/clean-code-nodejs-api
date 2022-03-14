@@ -2,13 +2,21 @@ import { AddAccountRepository } from "../../../../data/protocols/db/add-account-
 import { AddAccountModel } from "../../../../domain/use-cases/add-account";
 import { AccountModel } from "../../../../domain/models/account";
 import { MongodbHelper } from "../helpers/mongodb-helper";
+import { LoadAccountByEmailRepository } from "../../../../data/protocols/db/load-account-by-email-repository";
 
-export class Account implements AddAccountRepository {
+export class Account implements AddAccountRepository, LoadAccountByEmailRepository {
     async add (account: AddAccountModel): Promise<AccountModel> {
         const collection = await MongodbHelper.collection("accounts");
         const { insertedId } = await collection.insertOne(account);
         const response = await collection.findOne({ _id: insertedId });
 
         return MongodbHelper.map<AccountModel>(response);
+    }
+
+    async loadByEmail (email: string): Promise<AccountModel|null> {
+        const collection = await MongodbHelper.collection("accounts");
+        const account = await collection.findOne<AccountModel>({ email });
+
+        return MongodbHelper.map<AccountModel>(account);
     }
 }
