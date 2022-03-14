@@ -1,7 +1,7 @@
 import { StatusCode } from "status-code-enum";
 
-import { SignUpController } from "./sign-up";
-import { HttpRequest, AccountModel, AddAccount, AddAccountModel } from "./sign-up-protocols";
+import { SignUpController } from "./sign-up-controller";
+import { HttpRequest, AccountModel, AddAccount, AddAccountModel } from "./sign-up-controller-protocols";
 import { MissingParamsError, ServerError } from "../../errors";
 import { badRequest, serverError } from "../../helpers/http-helper";
 import { Validation } from "../../protocols/validation";
