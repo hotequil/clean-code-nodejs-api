@@ -17,7 +17,7 @@ const TOKEN = "token";
 const createAuthModel = (): AuthenticationModel => ({ email: DEFAULT_EMAIL, password: DEFAULT_PASSWORD });
 
 class LoadAccountByEmailRepositoryStub implements LoadAccountByEmailRepository {
-    async load (email: string): Promise<AccountModel> {
+    async loadByEmail (email: string): Promise<AccountModel> {
         const account = { email, id: ACCOUNT_ID, name: "name", password: ACCOUNT_PASSWORD };
 
         return await new Promise(resolve => resolve(account));
@@ -64,7 +64,7 @@ describe("DbAuthentication", () => {
     });
 
     it("Should call LoadAccountByEmailRepository with correct email when was called", async () => {
-        const loadSpy = jest.spyOn(loadAccountByEmailRepositoryStub, "load");
+        const loadSpy = jest.spyOn(loadAccountByEmailRepositoryStub, "loadByEmail");
 
         await db.auth(createAuthModel());
 
@@ -72,7 +72,7 @@ describe("DbAuthentication", () => {
     });
 
     it("Should throw an error if LoadAccountByEmailRepository throws when was called", async () => {
-        jest.spyOn(loadAccountByEmailRepositoryStub, "load")
+        jest.spyOn(loadAccountByEmailRepositoryStub, "loadByEmail")
             .mockReturnValueOnce(new Promise((resolve, reject) => reject(new Error())));
 
         const promise = db.auth(createAuthModel());
@@ -81,7 +81,7 @@ describe("DbAuthentication", () => {
     });
 
     it("Should return null if LoadAccountByEmailRepository returns null when was called", async () => {
-        jest.spyOn(loadAccountByEmailRepositoryStub, "load").mockReturnValueOnce(new Promise(resolve => resolve(null)));
+        jest.spyOn(loadAccountByEmailRepositoryStub, "loadByEmail").mockReturnValueOnce(new Promise(resolve => resolve(null)));
 
         const response = await db.auth(createAuthModel());
 
