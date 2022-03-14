@@ -1,7 +1,7 @@
 import { Collection } from "mongodb";
 
 import { MongodbHelper } from "../helpers/mongodb-helper";
-import { Account } from "./account";
+import { AccountMongoRepository } from "./account-mongo-repository";
 import { copy } from "../../../../presentation/helpers/manipulator-helper";
 import { AccountModel } from "../../../../domain/models/account";
 
@@ -9,7 +9,7 @@ const ACCOUNT = { name: "name", email: "email@email.email", password: "password"
 const TOKEN = "user1234";
 
 describe("AccountMongoDBRepository", () => {
-    let repository: Account;
+    let repository: AccountMongoRepository;
     let collection: Collection;
 
     beforeAll(async () => await MongodbHelper.connect());
@@ -21,7 +21,7 @@ describe("AccountMongoDBRepository", () => {
 
         await collection.deleteMany({});
 
-        repository = new Account();
+        repository = new AccountMongoRepository();
     });
 
     it("Should return a new account when add was called", async () => {

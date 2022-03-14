@@ -5,7 +5,7 @@ import { MongodbHelper } from "../helpers/mongodb-helper";
 import { LoadAccountByEmailRepository } from "../../../../data/protocols/db/load-account-by-email-repository";
 import { UpdateAccessTokenRepository } from "../../../../data/protocols/db/update-access-token-repository";
 
-export class Account implements AddAccountRepository, LoadAccountByEmailRepository, UpdateAccessTokenRepository {
+export class AccountMongoRepository implements AddAccountRepository, LoadAccountByEmailRepository, UpdateAccessTokenRepository {
     async add (account: AddAccountModel): Promise<AccountModel> {
         const collection = await MongodbHelper.collection("accounts");
         const { insertedId } = await collection.insertOne(account);
