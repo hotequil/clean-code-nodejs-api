@@ -4,7 +4,7 @@ import StatusCode from "status-code-enum";
 import app from "../config/app";
 import { MongodbHelper } from "../../infra/db/mongodb/helpers/mongodb-helper";
 
-describe("SignUpRoutes", () => {
+describe("LoginRoutes", () => {
     beforeAll(async () => await MongodbHelper.connect());
     afterAll(async () => await MongodbHelper.disconnect());
 
