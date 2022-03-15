@@ -40,4 +40,10 @@ describe("LoginRoutes", () => {
 
         await request(app).post("/api/login").send({ email, password }).expect(StatusCode.SuccessOK);
     });
+
+    it(`Should return status code ${StatusCode.ClientErrorUnauthorized} when /api/login (POST) was failed`, async () => {
+        const { email, password } = ACCOUNT;
+
+        await request(app).post("/api/login").send({ email, password }).expect(StatusCode.ClientErrorUnauthorized);
+    });
 });
