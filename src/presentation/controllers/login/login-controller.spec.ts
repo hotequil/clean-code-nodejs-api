@@ -1,6 +1,6 @@
 import StatusCode from "status-code-enum";
 
-import { LoginController } from "./login";
+import { LoginController } from "./login-controller";
 import { badRequest, serverError, success, unauthorized } from "../../helpers/http-helper";
 import { MissingParamsError, ServerError } from "../../errors";
 import {
@@ -10,7 +10,7 @@ import {
     Validation,
     AnyObject,
     AuthenticationModel
-} from "./login-protocols";
+} from "./login-controller-protocols";
 
 const TOKEN = "token";
 
@@ -24,7 +24,7 @@ const makeHttpRequest = (): HttpRequest => (
 );
 
 class AuthenticationStub implements Authentication {
-    async auth (model: AuthenticationModel): Promise<string> {
+    async auth (model: AuthenticationModel): Promise<string|null> {
         console.log(model);
 
         return await new Promise(resolve => resolve(TOKEN));
@@ -49,48 +49,6 @@ describe("LoginController", () => {
         validationStub = new ValidationStub();
         loginController = new LoginController(authentication, validationStub);
     });
-
-    // it(`Should return code ${StatusCode.ClientErrorBadRequest} if email is not provided when was called`, async () => {
-    //     const request: HttpRequest = { body: { password: "password" } };
-    //     const response = await loginController.handle(request);
-    //
-    //     expect(response).toEqual(badRequest(new MissingParamsError("email")));
-    // });
-    //
-    // it(`Should return code ${StatusCode.ClientErrorBadRequest} if password is not provided when was called`, async () => {
-    //     const request: HttpRequest = { body: { email: "email@email.email" } };
-    //     const response = await loginController.handle(request);
-    //
-    //     expect(response).toEqual(badRequest(new MissingParamsError("password")));
-    // });
-    //
-    // it("Should call EmailValidator with a correct email when was called", async () => {
-    //     const isValid = jest.spyOn(emailValidator, "isValid");
-    //     const request: HttpRequest = makeHttpRequest();
-    //     const { email } = request.body;
-    //
-    //     await loginController.handle(request);
-    //
-    //     expect(isValid).toHaveBeenCalledWith(email);
-    // });
-    //
-    // it("Should call EmailValidator if email is not valid when was called", async () => {
-    //     jest.spyOn(emailValidator, "isValid").mockReturnValueOnce(false);
-    //
-    //     const request: HttpRequest = makeHttpRequest();
-    //     const response: HttpResponse = await loginController.handle(request);
-    //
-    //     expect(response).toEqual(badRequest(new InvalidParamsError("email")));
-    // });
-    //
-    // it(`Should return code ${StatusCode.ServerErrorInternal} if EmailValidator throws when was called`, async () => {
-    //     jest.spyOn(emailValidator, "isValid").mockImplementationOnce(() => { throw new Error(); });
-    //
-    //     const request: HttpRequest = makeHttpRequest();
-    //     const response = await loginController.handle(request);
-    //
-    //     expect(response).toEqual(serverError(new ServerError()));
-    // });
 
     it("Should call Authentication with correct values", async () => {
         const request: HttpRequest = makeHttpRequest();

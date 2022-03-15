@@ -1,4 +1,4 @@
-import { Controller, HttpRequest, HttpResponse, Authentication, Validation } from "./login-protocols";
+import { Controller, HttpRequest, HttpResponse, Authentication, Validation } from "./login-controller-protocols";
 import { badRequest, serverError, success, unauthorized } from "../../helpers/http-helper";
 
 export class LoginController implements Controller {
@@ -8,10 +8,6 @@ export class LoginController implements Controller {
         try {
             const { password, email } = request.body;
             const error: Error|null = this.validation.validate({ password, email });
-
-            // if (!email) error = new MissingParamsError("email");
-            // else if (!password) error = new MissingParamsError("password");
-            // else if (!this.emailValidator.isValid(email)) error = new InvalidParamsError("email");
 
             if (error) return badRequest(error);
 
