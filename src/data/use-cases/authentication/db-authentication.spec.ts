@@ -93,7 +93,7 @@ describe("DbAuthentication", () => {
 
         await db.auth(createAuthModel());
 
-        expect(compareSpy).toHaveBeenCalledWith(ACCOUNT_PASSWORD, DEFAULT_PASSWORD);
+        expect(compareSpy).toHaveBeenCalledWith(DEFAULT_PASSWORD, ACCOUNT_PASSWORD);
     });
 
     it("Should return an log if HashComparer throws when was called", async () => {
