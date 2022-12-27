@@ -4,7 +4,9 @@
     "description": "Clean code NodeJS API.",
     "main": "./src/main/server.ts",
     "scripts": {
-        "start": "sucrase-node .",
+        "start": "node dist/main/server.js",
+        "build": "rimraf dist && tsc",
+        "dev": "sucrase-node .",
         "eslint": "eslint 'src/**'",
         "eslint:staged": "eslint 'src/**' --fix",
         "test": "jest --clearCache && jest --passWithNoTests --runInBand",
@@ -49,6 +51,7 @@
         "husky": "^7.0.4",
         "jest": "^27.4.7",
         "lint-staged": "^12.1.5",
+        "rimraf": "^3.0.2",
         "sucrase": "^3.20.3",
         "supertest": "^6.2.2",
         "ts-jest": "^27.1.2",
