@@ -25,7 +25,7 @@
         "nodejs"
     ],
     "author": "hotequil",
-    "license": "CC 1.0",
+    "license": "CC0 1.0 UNIVERSAL",
     "bugs": {
         "url": "https://github.com/hotequil/clean-code-nodejs-api/issues"
     },
@@ -67,6 +67,6 @@
         "validator": "^13.7.0"
     },
     "engines": {
-        "node": "16.14.0"
+        "node": "16.x"
     }
 }
