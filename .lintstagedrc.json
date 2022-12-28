@@ -1,7 +1,6 @@
 {
     "*.ts": [
         "npm run eslint:staged",
-        "npm run test:staged",
-        "git add"
+        "npm run test:staged"
     ]
 }
