@@ -1,17 +1,19 @@
 import { Express, Router } from "express";
-import fastGlob from "fast-glob";
+import { readdirSync } from "fs";
+import path from "node:path";
 
 export default (app: Express): void => {
     const router = Router();
 
     app.use("/api", router);
 
-    const files = fastGlob.sync("**/src/main/routes/**-routes.ts");
+    const files = readdirSync(path.join(__dirname, "../routes"));
 
-    files.map(async file => {
-        const imported = await import(`../../../${file}`);
-        const route = imported.default;
+    files.filter(file => !file.includes(".test."))
+         .map(async file => {
+             const imported = await import(`../routes/${file}`);
+             const route = imported.default;
 
-        route(router);
-    });
+             route(router);
+         });
 };
