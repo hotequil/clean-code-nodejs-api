@@ -8,6 +8,7 @@
         "dev": "npm run build && docker-compose up -d",
         "build": "rimraf dist && tsc",
         "start": "node dist/main/server.js",
+        "debug": "node --inspect=0.0.0.0:9222 --nolazy dist/main/server.js",
         "eslint": "eslint 'src/**'",
         "eslint:staged": "eslint 'src/**' --fix",
         "test": "jest --clearCache && jest --passWithNoTests --runInBand",

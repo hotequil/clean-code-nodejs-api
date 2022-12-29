@@ -4,7 +4,8 @@
         "module": "commonjs",
         "target": "es5",
         "esModuleInterop": true,
-        "strict": true
+        "strict": true,
+        "sourceMap": true
     },
     "exclude": [
         "**/*.spec.ts",
