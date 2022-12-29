@@ -108,3 +108,6 @@ dist
 
 # Jest
 globalConfig.json
+
+# Docker
+data
