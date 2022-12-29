@@ -26,6 +26,7 @@
     "keywords": [
         "nodejs"
     ],
+    "private": false,
     "author": "hotequil",
     "license": "CC0 1.0 UNIVERSAL",
     "bugs": {
