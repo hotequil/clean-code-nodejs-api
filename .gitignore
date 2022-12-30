@@ -111,3 +111,6 @@ globalConfig.json
 
 # Docker
 data
+
+# npm
+package-lock.json

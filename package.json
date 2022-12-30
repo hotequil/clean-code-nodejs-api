@@ -8,7 +8,8 @@
         "dev": "npm run build && docker-compose up -d",
         "build": "rimraf dist && tsc",
         "start": "node dist/main/server.js",
-        "debug": "node --inspect=0.0.0.0:9222 --nolazy dist/main/server.js",
+        "debug": "nodemon -L --watch ./dist --inspect=0.0.0.0:9222 --nolazy ./dist/main/server.js",
+        "watch": "tsc -w",
         "eslint": "eslint 'src/**'",
         "eslint:staged": "eslint 'src/**' --fix",
         "test": "jest --clearCache && jest --passWithNoTests --runInBand",
@@ -65,6 +66,7 @@
         "express": "^4.17.2",
         "jsonwebtoken": "^8.5.1",
         "mongodb": "^4.3.1",
+        "nodemon": "^2.0.20",
         "status-code-enum": "^1.0.0",
         "validator": "^13.7.0"
     },
