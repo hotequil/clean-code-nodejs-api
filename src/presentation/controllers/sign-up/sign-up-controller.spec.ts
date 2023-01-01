@@ -11,7 +11,7 @@ import {
     HttpResponse
 } from "./sign-up-controller-protocols";
 import { MissingParamsError, ServerError } from "../../errors";
-import { badRequest, serverError } from "../../helpers/http-helper";
+import { badRequest, serverError, success } from "../../helpers/http-helper";
 import { Validation } from "../../protocols/validation";
 import { AnyObject } from "../../../utils/helpers";
 
@@ -128,5 +128,12 @@ describe("SignUpController", () => {
         const response: HttpResponse = await controller.handle(request)
 
         expect(response).toEqual(serverError(new ServerError()))
+    });
+
+    it(`Should return code ${StatusCode.SuccessOK} when was called with token`, async () => {
+        const request: HttpRequest = makeDefaultHttpRequest();
+        const response: HttpResponse = await controller.handle(request);
+
+        expect(response).toEqual(success({ token: TOKEN }));
     });
 });
