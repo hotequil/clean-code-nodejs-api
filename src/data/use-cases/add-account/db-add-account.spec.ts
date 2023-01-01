@@ -45,10 +45,10 @@ class AddAccountRepositoryStub implements AddAccountRepository {
 }
 
 class LoadAccountByEmailRepositoryStub implements LoadAccountByEmailRepository {
-    async loadByEmail (email: string): Promise<AccountModel> {
-        const account = { email, id: "id", name: "name", password: "password" };
+    async loadByEmail (email: string): Promise<null> {
+        console.log(email)
 
-        return await new Promise(resolve => resolve(account));
+        return await new Promise(resolve => resolve(null));
     }
 }
 
@@ -109,5 +109,16 @@ describe("DbAddAccount", () => {
         await db.add(makeFakeAccount());
 
         expect(loadSpy).toHaveBeenCalledWith(EMAIL);
+    });
+
+    it("Should return null if LoadAccountByEmailRepository find an account with email", async () => {
+        const fakeAccount = makeFakeAccount();
+
+        jest.spyOn(loadAccountByEmailRepositoryStub, "loadByEmail")
+            .mockReturnValueOnce(new Promise(resolve => resolve(fakeAccount)))
+
+        const account = await db.add(fakeAccount);
+
+        expect(account).toBeNull();
     });
 });
