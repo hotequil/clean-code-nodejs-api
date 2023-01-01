@@ -1,15 +1,24 @@
 import { StatusCode } from "status-code-enum";
 
 import { SignUpController } from "./sign-up-controller";
-import { HttpRequest, AccountModel, AddAccount, AddAccountModel } from "./sign-up-controller-protocols";
+import {
+    HttpRequest,
+    AccountModel,
+    AddAccount,
+    AddAccountModel,
+    Authentication,
+    AuthenticationModel
+} from "./sign-up-controller-protocols";
 import { MissingParamsError, ServerError } from "../../errors";
 import { badRequest, serverError } from "../../helpers/http-helper";
 import { Validation } from "../../protocols/validation";
 import { AnyObject } from "../../../utils/helpers";
 
+const TOKEN = "any-token";
 let controller: SignUpController;
 let addAccountStub: AddAccount;
 let validationStub: Validation;
+let authenticationStub: Authentication;
 
 const makeDefaultHttpRequest = (): HttpRequest => (
     {
@@ -36,11 +45,20 @@ class ValidationStub implements Validation {
     }
 }
 
+class AuthenticationStub implements Authentication {
+    async auth (model: AuthenticationModel): Promise<string|null> {
+        console.log(model)
+
+        return await new Promise(resolve => resolve(TOKEN))
+    }
+}
+
 describe("SignUpController", () => {
     beforeEach(() => {
         addAccountStub = new AddAccountStub();
         validationStub = new ValidationStub();
-        controller = new SignUpController(addAccountStub, validationStub);
+        authenticationStub = new AuthenticationStub();
+        controller = new SignUpController(addAccountStub, validationStub, authenticationStub);
     });
 
     it(`Should return an AddAccount exception with code ${StatusCode.ServerErrorInternal} when was called`, async () => {
@@ -91,5 +109,14 @@ describe("SignUpController", () => {
         const response = await controller.handle(request);
 
         expect(response).toEqual(badRequest(error));
+    })
+
+    it("Should call Authentication with correct values", async () => {
+        const request: HttpRequest = makeDefaultHttpRequest();
+        const spy = jest.spyOn(authenticationStub, "auth");
+
+        await controller.handle(request);
+
+        expect(spy).toHaveBeenCalledWith({ email: request.body.email, password: request.body.password });
     })
 });
