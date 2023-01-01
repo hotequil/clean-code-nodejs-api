@@ -11,9 +11,10 @@ import {
     HttpResponse
 } from "./sign-up-controller-protocols";
 import { MissingParamsError, ServerError } from "../../errors";
-import { badRequest, serverError, success } from "../../helpers/http-helper";
+import { badRequest, forbidden, serverError, success } from "../../helpers/http-helper";
 import { Validation } from "../../protocols/validation";
 import { AnyObject } from "../../../utils/helpers";
+import { EmailInUseError } from "../../errors/email-in-use/email-in-use-error";
 
 const TOKEN = "any-token";
 let controller: SignUpController;
@@ -135,5 +136,14 @@ describe("SignUpController", () => {
         const response: HttpResponse = await controller.handle(request);
 
         expect(response).toEqual(success({ token: TOKEN }));
+    });
+
+    it(`Should return code ${StatusCode.ClientErrorForbidden} if AddAccount returns null`, async () => {
+        jest.spyOn(addAccountStub, "add").mockReturnValueOnce(new Promise(resolve => resolve(null)));
+
+        const request: HttpRequest = makeDefaultHttpRequest();
+        const response: HttpResponse = await controller.handle(request);
+
+        expect(response).toEqual(forbidden(new EmailInUseError()))
     });
 });
