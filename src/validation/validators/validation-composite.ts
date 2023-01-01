@@ -1,4 +1,4 @@
-import { Validation } from "../protocols/validation";
+import { Validation } from "../../presentation/protocols";
 import { AnyObject } from "../../utils/helpers";
 
 export class ValidationComposite implements Validation {

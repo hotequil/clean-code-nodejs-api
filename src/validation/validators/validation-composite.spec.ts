@@ -1,6 +1,6 @@
 import { ValidationComposite } from "./validation-composite";
-import { InvalidParamsError, MissingParamsError } from "../errors";
-import { Validation } from "../protocols/validation";
+import { InvalidParamsError, MissingParamsError } from "../../presentation/errors";
+import { Validation } from "../../presentation/protocols";
 import { AnyObject } from "../../utils/helpers";
 
 let validation: ValidationComposite;

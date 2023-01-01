@@ -1,5 +1,5 @@
 import { RequiredFieldValidation } from "./required-field-validation";
-import { MissingParamsError } from "../errors";
+import { MissingParamsError } from "../../presentation/errors";
 
 describe("RequiredFieldValidation", () => {
     it("Should return a MissingParamsError if validate is invalid when was called", () => {

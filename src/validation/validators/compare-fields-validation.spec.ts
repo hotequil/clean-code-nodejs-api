@@ -1,5 +1,5 @@
 import { CompareFieldsValidation } from "./compare-fields-validation";
-import { InvalidParamsError } from "../errors";
+import { InvalidParamsError } from "../../presentation/errors";
 
 let validation: CompareFieldsValidation;
 const FIRST_FIELD = "password";
