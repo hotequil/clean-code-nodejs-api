@@ -7,7 +7,8 @@ import {
     AddAccount,
     AddAccountModel,
     Authentication,
-    AuthenticationModel
+    AuthenticationModel,
+    HttpResponse
 } from "./sign-up-controller-protocols";
 import { MissingParamsError, ServerError } from "../../errors";
 import { badRequest, serverError } from "../../helpers/http-helper";
@@ -119,4 +120,13 @@ describe("SignUpController", () => {
 
         expect(spy).toHaveBeenCalledWith({ email: request.body.email, password: request.body.password });
     })
+
+    it(`Should return code ${StatusCode.ServerErrorInternal} if Authentication throws when was called`, async () => {
+        jest.spyOn(authenticationStub, "auth").mockImplementationOnce(() => { throw new Error() })
+
+        const request: HttpRequest = makeDefaultHttpRequest()
+        const response: HttpResponse = await controller.handle(request)
+
+        expect(response).toEqual(serverError(new ServerError()))
+    });
 });
