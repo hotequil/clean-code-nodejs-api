@@ -1,16 +1,25 @@
 import { DbAddAccount } from "./db-add-account";
-import { AccountModel, AddAccount, AddAccountModel, AddAccountRepository, Hasher } from "./db-add-account-protocols";
+import {
+    AccountModel,
+    AddAccount,
+    AddAccountModel,
+    AddAccountRepository,
+    Hasher,
+    LoadAccountByEmailRepository
+} from "./db-add-account-protocols";
 
 let db: AddAccount;
 let hasherSub: Hasher;
 let addAccountRepositoryStub: AddAccountRepository;
+let loadAccountByEmailRepositoryStub: LoadAccountByEmailRepository;
 const HASHED_PASSWORD = "12345678";
 const ID = "123";
+const EMAIL = "test@email.com";
 
 const makeFakeAccount = (): any => (
     {
         name: "name",
-        email: "email@email.email",
+        email: EMAIL,
         password: "password"
     }
 );
@@ -35,11 +44,20 @@ class AddAccountRepositoryStub implements AddAccountRepository {
     }
 }
 
+class LoadAccountByEmailRepositoryStub implements LoadAccountByEmailRepository {
+    async loadByEmail (email: string): Promise<AccountModel> {
+        const account = { email, id: "id", name: "name", password: "password" };
+
+        return await new Promise(resolve => resolve(account));
+    }
+}
+
 describe("DbAddAccount", () => {
     beforeEach(() => {
         hasherSub = new HasherStub();
         addAccountRepositoryStub = new AddAccountRepositoryStub();
-        db = new DbAddAccount(hasherSub, addAccountRepositoryStub);
+        loadAccountByEmailRepositoryStub = new LoadAccountByEmailRepositoryStub();
+        db = new DbAddAccount(hasherSub, addAccountRepositoryStub, loadAccountByEmailRepositoryStub);
     });
 
     it("Should call Hasher with correct password", async () => {
@@ -83,5 +101,13 @@ describe("DbAddAccount", () => {
         const account = await db.add(makeFakeAccount());
 
         expect(account).toEqual({ ...account, id: ID, password: HASHED_PASSWORD });
+    });
+
+    it("Should call LoadAccountByEmailRepository with correct email when was called", async () => {
+        const loadSpy = jest.spyOn(loadAccountByEmailRepositoryStub, "loadByEmail");
+
+        await db.add(makeFakeAccount());
+
+        expect(loadSpy).toHaveBeenCalledWith(EMAIL);
     });
 });
