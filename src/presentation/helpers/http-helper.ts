@@ -1,6 +1,6 @@
 import { StatusCode } from "status-code-enum";
 
-import { MissingParamsError, ServerError, UnauthorizedError } from "../errors";
+import { BaseError, MissingParamsError, ServerError, UnauthorizedError } from "../errors";
 import { HttpResponse } from "../protocols";
 
 export const badRequest = (error: MissingParamsError): HttpResponse => {
@@ -24,4 +24,9 @@ export const unauthorized = (): HttpResponse => (
 
 export const success = (body: any): HttpResponse => ({
     statusCode: StatusCode.SuccessOK, body
+});
+
+export const forbidden = (error: BaseError): HttpResponse => ({
+    statusCode: StatusCode.ClientErrorForbidden,
+    body: error
 });
