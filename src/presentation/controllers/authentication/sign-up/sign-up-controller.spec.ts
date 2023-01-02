@@ -10,11 +10,11 @@ import {
     AuthenticationModel,
     HttpResponse
 } from "./sign-up-controller-protocols";
-import { MissingParamsError, ServerError } from "../../errors";
-import { badRequest, forbidden, serverError, success } from "../../helpers/http-helper";
-import { Validation } from "../../protocols/validation";
-import { AnyObject } from "../../../utils/helpers";
-import { EmailInUseError } from "../../errors/email-in-use/email-in-use-error";
+import { MissingParamsError, ServerError } from "../../../errors";
+import { badRequest, forbidden, serverError, success } from "../../../helpers/http-helper";
+import { Validation } from "../../../protocols/validation";
+import { AnyObject } from "../../../../utils/helpers";
+import { EmailInUseError } from "../../../errors/email-in-use/email-in-use-error";
 
 const TOKEN = "any-token";
 let controller: SignUpController;

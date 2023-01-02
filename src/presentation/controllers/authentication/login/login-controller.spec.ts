@@ -1,8 +1,8 @@
 import StatusCode from "status-code-enum";
 
 import { LoginController } from "./login-controller";
-import { badRequest, serverError, success, unauthorized } from "../../helpers/http-helper";
-import { MissingParamsError, ServerError } from "../../errors";
+import { badRequest, serverError, success, unauthorized } from "../../../helpers/http-helper";
+import { MissingParamsError, ServerError } from "../../../errors";
 import {
     HttpRequest,
     HttpResponse,
