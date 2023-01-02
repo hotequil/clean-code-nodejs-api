@@ -29,7 +29,7 @@ class ValidationStub implements Validation{
     }
 }
 
-describe("AddSurveyController", () => {
+describe(AddSurveyController.name, () => {
     beforeEach(() => {
         validationStub = new ValidationStub()
         controller = new AddSurveyController(validationStub)
