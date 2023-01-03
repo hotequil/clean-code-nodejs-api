@@ -86,4 +86,10 @@ describe(AddSurveyController.name, () => {
 
         expect(statusCode).toBe(StatusCode.ServerErrorInternal)
     })
+
+    it(`Should return code ${StatusCode.SuccessNoContent} on success`, async () => {
+        const { statusCode } = await controller.handle(makeFakeHttpRequest())
+
+        expect(statusCode).toBe(StatusCode.SuccessNoContent)
+    })
 })
