@@ -26,6 +26,8 @@ export const success = (body: any): HttpResponse => ({
     statusCode: StatusCode.SuccessOK, body
 });
 
+export const noContent = (): HttpResponse => ({ body: null, statusCode: StatusCode.SuccessNoContent })
+
 export const forbidden = (error: BaseError): HttpResponse => ({
     statusCode: StatusCode.ClientErrorForbidden,
     body: error

@@ -4,8 +4,8 @@ import {
     Controller,
     HttpRequest,
     HttpResponse,
+    noContent,
     serverError,
-    success,
     Validation
 } from "./add-survey-controller-protocols";
 
@@ -21,7 +21,7 @@ export class AddSurveyController implements Controller{
 
             await this.addSurvey.add(body)
 
-            return success(null);
+            return noContent()
         } catch(error){
             return serverError(error as Error);
         }
