@@ -77,4 +77,13 @@ describe(AddSurveyController.name, () => {
 
         expect(addSurveySpy).toHaveBeenCalledWith(request.body)
     })
+
+    it(`Should return ${StatusCode.ServerErrorInternal} if AddSurvey throws`, async () => {
+        jest.spyOn(addSurveyStub, "add")
+            .mockReturnValueOnce(new Promise((resolve, reject) => reject(new Error())))
+
+        const { statusCode } = await controller.handle(makeFakeHttpRequest())
+
+        expect(statusCode).toBe(StatusCode.ServerErrorInternal)
+    })
 })
