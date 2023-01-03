@@ -35,4 +35,13 @@ describe(DbAddSurvey.name, () => {
 
         expect(repositorySpy).toHaveBeenCalledWith(model)
     })
+
+    it("Should throw if AddSurveyRepository throws", async () => {
+        jest.spyOn(addSurveyRepositoryStub, "add")
+            .mockReturnValueOnce(new Promise((resolve, reject) => reject(new Error())))
+
+        const promise = db.add(makeAddSurveyModel())
+
+        await expect(promise).rejects.toThrow()
+    })
 })
