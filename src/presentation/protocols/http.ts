@@ -6,6 +6,6 @@ export type HttpResponse<T = any> = {
 };
 
 export type HttpRequest<T = any> = {
-    body?: T
     headers?: AnyObject
+    body?: T
 };
