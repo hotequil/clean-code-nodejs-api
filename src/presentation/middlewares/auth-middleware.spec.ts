@@ -53,4 +53,12 @@ describe(AuthMiddleware.name, () => {
 
         expect(loadAccountByTokenSpy).toHaveBeenCalledWith(FAKE_TOKEN)
     });
+
+    it(`Should return code ${StatusCode.ClientErrorForbidden} if LoadAccountByToken returns null`, async () => {
+        jest.spyOn(loadAccountByToken, "loadByToken").mockReturnValueOnce(new Promise(resolve => resolve(null)))
+
+        const response = await middleware.handle(makeFakeHttpRequest())
+
+        expect(response).toEqual(forbidden(new AccessDeniedError()))
+    })
 });
