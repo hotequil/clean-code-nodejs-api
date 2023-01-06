@@ -1,6 +1,6 @@
 import { AuthMiddleware } from "./auth-middleware";
 import StatusCode from "status-code-enum";
-import { forbidden } from "../helpers/http-helper";
+import { forbidden, success } from "../helpers/http-helper";
 import { AccessDeniedError } from "../errors";
 import { HttpRequest } from "../protocols";
 import { Header } from "../../utils/enums";
@@ -60,5 +60,12 @@ describe(AuthMiddleware.name, () => {
         const response = await middleware.handle(makeFakeHttpRequest())
 
         expect(response).toEqual(forbidden(new AccessDeniedError()))
+    })
+
+    it(`Should return code ${StatusCode.SuccessOK} if LoadAccountByToken returns an account`, async () => {
+        const account = makeFakeAccountModel()
+        const response = await middleware.handle(makeFakeHttpRequest())
+
+        expect(response).toEqual(success({ accountId: account.id }))
     })
 });
