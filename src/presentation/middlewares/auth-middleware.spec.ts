@@ -1,6 +1,6 @@
 import { AuthMiddleware } from "./auth-middleware";
 import StatusCode from "status-code-enum";
-import { forbidden, success } from "../helpers/http-helper";
+import { forbidden, serverError, success } from "../helpers/http-helper";
 import { AccessDeniedError } from "../errors";
 import { HttpRequest } from "../protocols";
 import { Header } from "../../utils/enums";
@@ -68,4 +68,14 @@ describe(AuthMiddleware.name, () => {
 
         expect(response).toEqual(success({ accountId: account.id }))
     })
+
+    it(`Should return code ${StatusCode.ServerErrorInternal} if LoadAccountByToken throws`, async () => {
+        const error = new Error()
+
+        jest.spyOn(loadAccountByToken, "loadByToken").mockReturnValueOnce(new Promise((resolve, reject) => reject(error)))
+
+        const response = await middleware.handle(makeFakeHttpRequest())
+
+        expect(response).toEqual(serverError(error))
+    });
 });
