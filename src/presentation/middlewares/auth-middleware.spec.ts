@@ -2,10 +2,8 @@ import { AuthMiddleware } from "./auth-middleware";
 import StatusCode from "status-code-enum";
 import { forbidden, serverError, success } from "../helpers/http-helper";
 import { AccessDeniedError } from "../errors";
-import { HttpRequest } from "../protocols";
 import { AccountType, Header } from "../../utils/enums";
-import { LoadAccountByToken } from "../../domain/use-cases/load-account-by-token";
-import { AccountModel } from "../../domain/models/account";
+import { HttpRequest, LoadAccountByToken, AccountModel } from "./auth-middleware-protocols";
 
 let middleware: AuthMiddleware;
 let loadAccountByToken: LoadAccountByToken;
