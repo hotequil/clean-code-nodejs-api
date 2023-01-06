@@ -3,7 +3,7 @@ import StatusCode from "status-code-enum";
 import { forbidden, serverError, success } from "../helpers/http-helper";
 import { AccessDeniedError } from "../errors";
 import { HttpRequest } from "../protocols";
-import { Header } from "../../utils/enums";
+import { AccountType, Header } from "../../utils/enums";
 import { LoadAccountByToken } from "../../domain/use-cases/load-account-by-token";
 import { AccountModel } from "../../domain/models/account";
 
@@ -46,12 +46,17 @@ describe(AuthMiddleware.name, () => {
     })
 
     it("Should call LoadAccountByToken with correct token", async () => {
+        const role = AccountType.USER
+
+        loadAccountByToken = new LoadAccountByTokenStub()
+        middleware = new AuthMiddleware(loadAccountByToken, role)
+
         const loadAccountByTokenSpy = jest.spyOn(loadAccountByToken, "loadByToken")
         const request: HttpRequest = makeFakeHttpRequest()
 
         await middleware.handle(request)
 
-        expect(loadAccountByTokenSpy).toHaveBeenCalledWith(FAKE_TOKEN)
+        expect(loadAccountByTokenSpy).toHaveBeenCalledWith(FAKE_TOKEN, role)
     });
 
     it(`Should return code ${StatusCode.ClientErrorForbidden} if LoadAccountByToken returns null`, async () => {
