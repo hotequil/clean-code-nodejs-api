@@ -71,4 +71,10 @@ describe(DbLoadAccountByToken.name, () => {
 
         expect(account).toBeNull()
     })
+
+    it("Should return an account on success", async () => {
+        const account = await db.loadByToken(FAKE_TOKEN, ROLE)
+
+        expect(account).toEqual(makeFakeAccountModel())
+    })
 })
