@@ -85,5 +85,11 @@ describe("AccountMongoDBRepository", () => {
             expect(id).toBeTruthy();
             expect(account).toEqual(otherAccountProps);
         })
+
+        it("Should return null if loadByToken fails when decrypt was called", async () => {
+            const account = await repository.loadByToken(TOKEN, ROLE)
+
+            expect(account).toBeNull()
+        })
     })
 });
