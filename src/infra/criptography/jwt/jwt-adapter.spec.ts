@@ -1,21 +1,25 @@
 import jwt from "jsonwebtoken";
-
-import { Encrypter } from "../../../data/protocols/criptography/encrypter";
 import { JwtAdapter } from "./jwt-adapter";
 
 const ID = "user1234";
 const SECRET = "secret";
 const TOKEN = "token";
 const VALUE = { id: ID };
+const ENCRYPTED_TOKEN = "test"
 
 jest.mock("jsonwebtoken", () => ({
     sign () {
         return TOKEN;
-    }
+    },
+    verify(token: string){
+        console.log(token)
+
+        return TOKEN
+    },
 }));
 
 describe("JwtAdapter", () => {
-    let adapter: Encrypter;
+    let adapter: JwtAdapter;
 
     beforeEach(() => adapter = new JwtAdapter(SECRET));
 
@@ -42,5 +46,15 @@ describe("JwtAdapter", () => {
 
             await expect(promise).rejects.toThrow();
         });
+    })
+
+    describe("decrypt()", () => {
+        it("Should call verify with correct values", async () => {
+            const verifySpy = jest.spyOn(jwt, "verify")
+
+            await adapter.decrypt(ENCRYPTED_TOKEN)
+
+            expect(verifySpy).toHaveBeenCalledWith(ENCRYPTED_TOKEN, SECRET)
+        })
     })
 });
