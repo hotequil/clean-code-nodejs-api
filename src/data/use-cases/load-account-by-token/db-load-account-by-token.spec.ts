@@ -77,4 +77,22 @@ describe(DbLoadAccountByToken.name, () => {
 
         expect(account).toEqual(makeFakeAccountModel())
     })
+
+    it("Should throw if Decrypter throws", async () => {
+        jest.spyOn(decrypter, "decrypt")
+            .mockReturnValueOnce(new Promise((resolve, reject) => reject(new Error())))
+
+        const promise = db.loadByToken(FAKE_TOKEN, ROLE)
+
+        await expect(promise).rejects.toThrow()
+    })
+
+    it("Should throw if LoadAccountByTokenRepository throws", async () => {
+        jest.spyOn(loadAccountByTokenRepository, "loadByToken")
+            .mockReturnValueOnce(new Promise((resolve, reject) => reject(new Error())))
+
+        const promise = db.loadByToken(FAKE_TOKEN, ROLE)
+
+        await expect(promise).rejects.toThrow()
+    })
 })
