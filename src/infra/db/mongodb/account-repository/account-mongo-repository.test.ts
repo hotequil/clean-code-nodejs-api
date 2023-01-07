@@ -1,5 +1,4 @@
 import { Collection } from "mongodb";
-
 import { MongodbHelper } from "../helpers/mongodb-helper";
 import { AccountMongoRepository } from "./account-mongo-repository";
 import { copy } from "../../../../presentation/helpers/manipulator-helper";
@@ -60,5 +59,18 @@ describe("AccountMongoDBRepository", () => {
 
             expect(accessToken).toBe(TOKEN);
         });
+    })
+
+    describe("loadByToken()", () => {
+        it("Should return an account when loadByToken was called without role", async () => {
+            const account = { ...ACCOUNT, accessToken: TOKEN }
+
+            await collection.insertOne(copy(account))
+
+            const { id, ...otherAccountProps } = await repository.loadByToken(TOKEN) as AccountModel;
+
+            expect(id).toBeTruthy();
+            expect(account).toEqual(otherAccountProps);
+        })
     })
 });
