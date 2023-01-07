@@ -1,5 +1,5 @@
 import { DbLoadAccountByToken } from "./db-load-account-by-token";
-import { Decrypter } from "./db-load-account-by-token-protocols";
+import { AccountModel, Decrypter, LoadAccountByTokenRepository } from "./db-load-account-by-token-protocols";
 import { AccountType } from "../../../utils/enums";
 
 const FAKE_TOKEN = "token"
@@ -7,6 +7,15 @@ const DECRYPT_RESULT = "result"
 const ROLE = AccountType.USER
 let db: DbLoadAccountByToken
 let decrypter: Decrypter
+let loadAccountByTokenRepository: LoadAccountByTokenRepository
+
+const makeFakeAccountModel = (): AccountModel => ({
+    email: "email@email.email",
+    id: "id",
+    accessToken: "accessToken",
+    name: "name",
+    password: "password",
+})
 
 class DecrypterStub implements Decrypter{
     async decrypt(value: string): Promise<string | null> {
@@ -16,10 +25,19 @@ class DecrypterStub implements Decrypter{
     }
 }
 
+class LoadAccountByTokenRepositoryStub implements LoadAccountByTokenRepository{
+    async loadByToken(token: string, role?: AccountType): Promise<AccountModel | null>{
+        console.log(token, role)
+
+        return await new Promise(resolve => resolve(makeFakeAccountModel()))
+    }
+}
+
 describe(DbLoadAccountByToken.name, () => {
     beforeEach(() => {
         decrypter = new DecrypterStub()
-        db = new DbLoadAccountByToken(decrypter)
+        loadAccountByTokenRepository = new LoadAccountByTokenRepositoryStub()
+        db = new DbLoadAccountByToken(decrypter, loadAccountByTokenRepository)
     })
 
     it("Should call Decrypter with correct values", async () => {
@@ -36,5 +54,13 @@ describe(DbLoadAccountByToken.name, () => {
         const account = await db.loadByToken(FAKE_TOKEN, ROLE)
 
         expect(account).toBeNull()
+    })
+
+    it("Should call LoadAccountByTokenRepository with correct values", async () => {
+        const loadAccountByTokenRepositorySpy = jest.spyOn(loadAccountByTokenRepository, "loadByToken")
+
+        await db.loadByToken(FAKE_TOKEN, ROLE)
+
+        expect(loadAccountByTokenRepositorySpy).toHaveBeenCalledWith(DECRYPT_RESULT, ROLE)
     })
 })
