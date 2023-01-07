@@ -3,9 +3,11 @@ import { MongodbHelper } from "../helpers/mongodb-helper";
 import { AccountMongoRepository } from "./account-mongo-repository";
 import { copy } from "../../../../presentation/helpers/manipulator-helper";
 import { AccountModel } from "../../../../domain/models/account";
+import { AccountType } from "../../../../utils/enums";
 
 const ACCOUNT = { name: "name", email: "email@email.email", password: "password" };
 const TOKEN = "user1234";
+const ROLE = AccountType.USER
 
 describe("AccountMongoDBRepository", () => {
     let repository: AccountMongoRepository;
@@ -68,6 +70,17 @@ describe("AccountMongoDBRepository", () => {
             await collection.insertOne(copy(account))
 
             const { id, ...otherAccountProps } = await repository.loadByToken(TOKEN) as AccountModel;
+
+            expect(id).toBeTruthy();
+            expect(account).toEqual(otherAccountProps);
+        })
+
+        it("Should return an account when loadByToken was called with role", async () => {
+            const account = { ...ACCOUNT, accessToken: TOKEN, role: ROLE }
+
+            await collection.insertOne(copy(account))
+
+            const { id, ...otherAccountProps } = await repository.loadByToken(TOKEN, ROLE) as AccountModel;
 
             expect(id).toBeTruthy();
             expect(account).toEqual(otherAccountProps);
