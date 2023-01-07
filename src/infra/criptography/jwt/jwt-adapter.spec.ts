@@ -56,5 +56,11 @@ describe("JwtAdapter", () => {
 
             expect(verifySpy).toHaveBeenCalledWith(ENCRYPTED_TOKEN, SECRET)
         })
+
+        it("Should return a token if verify succeeds", async () => {
+            const token = await adapter.decrypt(ENCRYPTED_TOKEN)
+
+            expect(token).toBe(TOKEN)
+        })
     })
 });
