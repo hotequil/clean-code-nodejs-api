@@ -63,4 +63,12 @@ describe(DbLoadAccountByToken.name, () => {
 
         expect(loadAccountByTokenRepositorySpy).toHaveBeenCalledWith(DECRYPT_RESULT, ROLE)
     })
+
+    it("Should return null if LoadAccountByTokenRepository returns null", async () => {
+        jest.spyOn(loadAccountByTokenRepository, "loadByToken").mockReturnValueOnce(new Promise(resolve => resolve(null)))
+
+        const account = await db.loadByToken(FAKE_TOKEN, ROLE)
+
+        expect(account).toBeNull()
+    })
 })
