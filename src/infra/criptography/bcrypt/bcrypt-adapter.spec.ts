@@ -21,59 +21,63 @@ jest.mock("bcrypt", () => ({
 describe("BcryptAdapter", () => {
     beforeEach(() => bcryptAdapter = new BcryptAdapter(SALT));
 
-    it("Should call hash with correct values when was called", async () => {
-        const spyHash = jest.spyOn(bcrypt, "hash");
-        const value = "1234";
+    describe("hash()", () => {
+        it("Should call hash with correct values when was called", async () => {
+            const spyHash = jest.spyOn(bcrypt, "hash");
+            const value = "1234";
 
-        await bcryptAdapter.hash(value);
+            await bcryptAdapter.hash(value);
 
-        expect(spyHash).toHaveBeenCalledWith(value, SALT);
-    });
+            expect(spyHash).toHaveBeenCalledWith(value, SALT);
+        });
 
-    it("Should return a hash when was called on success", async () => {
-        const hash = await bcryptAdapter.hash("aleatory");
+        it("Should return a hash when was called on success", async () => {
+            const hash = await bcryptAdapter.hash("aleatory");
 
-        expect(hash).toBe(DEFAULT_VALUE);
-    });
+            expect(hash).toBe(DEFAULT_VALUE);
+        });
 
-    it("Should throw an log when hash throws", async () => {
-        jest.spyOn(bcrypt, "hash")
-            .mockReturnValueOnce(new Promise((resolve, reject) => reject(new Error())) as unknown as any);
+        it("Should throw an log when hash throws", async () => {
+            jest.spyOn(bcrypt, "hash")
+                .mockReturnValueOnce(new Promise((resolve, reject) => reject(new Error())) as unknown as any);
 
-        const promise = bcryptAdapter.hash("hash");
+            const promise = bcryptAdapter.hash("hash");
 
-        await expect(promise).rejects.toThrow();
-    });
+            await expect(promise).rejects.toThrow();
+        });
+    })
 
-    it("Should call compare with correct values when was called", async () => {
-        const compareSpy = jest.spyOn(bcrypt, "compare");
+    describe("compare()", () => {
+        it("Should call compare with correct values when was called", async () => {
+            const compareSpy = jest.spyOn(bcrypt, "compare");
 
-        await bcryptAdapter.compare(DEFAULT_VALUE, DEFAULT_HASH);
+            await bcryptAdapter.compare(DEFAULT_VALUE, DEFAULT_HASH);
 
-        expect(compareSpy).toHaveBeenCalledWith(DEFAULT_VALUE, DEFAULT_HASH);
-    });
+            expect(compareSpy).toHaveBeenCalledWith(DEFAULT_VALUE, DEFAULT_HASH);
+        });
 
-    it("Should return true when compare was called", async () => {
-        const response = await bcryptAdapter.compare(DEFAULT_VALUE, DEFAULT_HASH);
+        it("Should return true when compare was called", async () => {
+            const response = await bcryptAdapter.compare(DEFAULT_VALUE, DEFAULT_HASH);
 
-        expect(response).toBe(true);
-    });
+            expect(response).toBe(true);
+        });
 
-    it("Should return false when compare fails", async () => {
-        // @ts-ignore
-        jest.spyOn(bcrypt, "compare").mockReturnValueOnce(new Promise(resolve => resolve(false)));
+        it("Should return false when compare fails", async () => {
+            // @ts-ignore
+            jest.spyOn(bcrypt, "compare").mockReturnValueOnce(new Promise(resolve => resolve(false)));
 
-        const response = await bcryptAdapter.compare(DEFAULT_VALUE, DEFAULT_HASH);
+            const response = await bcryptAdapter.compare(DEFAULT_VALUE, DEFAULT_HASH);
 
-        expect(response).toBe(false);
-    });
+            expect(response).toBe(false);
+        });
 
-    it("Should throw an log when compare throws", async () => {
-        // @ts-ignore
-        jest.spyOn(bcrypt, "compare").mockReturnValueOnce(new Promise((resolve, reject) => reject(new Error())));
+        it("Should throw an log when compare throws", async () => {
+            // @ts-ignore
+            jest.spyOn(bcrypt, "compare").mockReturnValueOnce(new Promise((resolve, reject) => reject(new Error())));
 
-        const promise = bcryptAdapter.compare(DEFAULT_VALUE, DEFAULT_HASH);
+            const promise = bcryptAdapter.compare(DEFAULT_VALUE, DEFAULT_HASH);
 
-        await expect(promise).rejects.toThrow();
-    });
+            await expect(promise).rejects.toThrow();
+        });
+    })
 });

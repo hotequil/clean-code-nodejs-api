@@ -24,35 +24,41 @@ describe("AccountMongoDBRepository", () => {
         repository = new AccountMongoRepository();
     });
 
-    it("Should return a new account when add was called", async () => {
-        const { id, name, email, password } = await repository.add(copy(ACCOUNT));
+    describe("add()", () => {
+        it("Should return a new account when add was called", async () => {
+            const { id, name, email, password } = await repository.add(copy(ACCOUNT));
 
-        expect(id).toBeTruthy();
-        expect(ACCOUNT).toEqual({ name, email, password });
-    });
+            expect(id).toBeTruthy();
+            expect(ACCOUNT).toEqual({ name, email, password });
+        });
+    })
 
-    it("Should return an account when loadByEmail was called", async () => {
-        await collection.insertOne(copy(ACCOUNT));
+    describe("loadByEmail()", () => {
+        it("Should return an account when loadByEmail was called", async () => {
+            await collection.insertOne(copy(ACCOUNT));
 
-        const { id, name, email, password } = await repository.loadByEmail(ACCOUNT.email) as AccountModel;
+            const { id, name, email, password } = await repository.loadByEmail(ACCOUNT.email) as AccountModel;
 
-        expect(id).toBeTruthy();
-        expect(ACCOUNT).toEqual({ name, email, password });
-    });
+            expect(id).toBeTruthy();
+            expect(ACCOUNT).toEqual({ name, email, password });
+        });
 
-    it("Should return null if there is no account with email when was called", async () => {
-        const account = await repository.loadByEmail(ACCOUNT.email);
+        it("Should return null if there is no account with email when was called", async () => {
+            const account = await repository.loadByEmail(ACCOUNT.email);
 
-        expect(account).toBe(null);
-    });
+            expect(account).toBe(null);
+        });
+    })
 
-    it("Should update the accessToken when updateAccessToken was called", async () => {
-        const { insertedId } = await collection.insertOne(copy(ACCOUNT));
+    describe("updateAccessToken()", () => {
+        it("Should update the accessToken when updateAccessToken was called", async () => {
+            const { insertedId } = await collection.insertOne(copy(ACCOUNT));
 
-        await repository.updateAccessToken(insertedId, TOKEN);
+            await repository.updateAccessToken(insertedId, TOKEN);
 
-        const { accessToken } = await collection.findOne<AccountModel>({ _id: insertedId }) as AccountModel;
+            const { accessToken } = await collection.findOne<AccountModel>({ _id: insertedId }) as AccountModel;
 
-        expect(accessToken).toBe(TOKEN);
-    });
+            expect(accessToken).toBe(TOKEN);
+        });
+    })
 });
