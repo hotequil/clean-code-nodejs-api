@@ -61,7 +61,7 @@ describe(DbLoadAccountByToken.name, () => {
 
         await db.loadByToken(FAKE_TOKEN, ROLE)
 
-        expect(loadAccountByTokenRepositorySpy).toHaveBeenCalledWith(DECRYPT_RESULT, ROLE)
+        expect(loadAccountByTokenRepositorySpy).toHaveBeenCalledWith(FAKE_TOKEN, ROLE)
     })
 
     it("Should return null if LoadAccountByTokenRepository returns null", async () => {
