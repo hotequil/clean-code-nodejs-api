@@ -1,5 +1,5 @@
 import { DbAuthentication } from "../../../../../data/use-cases/authentication/db-authentication";
-import { AccountMongoRepository } from "../../../../../infra/db/mongodb/account-repository/account-mongo-repository";
+import { AccountMongoRepository } from "../../../../../infra/db/mongodb/account/account-mongo-repository";
 import env from "../../../../config/env";
 import { JwtAdapter } from "../../../../../infra/criptography/jwt/jwt-adapter";
 import { BcryptAdapter } from "../../../../../infra/criptography/bcrypt/bcrypt-adapter";
