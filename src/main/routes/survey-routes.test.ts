@@ -22,9 +22,9 @@ describe("SurveyRoutes", () => {
         await collection.deleteMany({});
     });
 
-    it(`Should return code ${StatusCode.SuccessNoContent} when POST in /api/surveys was called`, async () => {
+    it(`Should return code ${StatusCode.ClientErrorForbidden} when POST in /api/surveys was called without accessToken`, async () => {
         await request(app).post("/api/surveys")
                           .send(makeAddSurveyModel())
-                          .expect(StatusCode.SuccessNoContent);
+                          .expect(StatusCode.ClientErrorForbidden);
     });
 });
