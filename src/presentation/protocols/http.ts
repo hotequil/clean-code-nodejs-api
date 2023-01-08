@@ -1,8 +1,11 @@
-export type HttpResponse = {
+import { AnyObject } from "../../utils/helpers";
+
+export type HttpResponse<T = any> = {
     statusCode: number
-    body: any
+    body: T
 };
 
-export type HttpRequest = {
-    body?: any
+export type HttpRequest<T = any> = {
+    headers?: AnyObject
+    body?: T
 };
