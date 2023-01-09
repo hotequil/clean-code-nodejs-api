@@ -6,6 +6,7 @@ type Answer = {
 export type AddSurveyModel = {
     question: string
     answers: Answer[]
+    date: Date
 }
 
 export interface AddSurvey{

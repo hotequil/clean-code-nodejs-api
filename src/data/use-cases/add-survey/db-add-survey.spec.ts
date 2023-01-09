@@ -10,7 +10,8 @@ const makeAddSurveyModel = (): AddSurveyModel => ({
         { image: "image", answer: "answer" },
         { image: "image", answer: "answer" },
         { image: "image", answer: "answer" },
-    ]
+    ],
+    date: new Date(),
 })
 
 class AddSurveyRepositoryStub implements AddSurveyRepository{

@@ -9,7 +9,8 @@ import { AccountType, Header } from "../../utils/enums";
 
 const makeAddSurveyModel = (): AddSurveyModel => ({
     question: "question",
-    answers: [{ answer: "answer", image: "image" }, { answer: "answer", image: "image" }, { answer: "answer", image: "image" }]
+    answers: [{ answer: "answer", image: "image" }, { answer: "answer", image: "image" }, { answer: "answer", image: "image" }],
+    date: new Date(),
 })
 
 describe("SurveyRoutes", () => {

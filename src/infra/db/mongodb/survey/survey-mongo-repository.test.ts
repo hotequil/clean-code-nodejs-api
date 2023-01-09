@@ -8,7 +8,8 @@ let collection: Collection
 
 const makeSurveyData = (): AddSurveyModel => ({
     question: "question",
-    answers: [{ answer: "answer" }, { answer: "answer", image: "image" }]
+    answers: [{ answer: "answer" }, { answer: "answer", image: "image" }],
+    date: new Date(),
 })
 
 describe(SurveyMongoRepository.name, () => {

@@ -8,6 +8,7 @@ import {
     AddSurveyModel
 } from "./add-survey-controller-protocols";
 import StatusCode from "status-code-enum";
+import * as MockDate from "mockdate";
 
 let controller: AddSurveyController
 let validationStub: Validation
@@ -26,6 +27,7 @@ const makeFakeHttpRequest = (): HttpRequest<AddSurveyModel> => ({
                 answer: "second"
             },
         ],
+        date: new Date()
     }
 })
 
@@ -46,6 +48,9 @@ class AddSurveyStub implements AddSurvey{
 }
 
 describe(AddSurveyController.name, () => {
+    beforeAll(() => MockDate.set(new Date()))
+    afterAll(() => MockDate.reset())
+
     beforeEach(() => {
         validationStub = new ValidationStub()
         addSurveyStub = new AddSurveyStub()
