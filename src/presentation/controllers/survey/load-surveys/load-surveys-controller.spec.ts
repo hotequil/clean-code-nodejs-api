@@ -1,6 +1,8 @@
 import { LoadSurveysController } from "./load-surveys-controller";
 import { HttpRequest, LoadSurveys, SurveysModel } from "./load-surveys-controller-protocols";
 import * as MockDate from "mockdate";
+import StatusCode from "status-code-enum";
+import { success } from "../../../helpers/http-helper";
 
 let controller: LoadSurveysController
 let loadSurveysStub: LoadSurveys
@@ -36,5 +38,11 @@ describe(LoadSurveysController.name, () => {
         await controller.handle(makeFakeHttpRequest())
 
         expect(loadSpy).toHaveBeenCalled()
+    })
+
+    it(`Should return code ${StatusCode.SuccessOK} when handle was called with success`, async () => {
+        const response = await controller.handle(makeFakeHttpRequest())
+
+        expect(response).toEqual(success(makeFakeSurveys()))
     })
 })
