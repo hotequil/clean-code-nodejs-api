@@ -1,5 +1,5 @@
 import { Controller, HttpRequest, HttpResponse, LoadSurveys } from "./load-surveys-controller-protocols";
-import { badRequest, success } from "../../../helpers/http-helper";
+import { badRequest, noContent, success } from "../../../helpers/http-helper";
 
 export class LoadSurveysController implements Controller{
     constructor(private readonly loadSurveys: LoadSurveys){}
@@ -8,7 +8,9 @@ export class LoadSurveysController implements Controller{
         try{
             console.log(request)
 
-            return success(await this.loadSurveys.load())
+            const list = await this.loadSurveys.load()
+
+            return list.length ? success(list) : noContent()
         } catch(error: any){
             return badRequest(error)
         }
