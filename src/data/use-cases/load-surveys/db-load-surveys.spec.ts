@@ -1,5 +1,6 @@
 import { DbLoadSurveys } from "./db-load-surveys";
 import { SurveysModel, LoadSurveysRepository } from "./db-load-surveys-protocols";
+import * as MockDate from "mockdate";
 
 let loadSurveys: DbLoadSurveys
 let loadSurveysRepositoryStub: LoadSurveysRepository
@@ -20,6 +21,9 @@ class LoadSurveysRepositoryStub implements LoadSurveysRepository{
 }
 
 describe(DbLoadSurveys.name, () => {
+    beforeAll(() => MockDate.set(new Date()))
+    afterAll(() => MockDate.reset())
+
     beforeEach(() => {
         loadSurveysRepositoryStub = new LoadSurveysRepositoryStub()
         loadSurveys = new DbLoadSurveys(loadSurveysRepositoryStub)
@@ -31,5 +35,11 @@ describe(DbLoadSurveys.name, () => {
         await loadSurveys.load()
 
         expect(loadAllSpy).toHaveBeenCalled()
+    })
+
+    it("Should return a list of surveys on success", async () => {
+        const surveys = await loadSurveys.load()
+
+        expect(surveys).toEqual(makeFakeSurveysModel())
     })
 })
