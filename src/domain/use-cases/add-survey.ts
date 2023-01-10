@@ -1,11 +1,8 @@
-type Answer = {
-    answer: string
-    image?: string
-}
+import { SurveyAnswersModel } from "../models/survey";
 
 export type AddSurveyModel = {
     question: string
-    answers: Answer[]
+    answers: SurveyAnswersModel
     date: Date
 }
 
