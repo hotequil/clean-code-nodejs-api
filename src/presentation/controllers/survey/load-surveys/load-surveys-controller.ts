@@ -7,8 +7,6 @@ export class LoadSurveysController implements Controller{
     async handle(request: HttpRequest): Promise<HttpResponse> {
         console.log(request)
 
-        await this.loadSurveys.load()
-
-        return success(null);
+        return success(await this.loadSurveys.load())
     }
 }
