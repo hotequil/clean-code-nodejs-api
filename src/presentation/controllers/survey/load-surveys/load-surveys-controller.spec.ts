@@ -2,7 +2,7 @@ import { LoadSurveysController } from "./load-surveys-controller";
 import { HttpRequest, LoadSurveys, SurveysModel } from "./load-surveys-controller-protocols";
 import * as MockDate from "mockdate";
 import StatusCode from "status-code-enum";
-import { badRequest, success } from "../../../helpers/http-helper";
+import { badRequest, noContent, success } from "../../../helpers/http-helper";
 
 let controller: LoadSurveysController
 let loadSurveysStub: LoadSurveys
@@ -44,6 +44,14 @@ describe(LoadSurveysController.name, () => {
         const response = await controller.handle(makeFakeHttpRequest())
 
         expect(response).toEqual(success(makeFakeSurveys()))
+    })
+
+    it(`Should return code ${StatusCode.SuccessNoContent} when handle was called with empty value`, async () => {
+        jest.spyOn(loadSurveysStub, "load").mockReturnValueOnce(new Promise(resolve => resolve([])))
+
+        const response = await controller.handle(makeFakeHttpRequest())
+
+        expect(response).toEqual(noContent())
     })
 
     it(`Should return code ${StatusCode.ServerErrorInternal} if LoadSurveys throws`, async () => {
