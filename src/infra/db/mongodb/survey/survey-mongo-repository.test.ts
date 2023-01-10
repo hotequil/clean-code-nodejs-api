@@ -24,13 +24,15 @@ describe(SurveyMongoRepository.name, () => {
         repository = new SurveyMongoRepository()
     })
 
-    it("Should create a survey when add was called", async () => {
-        const data = makeSurveyData()
+    describe("add()", () => {
+        it("Should create a survey when add was called", async () => {
+            const data = makeSurveyData()
 
-        await repository.add(data)
+            await repository.add(data)
 
-        const addedSurvey = await collection.findOne({ question: data.question })
+            const addedSurvey = await collection.findOne({ question: data.question })
 
-        expect(addedSurvey).toBeTruthy()
+            expect(addedSurvey).toBeTruthy()
+        })
     })
 })
