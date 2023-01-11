@@ -47,5 +47,11 @@ describe(SurveyMongoRepository.name, () => {
             expect(surveys.length).toBe(surveysToAdd.length)
             expect(surveys[0].question).toBe(surveysToAdd[0].question)
         })
+
+        it("Should get an empty list of surveys when loadAll was called", async () => {
+            const surveys = await repository.loadAll()
+
+            expect(surveys.length).toBe(0)
+        })
     })
 })
