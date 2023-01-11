@@ -4,7 +4,12 @@ import { makeAddSurveyController } from "../factories/controllers/survey/add-sur
 import { makeAuthMiddleware } from "../factories/middlewares/auth-middleware-factory";
 import { AccountType } from "../../utils/enums";
 import { adaptMiddleware } from "../adapters/express-middleware-adapter";
+import { makeLoadSurveysController } from "../factories/controllers/survey/load-surveys/load-surveys-controller-factory";
 
 export default (router: Router): void => {
-    router.post("/surveys", adaptMiddleware(makeAuthMiddleware(AccountType.ADMIN)), adaptRoute(makeAddSurveyController()));
+    const adminAuth = adaptMiddleware(makeAuthMiddleware(AccountType.ADMIN))
+    const defaultAuth = adaptMiddleware(makeAuthMiddleware())
+
+    router.post("/surveys", adminAuth, adaptRoute(makeAddSurveyController()));
+    router.get("/surveys", defaultAuth, adaptRoute(makeLoadSurveysController()));
 };
