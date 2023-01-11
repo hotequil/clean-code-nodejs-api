@@ -35,4 +35,17 @@ describe(SurveyMongoRepository.name, () => {
             expect(addedSurvey).toBeTruthy()
         })
     })
+
+    describe("loadAll()", () => {
+        it("Should get all surveys when loadAll was called", async () => {
+            const surveysToAdd = [makeSurveyData(), makeSurveyData()]
+
+            await collection.insertMany(surveysToAdd)
+
+            const surveys = await repository.loadAll()
+
+            expect(surveys.length).toBe(surveysToAdd.length)
+            expect(surveys[0].question).toBe(surveysToAdd[0].question)
+        })
+    })
 })
