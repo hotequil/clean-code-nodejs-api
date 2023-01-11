@@ -40,4 +40,10 @@ describe("SurveyRoutes", () => {
                 .expect(StatusCode.SuccessNoContent)
         })
     })
+
+    describe("GET: /api/surveys", () => {
+        it(`Should return code ${StatusCode.ClientErrorForbidden} when GET in /api/surveys was called without accessToken`, async () =>
+            await request(app).post("/api/surveys").expect(StatusCode.ClientErrorForbidden)
+        )
+    })
 });
