@@ -8,7 +8,8 @@ let collection: Collection
 
 const makeSurveyData = (): AddSurveyModel => ({
     question: "question",
-    answers: [{ answer: "answer" }, { answer: "answer", image: "image" }]
+    answers: [{ answer: "answer" }, { answer: "answer", image: "image" }],
+    date: new Date(),
 })
 
 describe(SurveyMongoRepository.name, () => {
@@ -23,13 +24,34 @@ describe(SurveyMongoRepository.name, () => {
         repository = new SurveyMongoRepository()
     })
 
-    it("Should create a survey when add was called", async () => {
-        const data = makeSurveyData()
+    describe("add()", () => {
+        it("Should create a survey when add was called", async () => {
+            const data = makeSurveyData()
 
-        await repository.add(data)
+            await repository.add(data)
 
-        const addedSurvey = await collection.findOne({ question: data.question })
+            const addedSurvey = await collection.findOne({ question: data.question })
 
-        expect(addedSurvey).toBeTruthy()
+            expect(addedSurvey).toBeTruthy()
+        })
+    })
+
+    describe("loadAll()", () => {
+        it("Should get all surveys when loadAll was called", async () => {
+            const surveysToAdd = [makeSurveyData(), makeSurveyData()]
+
+            await collection.insertMany(surveysToAdd)
+
+            const surveys = await repository.loadAll()
+
+            expect(surveys.length).toBe(surveysToAdd.length)
+            expect(surveys[0].question).toBe(surveysToAdd[0].question)
+        })
+
+        it("Should get an empty list of surveys when loadAll was called", async () => {
+            const surveys = await repository.loadAll()
+
+            expect(surveys.length).toBe(0)
+        })
     })
 })
