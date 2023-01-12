@@ -1,6 +1,6 @@
 import { DbLoadAccountByToken } from "./db-load-account-by-token";
 import { AccountModel, Decrypter, LoadAccountByTokenRepository } from "./db-load-account-by-token-protocols";
-import { AccountType } from "../../../utils/enums";
+import { AccountType } from "@/utils/enums";
 
 const FAKE_TOKEN = "token"
 const DECRYPT_RESULT = "result"

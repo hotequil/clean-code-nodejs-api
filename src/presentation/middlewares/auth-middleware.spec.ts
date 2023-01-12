@@ -2,7 +2,7 @@ import { AuthMiddleware } from "./auth-middleware";
 import StatusCode from "status-code-enum";
 import { forbidden, serverError, success } from "../helpers/http-helper";
 import { AccessDeniedError } from "../errors";
-import { AccountType, Header } from "../../utils/enums";
+import { AccountType, Header } from "@/utils/enums";
 import { HttpRequest, LoadAccountByToken, AccountModel } from "./auth-middleware-protocols";
 
 let middleware: AuthMiddleware;

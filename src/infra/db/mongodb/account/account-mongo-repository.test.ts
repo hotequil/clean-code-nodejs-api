@@ -1,9 +1,9 @@
 import { Collection } from "mongodb";
 import { MongodbHelper } from "../helpers/mongodb-helper";
 import { AccountMongoRepository } from "./account-mongo-repository";
-import { copy } from "../../../../presentation/helpers/manipulator-helper";
-import { AccountModel } from "../../../../domain/models/account";
-import { AccountType } from "../../../../utils/enums";
+import { copy } from "@/presentation/helpers/manipulator-helper";
+import { AccountModel } from "@/domain/models/account";
+import { AccountType } from "@/utils/enums";
 
 const ACCOUNT = { name: "name", email: "email@email.email", password: "password" };
 const TOKEN = "user1234";
