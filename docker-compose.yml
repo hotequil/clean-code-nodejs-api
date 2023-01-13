@@ -14,6 +14,8 @@ services:
     working_dir: /usr/src/clean-code-nodejs-api
     restart: always
     command: bash -c "npm i --omit=dev && npm run debug"
+    environment:
+      - MONGO_URL=mongodb://mongo:27017/clean-code-nodejs-api
     volumes:
       - ./dist/:/usr/src/clean-code-nodejs-api/dist/
       - ./package.json:/usr/src/clean-code-nodejs-api/package.json
