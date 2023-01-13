@@ -1,5 +1,4 @@
 import { StatusCode } from "status-code-enum";
-
 import { SignUpController } from "./sign-up-controller";
 import {
     HttpRequest,

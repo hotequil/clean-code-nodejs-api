@@ -1,5 +1,4 @@
 import StatusCode from "status-code-enum";
-
 import { Controller, HttpRequest, HttpResponse } from "@/presentation/protocols";
 import { LogErrorRepository } from "@/data/protocols/db/log/log-error-repository";
 
