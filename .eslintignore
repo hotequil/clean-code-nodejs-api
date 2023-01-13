@@ -118,3 +118,8 @@ dist
 
 # Docker
 ./data
+
+# Jest
+jest.config.ts
+jest-unit.config.ts
+jest-integration.config.ts

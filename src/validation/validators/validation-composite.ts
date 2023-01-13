@@ -1,5 +1,5 @@
-import { Validation } from "../../presentation/protocols";
-import { AnyObject } from "../../utils/helpers";
+import { Validation } from "@/presentation/protocols";
+import { AnyObject } from "@/utils/helpers";
 
 export class ValidationComposite implements Validation {
     constructor (private readonly validations: Validation[]) {}

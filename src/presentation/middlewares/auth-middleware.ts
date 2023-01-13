@@ -1,6 +1,6 @@
 import { AccessDeniedError } from "../errors";
 import { forbidden, serverError, success } from "../helpers/http-helper";
-import { AccountType, Header } from "../../utils/enums";
+import { AccountType, Header } from "@/utils/enums";
 import { HttpRequest, HttpResponse, LoadAccountByToken, Middleware } from "./auth-middleware-protocols";
 
 export class AuthMiddleware implements Middleware{

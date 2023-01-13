@@ -10,6 +10,9 @@ const config: Config.InitialOptions = {
     collectCoverageFrom: ["<rootDir>/src/**/*.ts", "!<rootDir>/src/main/**"],
     transform: {
         ".+\\.ts$": "ts-jest"
+    },
+    moduleNameMapper: {
+        "@/(.*)": "<rootDir>/src/$1"
     }
 };
 

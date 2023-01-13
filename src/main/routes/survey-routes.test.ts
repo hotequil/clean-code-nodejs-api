@@ -1,11 +1,11 @@
 import request from "supertest";
 import StatusCode from "status-code-enum";
 import app from "../config/app";
-import { MongodbHelper } from "../../infra/db/mongodb/helpers/mongodb-helper";
-import { AddSurveyModel } from "../../domain/use-cases/add-survey";
+import { MongodbHelper } from "@/infra/db/mongodb/helpers/mongodb-helper";
+import { AddSurveyModel } from "@/domain/use-cases/add-survey";
 import { sign } from "jsonwebtoken";
 import env from "../config/env";
-import { AccountType, Header } from "../../utils/enums";
+import { AccountType, Header } from "@/utils/enums";
 
 const makeAddSurveyModel = (): AddSurveyModel => ({
     question: "question",
@@ -27,8 +27,13 @@ const makeAccessToken = async (role?: AccountType): Promise<string> => {
 }
 
 describe("SurveyRoutes", () => {
-    beforeAll(async () => await MongodbHelper.connect());
-    afterAll(async () => await MongodbHelper.disconnect());
+    beforeAll(async () => {
+        await MongodbHelper.connect()
+    });
+
+    afterAll(async () => {
+        await MongodbHelper.disconnect()
+    });
 
     describe("POST: /api/surveys", () => {
         it(`Should return code ${StatusCode.ClientErrorForbidden} when POST in /api/surveys was called without accessToken`, async () => {

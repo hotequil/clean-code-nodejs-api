@@ -1,4 +1,4 @@
-import { AccountType } from "../../utils/enums";
+import { AccountType } from "@/utils/enums";
 import { AccountModel } from "../models/account";
 
 export interface LoadAccountByToken{

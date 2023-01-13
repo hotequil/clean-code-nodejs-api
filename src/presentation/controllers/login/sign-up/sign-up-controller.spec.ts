@@ -1,5 +1,4 @@
 import { StatusCode } from "status-code-enum";
-
 import { SignUpController } from "./sign-up-controller";
 import {
     HttpRequest,
@@ -12,8 +11,8 @@ import {
 } from "./sign-up-controller-protocols";
 import { MissingParamsError, ServerError } from "../../../errors";
 import { badRequest, forbidden, serverError, success } from "../../../helpers/http-helper";
-import { Validation } from "../../../protocols/validation";
-import { AnyObject } from "../../../../utils/helpers";
+import { Validation } from "@/presentation/protocols";
+import { AnyObject } from "@/utils/helpers";
 import { EmailInUseError } from "../../../errors/email-in-use/email-in-use-error";
 
 const TOKEN = "any-token";

@@ -2,9 +2,8 @@ import request from "supertest";
 import StatusCode from "status-code-enum";
 import { Collection } from "mongodb";
 import { hash } from "bcrypt";
-
 import app from "../config/app";
-import { MongodbHelper } from "../../infra/db/mongodb/helpers/mongodb-helper";
+import { MongodbHelper } from "@/infra/db/mongodb/helpers/mongodb-helper";
 
 const PASSWORD = "passwordAndConfirmation"
 const SALT = 12;
@@ -18,8 +17,13 @@ const ACCOUNT = {
 describe("LoginRoutes", () => {
     let collection: Collection;
 
-    beforeAll(async () => await MongodbHelper.connect());
-    afterAll(async () => await MongodbHelper.disconnect());
+    beforeAll(async () => {
+        await MongodbHelper.connect()
+    });
+
+    afterAll(async () => {
+        await MongodbHelper.disconnect()
+    });
 
     beforeEach(async () => {
         collection = await MongodbHelper.collection("accounts");

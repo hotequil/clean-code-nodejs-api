@@ -1,4 +1,4 @@
-import { AnyObject } from "../../utils/helpers";
+import { AnyObject } from "@/utils/helpers";
 
 export type HttpResponse<T = any> = {
     statusCode: number

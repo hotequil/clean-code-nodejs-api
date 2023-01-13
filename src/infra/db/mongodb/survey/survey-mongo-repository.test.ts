@@ -1,7 +1,7 @@
 import { SurveyMongoRepository } from "./survey-mongo-repository";
 import { MongodbHelper } from "../helpers/mongodb-helper";
 import { Collection } from "mongodb";
-import { AddSurveyModel } from "../../../../domain/use-cases/add-survey";
+import { AddSurveyModel } from "@/domain/use-cases/add-survey";
 
 let repository: SurveyMongoRepository
 let collection: Collection

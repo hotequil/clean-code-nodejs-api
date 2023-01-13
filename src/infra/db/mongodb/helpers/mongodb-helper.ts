@@ -1,5 +1,4 @@
 import { MongoClient, Collection, Db } from "mongodb";
-
 import env from "../../../../main/config/env";
 
 type Client = MongoClient|null;

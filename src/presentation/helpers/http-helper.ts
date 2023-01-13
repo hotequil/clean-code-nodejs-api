@@ -1,5 +1,4 @@
 import { StatusCode } from "status-code-enum";
-
 import { BaseError, MissingParamsError, ServerError, UnauthorizedError } from "../errors";
 import { HttpResponse } from "../protocols";
 
