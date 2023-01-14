@@ -7,11 +7,18 @@ let dbLoadSurveyById: DbLoadSurveyById
 let loadSurveyByIdRepositoryStub: LoadSurveyByIdRepository
 const ID = "id"
 
+const makeFakeSurvey = (): SurveyModel => ({
+    id: ID,
+    question: "question",
+    answers: [{ answer: "answer", image: "image" }],
+    date: new Date(),
+})
+
 class LoadSurveyByIdRepositoryStub implements LoadSurveyByIdRepository{
     async loadById(id: string): Promise<SurveyModel | null>{
         console.log(id)
 
-        return await new Promise(resolve => resolve(null))
+        return await new Promise(resolve => resolve(makeFakeSurvey()))
     }
 }
 
@@ -30,5 +37,11 @@ describe(DbLoadSurveyById.name, () => {
         await dbLoadSurveyById.loadById(ID)
 
         expect(loadByIdSpy).toBeCalledWith(ID)
+    })
+
+    it("Should return survey when loadById was called with success", async () => {
+        const survey = await dbLoadSurveyById.loadById(ID)
+
+        expect(survey).toEqual(makeFakeSurvey())
     })
 })
