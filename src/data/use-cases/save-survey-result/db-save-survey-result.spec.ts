@@ -43,4 +43,11 @@ describe(DbSaveSurveyResult.name, () => {
 
         await expect(promise).rejects.toThrow()
     })
+
+    it("Should return a survey result when SaveSurveyResultRepository gives success", async () => {
+        const surveyData = makeFakeSaveSurveyResultModel()
+        const survey = await dbSaveSurveyResult.save(surveyData)
+
+        expect(survey).toEqual({ ...surveyData, id: SURVEY_ID })
+    })
 })
