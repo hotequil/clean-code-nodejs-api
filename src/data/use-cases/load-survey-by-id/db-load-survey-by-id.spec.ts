@@ -44,4 +44,12 @@ describe(DbLoadSurveyById.name, () => {
 
         expect(survey).toEqual(makeFakeSurvey())
     })
+
+    it("Should throw if LoadSurveyByIdRepository throws", async () => {
+        jest.spyOn(loadSurveyByIdRepositoryStub, "loadById").mockReturnValueOnce(new Promise((resolve, reject) => reject(new Error())))
+
+        const promise = dbLoadSurveyById.loadById(ID)
+
+        await expect(promise).rejects.toThrow()
+    })
 })
