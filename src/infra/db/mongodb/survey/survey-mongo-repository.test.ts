@@ -2,6 +2,8 @@ import { SurveyMongoRepository } from "./survey-mongo-repository";
 import { MongodbHelper } from "../helpers/mongodb-helper";
 import { Collection } from "mongodb";
 import { AddSurveyModel } from "@/domain/use-cases/add-survey";
+import { SurveyModel } from "@/domain/models/survey";
+import * as MockDate from "mockdate";
 
 let repository: SurveyMongoRepository
 let collection: Collection
@@ -13,8 +15,17 @@ const makeSurveyData = (): AddSurveyModel => ({
 })
 
 describe(SurveyMongoRepository.name, () => {
-    beforeAll(async () => await MongodbHelper.connect())
-    afterAll(async () => await MongodbHelper.disconnect())
+    beforeAll(async () => {
+        await MongodbHelper.connect()
+
+        MockDate.set(new Date())
+    })
+
+    afterAll(async () => {
+        await MongodbHelper.disconnect()
+
+        MockDate.reset()
+    })
 
     beforeEach(async () => {
         collection = await MongodbHelper.collection("surveys");
@@ -52,6 +63,19 @@ describe(SurveyMongoRepository.name, () => {
             const surveys = await repository.loadAll()
 
             expect(surveys.length).toBe(0)
+        })
+    })
+
+    describe("loadById()", () => {
+        it("Should load survey by id on success", async () => {
+            const surveyData = makeSurveyData()
+            const { insertedId } = await collection.insertOne(surveyData)
+            const survey = await repository.loadById(insertedId) as SurveyModel
+
+            expect(survey.id).toEqual(insertedId)
+            expect(survey.question).toBe(surveyData.question)
+            expect(survey.date).toEqual(surveyData.date)
+            expect(survey.answers).toEqual(surveyData.answers)
         })
     })
 })
