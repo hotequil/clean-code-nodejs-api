@@ -18,7 +18,7 @@ export class SurveyMongoRepository implements AddSurveyRepository, LoadSurveysRe
     async loadAll(): Promise<SurveysModel> {
         const collection = await MongodbHelper.collection("surveys") as unknown as Collection<SurveyModel>
 
-        return await collection.find().toArray();
+        return MongodbHelper.mapAll<SurveyModel>(await collection.find().toArray());
     }
 
     async loadById(id: Object): Promise<SurveyModel | null> {

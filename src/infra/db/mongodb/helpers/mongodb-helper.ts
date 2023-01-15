@@ -38,4 +38,8 @@ export class MongodbHelper {
 
         return { id: _id, ...newItem };
     }
+
+    static mapAll<T = any[]>(items: any[]): T[]{
+        return items.map(MongodbHelper.map)
+    }
 }
