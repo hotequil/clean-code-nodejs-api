@@ -65,4 +65,18 @@ describe(SurveyResultMongoRepository.name, () => {
         expect(result.answer).toBe(answer)
         expect(result.date).toBeTruthy()
     })
+
+    it("Should update survey result if it isn't new", async () => {
+        const surveyId = await makeSurveyId()
+        const accountId = await makeAccountId()
+        const newAnswer = "new answer"
+        const { insertedId } = await collection.insertOne({ surveyId, accountId, answer: "answer", date: new Date() })
+        const result = await repository.save({ surveyId, accountId, answer: newAnswer, date: new Date() }) as SurveyResultModel
+
+        expect(result.id).toEqual(insertedId)
+        expect(result.surveyId).toEqual(surveyId)
+        expect(result.accountId).toEqual(accountId)
+        expect(result.answer).toBe(newAnswer)
+        expect(result.date).toBeTruthy()
+    })
 })
