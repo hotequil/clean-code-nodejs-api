@@ -13,7 +13,7 @@ const makeFakeSurvey = (): SurveyModel => ({
 })
 
 class LoadSurveyByIdRepositoryStub implements LoadSurveyByIdRepository{
-    async loadById(id: string): Promise<SurveyModel | null>{
+    async loadById(id: string | Object): Promise<SurveyModel | null>{
         console.log(id)
 
         return await new Promise(resolve => resolve(makeFakeSurvey()))
