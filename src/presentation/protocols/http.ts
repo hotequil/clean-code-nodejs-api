@@ -1,6 +1,6 @@
 export type HttpResponse<T = any> = {
-    statusCode: number
     body: T
+    statusCode: number
 };
 
 export type HttpRequest<T = any, K = any, F = any> = {
