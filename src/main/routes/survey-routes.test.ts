@@ -2,7 +2,7 @@ import request from "supertest";
 import StatusCode from "status-code-enum";
 import app from "../config/app";
 import { MongodbHelper } from "@/infra/db/mongodb/helpers/mongodb-helper";
-import { AddSurveyModel } from "@/domain/use-cases/add-survey";
+import { AddSurveyModel } from "@/domain/use-cases/survey/add-survey";
 import { sign } from "jsonwebtoken";
 import env from "../config/env";
 import { AccountType, Header } from "@/utils/enums";

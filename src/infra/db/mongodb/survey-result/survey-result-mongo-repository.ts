@@ -1,4 +1,4 @@
-import { SaveSurveyResult, SaveSurveyResultModel } from "@/domain/use-cases/save-survey-result";
+import { SaveSurveyResult, SaveSurveyResultModel } from "@/domain/use-cases/survey-result/save-survey-result";
 import { SurveyResultModel } from "@/domain/models/survey-result";
 import { MongodbHelper } from "@/infra/db/mongodb/helpers/mongodb-helper";
 
