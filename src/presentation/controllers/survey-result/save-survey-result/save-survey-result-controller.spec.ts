@@ -2,6 +2,7 @@ import { SaveSurveyResultController } from "./save-survey-result-controller";
 import { LoadSurveyById, HttpRequest, SurveyModel } from "./save-survey-result-protocols";
 import * as MockDate from "mockdate";
 import StatusCode from "status-code-enum";
+import { serverError } from "@/presentation/helpers/http-helper";
 
 let controller: SaveSurveyResultController
 let loadSurveyByIdStub: LoadSurveyById
@@ -51,5 +52,15 @@ describe(SaveSurveyResultController.name, () => {
         const { statusCode } = await controller.handle(makeFakeRequest())
 
         expect(statusCode).toBe(StatusCode.ClientErrorForbidden)
+    })
+
+    it(`Should return code ${StatusCode.ServerErrorInternal} if LoadSurveyById throws`, async () => {
+        const error = new Error()
+
+        jest.spyOn(loadSurveyByIdStub, "loadById").mockReturnValueOnce(new Promise((resolve, reject) => reject(error)))
+
+        const response = await controller.handle(makeFakeRequest())
+
+        expect(response).toEqual(serverError(error))
     })
 })
