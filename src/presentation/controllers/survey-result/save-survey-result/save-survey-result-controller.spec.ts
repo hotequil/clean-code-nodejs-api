@@ -112,4 +112,14 @@ describe(SaveSurveyResultController.name, () => {
             date: new Date()
         })
     })
+
+    it(`Should return code ${StatusCode.ServerErrorInternal} if SaveSurveyResult throws`, async () => {
+        const error = new Error()
+
+        jest.spyOn(saveSurveyResultStub, "save").mockReturnValueOnce(new Promise((resolve, reject) => reject(error)))
+
+        const response = await controller.handle(makeFakeRequest())
+
+        expect(response).toEqual(serverError(error))
+    })
 })
