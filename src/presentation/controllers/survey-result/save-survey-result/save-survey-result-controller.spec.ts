@@ -2,22 +2,27 @@ import { SaveSurveyResultController } from "./save-survey-result-controller";
 import { LoadSurveyById, HttpRequest, SurveyModel } from "./save-survey-result-protocols";
 import * as MockDate from "mockdate";
 import StatusCode from "status-code-enum";
-import { serverError } from "@/presentation/helpers/http-helper";
+import { forbidden, serverError } from "@/presentation/helpers/http-helper";
+import { InvalidParamsError } from "@/presentation/errors";
 
 let controller: SaveSurveyResultController
 let loadSurveyByIdStub: LoadSurveyById
 const SURVEY_ID = "surveyId"
+const VALID_ANSWER = "valid-answer"
 
-const makeFakeRequest = (): HttpRequest<any, { surveyId: string }> => ({
+const makeFakeRequest = (): HttpRequest<{ answer: string }, { surveyId: string }> => ({
     params: {
         surveyId: SURVEY_ID
     },
+    body: {
+        answer: VALID_ANSWER
+    }
 })
 
 const makeFakeSurvey = (): SurveyModel => ({
     id: SURVEY_ID,
     question: "question",
-    answers: [{ answer: "answer", image: "image" }, { answer: "answer", image: "image" }],
+    answers: [{ answer: "answer", image: "image" }, { answer: VALID_ANSWER, image: "image" }],
     date: new Date(),
 })
 
@@ -62,5 +67,15 @@ describe(SaveSurveyResultController.name, () => {
         const response = await controller.handle(makeFakeRequest())
 
         expect(response).toEqual(serverError(error))
+    })
+
+    it(`Should return code ${StatusCode.ClientErrorForbidden} if an invalid answer is provided`, async () => {
+        const request = makeFakeRequest()
+
+        if(request?.body) request.body.answer = "invalid-answer"
+
+        const response = await controller.handle(request)
+
+        expect(response).toEqual(forbidden(new InvalidParamsError("answer")))
     })
 })
