@@ -2,7 +2,7 @@ import { SaveSurveyResultController } from "./save-survey-result-controller";
 import { LoadSurveyById, HttpRequest, SurveyModel, SaveSurveyResult, SaveSurveyResultModel, SurveyResultModel } from "./save-survey-result-protocols";
 import * as MockDate from "mockdate";
 import StatusCode from "status-code-enum";
-import { forbidden, serverError } from "@/presentation/helpers/http-helper";
+import { forbidden, serverError, success } from "@/presentation/helpers/http-helper";
 import { InvalidParamsError } from "@/presentation/errors";
 
 let controller: SaveSurveyResultController
@@ -121,5 +121,11 @@ describe(SaveSurveyResultController.name, () => {
         const response = await controller.handle(makeFakeRequest())
 
         expect(response).toEqual(serverError(error))
+    })
+
+    it(`Should return code ${StatusCode.SuccessOK} when handle was called with success`, async () => {
+        const response = await controller.handle(makeFakeRequest())
+
+        expect(response).toEqual(success(makeFakeSurveyResult()))
     })
 })
