@@ -3,7 +3,7 @@ import { AddSurveyModel } from "@/domain/use-cases/survey/add-survey";
 import { MongodbHelper } from "../helpers/mongodb-helper";
 import { LoadSurveysRepository } from "@/data/protocols/db/survey/load-surveys-repository";
 import { SurveyModel, SurveysModel } from "@/domain/models/survey";
-import { Collection } from "mongodb";
+import { Collection, ObjectId } from "mongodb";
 import { LoadSurveyById } from "@/domain/use-cases/survey/load-survey-by-id";
 
 export class SurveyMongoRepository implements AddSurveyRepository, LoadSurveysRepository, LoadSurveyById{
@@ -21,9 +21,9 @@ export class SurveyMongoRepository implements AddSurveyRepository, LoadSurveysRe
         return MongodbHelper.mapAll<SurveyModel>(await collection.find().toArray());
     }
 
-    async loadById(id: Object): Promise<SurveyModel | null> {
+    async loadById(id: Object | string): Promise<SurveyModel | null> {
         const collection = await MongodbHelper.collection("surveys")
-        const response = await collection.findOne({ _id: id }) as unknown
+        const response = await collection.findOne({ _id: typeof id === "string" ? new ObjectId(id) : id }) as unknown
 
         return response ? MongodbHelper.map<SurveyModel>(response) : null;
     }
