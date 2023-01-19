@@ -1,5 +1,5 @@
 import { SaveSurveyResultController } from "./save-survey-result-controller";
-import { LoadSurveyById, HttpRequest, SurveyModel, SaveSurveyResult, SaveSurveyResultModel, SurveyResultModel } from "./save-survey-result-protocols";
+import { LoadSurveyById, HttpRequest, SurveyModel, SaveSurveyResult, SaveSurveyResultParams, SurveyResultModel } from "./save-survey-result-protocols";
 import * as MockDate from "mockdate";
 import StatusCode from "status-code-enum";
 import { forbidden, serverError, success } from "@/presentation/helpers/http-helper";
@@ -46,7 +46,7 @@ class LoadSurveyByIdStub implements LoadSurveyById{
 }
 
 class SaveSurveyResultStub implements SaveSurveyResult{
-    async save(data: SaveSurveyResultModel): Promise<SurveyResultModel | null> {
+    async save(data: SaveSurveyResultParams): Promise<SurveyResultModel | null> {
         console.log(data)
 
         return await new Promise(resolve => resolve(makeFakeSurveyResult()));

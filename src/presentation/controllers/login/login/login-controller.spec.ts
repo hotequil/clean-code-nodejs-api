@@ -8,7 +8,7 @@ import {
     Authentication,
     Validation,
     AnyObject,
-    AuthenticationModel
+    AuthenticationParams
 } from "./login-controller-protocols";
 
 const TOKEN = "token";
@@ -23,7 +23,7 @@ const makeHttpRequest = (): HttpRequest => (
 );
 
 class AuthenticationStub implements Authentication {
-    async auth (model: AuthenticationModel): Promise<string|null> {
+    async auth (model: AuthenticationParams): Promise<string|null> {
         console.log(model);
 
         return await new Promise(resolve => resolve(TOKEN));

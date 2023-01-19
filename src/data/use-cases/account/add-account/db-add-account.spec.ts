@@ -2,7 +2,7 @@ import { DbAddAccount } from "./db-add-account";
 import {
     AccountModel,
     AddAccount,
-    AddAccountModel,
+    AddAccountParams,
     AddAccountRepository,
     Hasher,
     LoadAccountByEmailRepository
@@ -33,7 +33,7 @@ class HasherStub implements Hasher {
 }
 
 class AddAccountRepositoryStub implements AddAccountRepository {
-    async add (account: AddAccountModel): Promise<AccountModel> {
+    async add (account: AddAccountParams): Promise<AccountModel> {
         const fakeAccount: AccountModel = {
             ...account,
             password: HASHED_PASSWORD,

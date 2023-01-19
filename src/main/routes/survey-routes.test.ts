@@ -2,12 +2,12 @@ import request from "supertest";
 import StatusCode from "status-code-enum";
 import app from "../config/app";
 import { MongodbHelper } from "@/infra/db/mongodb/helpers/mongodb-helper";
-import { AddSurveyModel } from "@/domain/use-cases/survey/add-survey";
+import { AddSurveyParams } from "@/domain/use-cases/survey/add-survey";
 import { sign } from "jsonwebtoken";
 import env from "../config/env";
 import { AccountType, Header } from "@/utils/enums";
 
-const makeAddSurveyModel = (): AddSurveyModel => ({
+const makeAddSurveyModel = (): AddSurveyParams => ({
     question: "question",
     answers: [{ answer: "answer", image: "image" }, { answer: "answer", image: "image" }, { answer: "answer", image: "image" }],
     date: new Date(),

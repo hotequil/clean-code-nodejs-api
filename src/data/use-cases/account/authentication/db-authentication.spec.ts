@@ -1,7 +1,7 @@
 import { DbAuthentication } from "./db-authentication";
 import {
     Authentication,
-    AuthenticationModel,
+    AuthenticationParams,
     AccountModel,
     LoadAccountByEmailRepository,
     HashComparer,
@@ -14,7 +14,7 @@ const DEFAULT_PASSWORD = "1a2b3c4d";
 const ACCOUNT_PASSWORD = "password";
 const ACCOUNT_ID = "id";
 const TOKEN = "token";
-const createAuthModel = (): AuthenticationModel => ({ email: DEFAULT_EMAIL, password: DEFAULT_PASSWORD });
+const createAuthModel = (): AuthenticationParams => ({ email: DEFAULT_EMAIL, password: DEFAULT_PASSWORD });
 
 class LoadAccountByEmailRepositoryStub implements LoadAccountByEmailRepository {
     async loadByEmail (email: string): Promise<AccountModel> {

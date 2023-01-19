@@ -1,14 +1,14 @@
 import { SurveyMongoRepository } from "./survey-mongo-repository";
 import { MongodbHelper } from "../helpers/mongodb-helper";
 import { Collection } from "mongodb";
-import { AddSurveyModel } from "@/domain/use-cases/survey/add-survey";
+import { AddSurveyParams } from "@/domain/use-cases/survey/add-survey";
 import { SurveyModel } from "@/domain/models/survey";
 import * as MockDate from "mockdate";
 
 let repository: SurveyMongoRepository
 let collection: Collection
 
-const makeSurveyData = (): AddSurveyModel => ({
+const makeSurveyData = (): AddSurveyParams => ({
     question: "question",
     answers: [{ answer: "answer" }, { answer: "answer", image: "image" }],
     date: new Date(),

@@ -4,9 +4,9 @@ import {
     HttpRequest,
     AccountModel,
     AddAccount,
-    AddAccountModel,
+    AddAccountParams,
     Authentication,
-    AuthenticationModel,
+    AuthenticationParams,
     HttpResponse
 } from "./sign-up-controller-protocols";
 import { MissingParamsError, ServerError } from "../../../errors";
@@ -33,7 +33,7 @@ const makeDefaultHttpRequest = (): HttpRequest => (
 );
 
 class AddAccountStub implements AddAccount {
-    async add (account: AddAccountModel): Promise<AccountModel> {
+    async add (account: AddAccountParams): Promise<AccountModel> {
         return await new Promise(resolve => resolve({ ...account, id: "id" }));
     }
 }
@@ -47,7 +47,7 @@ class ValidationStub implements Validation {
 }
 
 class AuthenticationStub implements Authentication {
-    async auth (model: AuthenticationModel): Promise<string|null> {
+    async auth (model: AuthenticationParams): Promise<string|null> {
         console.log(model)
 
         return await new Promise(resolve => resolve(TOKEN))
