@@ -1,6 +1,6 @@
 {
     "name": "clean-code-nodejs-api",
-    "version": "2.0.1",
+    "version": "2.1.0",
     "description": "Clean code NodeJS API.",
     "main": "./src/main/server.ts",
     "scripts": {
