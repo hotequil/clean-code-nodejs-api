@@ -3,6 +3,7 @@ import { Controller, HttpRequest, HttpResponse } from "@/presentation/protocols"
 import { LogDecorator } from "./log-controller-decorator";
 import { serverError } from "@/presentation/helpers/http-helper";
 import { LogErrorRepository } from "@/data/protocols/db/log/log-error-repository";
+import { mockLogErrorRepository } from "@/utils/tests";
 
 const RESPONSE_MOCK = {
     statusCode: StatusCode.SuccessOK,
@@ -28,14 +29,6 @@ class ControllerStub implements Controller {
     }
 }
 
-class LogErrorRepositoryStub implements LogErrorRepository {
-    async logError (stack: string): Promise<void> {
-        console.log(stack);
-
-        return await new Promise(resolve => resolve());
-    }
-}
-
 describe("LogDecorator", () => {
     let logDecorator: LogDecorator;
     let controllerStub: ControllerStub;
@@ -43,7 +36,7 @@ describe("LogDecorator", () => {
 
     beforeEach(() => {
         controllerStub = new ControllerStub();
-        logErrorRepositoryStub = new LogErrorRepositoryStub();
+        logErrorRepositoryStub = mockLogErrorRepository();
         logDecorator = new LogDecorator(controllerStub, logErrorRepositoryStub);
     });
 
