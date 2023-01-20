@@ -1,6 +1,7 @@
 import { DbLoadAccountByToken } from "./db-load-account-by-token";
 import { AccountModel, Decrypter, LoadAccountByTokenRepository } from "./db-load-account-by-token-protocols";
 import { AccountType } from "@/utils/enums";
+import { mockAccountModel, throwError } from "@/utils/tests";
 
 const FAKE_TOKEN = "token"
 const DECRYPT_RESULT = "result"
@@ -8,14 +9,6 @@ const ROLE = AccountType.USER
 let db: DbLoadAccountByToken
 let decrypter: Decrypter
 let loadAccountByTokenRepository: LoadAccountByTokenRepository
-
-const makeFakeAccountModel = (): AccountModel => ({
-    email: "email@email.email",
-    id: "id",
-    accessToken: "accessToken",
-    name: "name",
-    password: "password",
-})
 
 class DecrypterStub implements Decrypter{
     async decrypt(value: string): Promise<string | null> {
@@ -29,7 +22,7 @@ class LoadAccountByTokenRepositoryStub implements LoadAccountByTokenRepository{
     async loadByToken(token: string, role?: AccountType): Promise<AccountModel | null>{
         console.log(token, role)
 
-        return await new Promise(resolve => resolve(makeFakeAccountModel()))
+        return await new Promise(resolve => resolve(mockAccountModel()))
     }
 }
 
@@ -75,12 +68,11 @@ describe(DbLoadAccountByToken.name, () => {
     it("Should return an account on success", async () => {
         const account = await db.loadByToken(FAKE_TOKEN, ROLE)
 
-        expect(account).toEqual(makeFakeAccountModel())
+        expect(account).toEqual(mockAccountModel())
     })
 
     it("Should throw if Decrypter throws", async () => {
-        jest.spyOn(decrypter, "decrypt")
-            .mockReturnValueOnce(new Promise((resolve, reject) => reject(new Error())))
+        jest.spyOn(decrypter, "decrypt").mockImplementationOnce(throwError)
 
         const promise = db.loadByToken(FAKE_TOKEN, ROLE)
 
@@ -88,8 +80,7 @@ describe(DbLoadAccountByToken.name, () => {
     })
 
     it("Should throw if LoadAccountByTokenRepository throws", async () => {
-        jest.spyOn(loadAccountByTokenRepository, "loadByToken")
-            .mockReturnValueOnce(new Promise((resolve, reject) => reject(new Error())))
+        jest.spyOn(loadAccountByTokenRepository, "loadByToken").mockImplementationOnce(throwError)
 
         const promise = db.loadByToken(FAKE_TOKEN, ROLE)
 

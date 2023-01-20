@@ -1,5 +1,6 @@
 import { DbAddSurvey } from "./db-add-survey";
 import { AddSurveyParams, AddSurveyRepository } from "./db-add-survey-protocols";
+import { throwError } from "@/utils/tests";
 
 let db: DbAddSurvey
 let addSurveyRepositoryStub: AddSurveyRepository
@@ -38,8 +39,7 @@ describe(DbAddSurvey.name, () => {
     })
 
     it("Should throw if AddSurveyRepository throws", async () => {
-        jest.spyOn(addSurveyRepositoryStub, "add")
-            .mockReturnValueOnce(new Promise((resolve, reject) => reject(new Error())))
+        jest.spyOn(addSurveyRepositoryStub, "add").mockImplementationOnce(throwError)
 
         const promise = db.add(makeAddSurveyModel())
 

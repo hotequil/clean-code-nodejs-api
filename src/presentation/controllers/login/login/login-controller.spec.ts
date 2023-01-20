@@ -10,6 +10,7 @@ import {
     AnyObject,
     AuthenticationParams
 } from "./login-controller-protocols";
+import { throwError } from "@/utils/tests";
 
 const TOKEN = "token";
 
@@ -68,7 +69,7 @@ describe("LoginController", () => {
     });
 
     it(`Should return code ${StatusCode.ServerErrorInternal} if Authentication throws when was called`, async () => {
-        jest.spyOn(authentication, "auth").mockImplementationOnce(() => { throw new Error(); });
+        jest.spyOn(authentication, "auth").mockImplementationOnce(throwError);
 
         const request: HttpRequest = makeHttpRequest();
         const response: HttpResponse = await loginController.handle(request);

@@ -4,6 +4,7 @@ import * as MockDate from "mockdate";
 import StatusCode from "status-code-enum";
 import { forbidden, serverError, success } from "@/presentation/helpers/http-helper";
 import { InvalidParamsError } from "@/presentation/errors";
+import { throwError } from "@/utils/tests";
 
 let controller: SaveSurveyResultController
 let loadSurveyByIdStub: LoadSurveyById
@@ -80,13 +81,11 @@ describe(SaveSurveyResultController.name, () => {
     })
 
     it(`Should return code ${StatusCode.ServerErrorInternal} if LoadSurveyById throws`, async () => {
-        const error = new Error()
-
-        jest.spyOn(loadSurveyByIdStub, "loadById").mockReturnValueOnce(new Promise((resolve, reject) => reject(error)))
+        jest.spyOn(loadSurveyByIdStub, "loadById").mockImplementationOnce(throwError)
 
         const response = await controller.handle(makeFakeRequest())
 
-        expect(response).toEqual(serverError(error))
+        expect(response).toEqual(serverError(new Error()))
     })
 
     it(`Should return code ${StatusCode.ClientErrorForbidden} if an invalid answer is provided`, async () => {
@@ -114,13 +113,11 @@ describe(SaveSurveyResultController.name, () => {
     })
 
     it(`Should return code ${StatusCode.ServerErrorInternal} if SaveSurveyResult throws`, async () => {
-        const error = new Error()
-
-        jest.spyOn(saveSurveyResultStub, "save").mockReturnValueOnce(new Promise((resolve, reject) => reject(error)))
+        jest.spyOn(saveSurveyResultStub, "save").mockImplementationOnce(throwError)
 
         const response = await controller.handle(makeFakeRequest())
 
-        expect(response).toEqual(serverError(error))
+        expect(response).toEqual(serverError(new Error()))
     })
 
     it(`Should return code ${StatusCode.SuccessOK} when handle was called with success`, async () => {

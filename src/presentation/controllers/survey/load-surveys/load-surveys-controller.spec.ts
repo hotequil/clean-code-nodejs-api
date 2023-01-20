@@ -3,6 +3,7 @@ import { HttpRequest, LoadSurveys, SurveysModel } from "./load-surveys-controlle
 import * as MockDate from "mockdate";
 import StatusCode from "status-code-enum";
 import { badRequest, noContent, success } from "../../../helpers/http-helper";
+import { throwError } from "@/utils/tests";
 
 let controller: LoadSurveysController
 let loadSurveysStub: LoadSurveys
@@ -55,7 +56,7 @@ describe(LoadSurveysController.name, () => {
     })
 
     it(`Should return code ${StatusCode.ServerErrorInternal} if LoadSurveys throws`, async () => {
-        jest.spyOn(loadSurveysStub, "load").mockReturnValueOnce(new Promise((resolve, reject) => reject(new Error())))
+        jest.spyOn(loadSurveysStub, "load").mockImplementationOnce(throwError)
 
         const response = await controller.handle(makeFakeHttpRequest())
 

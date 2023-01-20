@@ -1,5 +1,6 @@
 import { SurveyModel, DbLoadSurveyById, LoadSurveyByIdRepository } from "./db-load-survey-by-id-protocols";
 import * as MockDate from "mockdate";
+import { throwError } from "@/utils/tests";
 
 let dbLoadSurveyById: DbLoadSurveyById
 let loadSurveyByIdRepositoryStub: LoadSurveyByIdRepository
@@ -44,7 +45,7 @@ describe(DbLoadSurveyById.name, () => {
     })
 
     it("Should throw if LoadSurveyByIdRepository throws", async () => {
-        jest.spyOn(loadSurveyByIdRepositoryStub, "loadById").mockReturnValueOnce(new Promise((resolve, reject) => reject(new Error())))
+        jest.spyOn(loadSurveyByIdRepositoryStub, "loadById").mockImplementationOnce(throwError)
 
         const promise = dbLoadSurveyById.loadById(ID)
 

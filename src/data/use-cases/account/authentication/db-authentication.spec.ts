@@ -8,6 +8,7 @@ import {
     Encrypter,
     UpdateAccessTokenRepository
 } from "./db-authentication-protocols";
+import { throwError } from "@/utils/tests";
 
 const DEFAULT_EMAIL = "email@email.email";
 const DEFAULT_PASSWORD = "1a2b3c4d";
@@ -72,8 +73,7 @@ describe("DbAuthentication", () => {
     });
 
     it("Should throw an log if LoadAccountByEmailRepository throws when was called", async () => {
-        jest.spyOn(loadAccountByEmailRepositoryStub, "loadByEmail")
-            .mockReturnValueOnce(new Promise((resolve, reject) => reject(new Error())));
+        jest.spyOn(loadAccountByEmailRepositoryStub, "loadByEmail").mockImplementationOnce(throwError)
 
         const promise = db.auth(createAuthModel());
 
@@ -97,8 +97,7 @@ describe("DbAuthentication", () => {
     });
 
     it("Should return an log if HashComparer throws when was called", async () => {
-        jest.spyOn(hashComparerStub, "compare")
-            .mockReturnValueOnce(new Promise((resolve, reject) => reject(new Error())));
+        jest.spyOn(hashComparerStub, "compare").mockImplementationOnce(throwError)
 
         const promise = db.auth(createAuthModel());
 
@@ -122,8 +121,7 @@ describe("DbAuthentication", () => {
     });
 
     it("Should return an log if Encrypter throws when was called", async () => {
-        jest.spyOn(encrypterStub, "encrypt")
-            .mockReturnValueOnce(new Promise((resolve, reject) => reject(new Error())));
+        jest.spyOn(encrypterStub, "encrypt").mockImplementationOnce(throwError)
 
         const promise = db.auth(createAuthModel());
 
@@ -145,8 +143,7 @@ describe("DbAuthentication", () => {
     });
 
     it("Should return an log if UpdateAccessTokenRepository throws when was called", async () => {
-        jest.spyOn(updateAccessTokenRepositoryStub, "updateAccessToken")
-            .mockReturnValueOnce(new Promise((resolve, reject) => reject(new Error())));
+        jest.spyOn(updateAccessTokenRepositoryStub, "updateAccessToken").mockImplementationOnce(throwError)
 
         const promise = db.auth(createAuthModel());
 

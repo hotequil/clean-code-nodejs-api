@@ -1,5 +1,6 @@
 import bcrypt from "bcrypt";
 import { BcryptAdapter } from "./bcrypt-adapter";
+import { throwError } from "@/utils/tests";
 
 let bcryptAdapter: BcryptAdapter;
 const SALT = 12;
@@ -37,8 +38,7 @@ describe("BcryptAdapter", () => {
         });
 
         it("Should throw an log when hash throws", async () => {
-            jest.spyOn(bcrypt, "hash")
-                .mockReturnValueOnce(new Promise((resolve, reject) => reject(new Error())) as unknown as any);
+            jest.spyOn(bcrypt, "hash").mockImplementationOnce(throwError)
 
             const promise = bcryptAdapter.hash("hash");
 
@@ -71,8 +71,7 @@ describe("BcryptAdapter", () => {
         });
 
         it("Should throw an log when compare throws", async () => {
-            // @ts-ignore
-            jest.spyOn(bcrypt, "compare").mockReturnValueOnce(new Promise((resolve, reject) => reject(new Error())));
+            jest.spyOn(bcrypt, "compare").mockImplementationOnce(throwError)
 
             const promise = bcryptAdapter.compare(DEFAULT_VALUE, DEFAULT_HASH);
 

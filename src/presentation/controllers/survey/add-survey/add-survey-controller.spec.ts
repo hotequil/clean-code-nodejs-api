@@ -9,6 +9,7 @@ import {
 } from "./add-survey-controller-protocols";
 import StatusCode from "status-code-enum";
 import * as MockDate from "mockdate";
+import { throwError } from "@/utils/tests";
 
 let controller: AddSurveyController
 let validationStub: Validation
@@ -84,8 +85,7 @@ describe(AddSurveyController.name, () => {
     })
 
     it(`Should return ${StatusCode.ServerErrorInternal} if AddSurvey throws`, async () => {
-        jest.spyOn(addSurveyStub, "add")
-            .mockReturnValueOnce(new Promise((resolve, reject) => reject(new Error())))
+        jest.spyOn(addSurveyStub, "add").mockImplementationOnce(throwError)
 
         const { statusCode } = await controller.handle(makeFakeHttpRequest())
 
