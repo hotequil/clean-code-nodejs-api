@@ -7,7 +7,7 @@ import {
     Hasher,
     LoadAccountByEmailRepository
 } from "./db-add-account-protocols";
-import { mockAccountModel, mockAddAccountParams, throwError } from "@/utils/tests";
+import { mockAccountModel, mockAddAccountParams, mockHasher, throwError } from "@/utils/tests";
 
 let db: AddAccount;
 let hasherSub: Hasher;
@@ -15,14 +15,6 @@ let addAccountRepositoryStub: AddAccountRepository;
 let loadAccountByEmailRepositoryStub: LoadAccountByEmailRepository;
 const HASHED_PASSWORD = "12345678";
 const ID = "123";
-
-class HasherStub implements Hasher {
-    async hash (value: string): Promise<string> {
-        console.log(value);
-
-        return await new Promise(resolve => resolve(HASHED_PASSWORD));
-    }
-}
 
 class AddAccountRepositoryStub implements AddAccountRepository {
     async add (account: AddAccountParams): Promise<AccountModel> {
@@ -46,7 +38,7 @@ class LoadAccountByEmailRepositoryStub implements LoadAccountByEmailRepository {
 
 describe("DbAddAccount", () => {
     beforeEach(() => {
-        hasherSub = new HasherStub();
+        hasherSub = mockHasher(HASHED_PASSWORD);
         addAccountRepositoryStub = new AddAccountRepositoryStub();
         loadAccountByEmailRepositoryStub = new LoadAccountByEmailRepositoryStub();
         db = new DbAddAccount(hasherSub, addAccountRepositoryStub, loadAccountByEmailRepositoryStub);

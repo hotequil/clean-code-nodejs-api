@@ -1,7 +1,7 @@
 import { DbLoadAccountByToken } from "./db-load-account-by-token";
 import { AccountModel, Decrypter, LoadAccountByTokenRepository } from "./db-load-account-by-token-protocols";
 import { AccountType } from "@/utils/enums";
-import { mockAccountModel, throwError } from "@/utils/tests";
+import { mockAccountModel, mockDecrypter, throwError } from "@/utils/tests";
 
 const FAKE_TOKEN = "token"
 const DECRYPT_RESULT = "result"
@@ -9,14 +9,6 @@ const ROLE = AccountType.USER
 let db: DbLoadAccountByToken
 let decrypter: Decrypter
 let loadAccountByTokenRepository: LoadAccountByTokenRepository
-
-class DecrypterStub implements Decrypter{
-    async decrypt(value: string): Promise<string | null> {
-        console.log(value)
-
-        return await new Promise(resolve => resolve(DECRYPT_RESULT));
-    }
-}
 
 class LoadAccountByTokenRepositoryStub implements LoadAccountByTokenRepository{
     async loadByToken(token: string, role?: AccountType): Promise<AccountModel | null>{
@@ -28,7 +20,7 @@ class LoadAccountByTokenRepositoryStub implements LoadAccountByTokenRepository{
 
 describe(DbLoadAccountByToken.name, () => {
     beforeEach(() => {
-        decrypter = new DecrypterStub()
+        decrypter = mockDecrypter(DECRYPT_RESULT)
         loadAccountByTokenRepository = new LoadAccountByTokenRepositoryStub()
         db = new DbLoadAccountByToken(decrypter, loadAccountByTokenRepository)
     })

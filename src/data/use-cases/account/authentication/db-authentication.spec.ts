@@ -8,7 +8,7 @@ import {
     Encrypter,
     UpdateAccessTokenRepository
 } from "./db-authentication-protocols";
-import { throwError } from "@/utils/tests";
+import { mockEncrypter, mockHashComparer, throwError } from "@/utils/tests";
 
 const DEFAULT_EMAIL = "email@email.email";
 const DEFAULT_PASSWORD = "1a2b3c4d";
@@ -22,22 +22,6 @@ class LoadAccountByEmailRepositoryStub implements LoadAccountByEmailRepository {
         const account = { email, id: ACCOUNT_ID, name: "name", password: ACCOUNT_PASSWORD };
 
         return await new Promise(resolve => resolve(account));
-    }
-}
-
-class HashComparerStub implements HashComparer {
-    async compare (value: string, hash: string): Promise<boolean> {
-        console.log(value, hash);
-
-        return await new Promise(resolve => resolve(true));
-    }
-}
-
-class EncrypterStub implements Encrypter {
-    async encrypt (value: string): Promise<string> {
-        console.log(value);
-
-        return await new Promise(resolve => resolve(TOKEN));
     }
 }
 
@@ -58,8 +42,8 @@ describe("DbAuthentication", () => {
 
     beforeEach(() => {
         loadAccountByEmailRepositoryStub = new LoadAccountByEmailRepositoryStub();
-        hashComparerStub = new HashComparerStub();
-        encrypterStub = new EncrypterStub();
+        hashComparerStub = mockHashComparer();
+        encrypterStub = mockEncrypter(TOKEN);
         updateAccessTokenRepositoryStub = new UpdateAccessTokenRepositoryStub();
         db = new DbAuthentication(loadAccountByEmailRepositoryStub, hashComparerStub, encrypterStub, updateAccessTokenRepositoryStub);
     });
