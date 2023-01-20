@@ -1,7 +1,7 @@
 import { DbLoadAccountByToken } from "./db-load-account-by-token";
-import { AccountModel, Decrypter, LoadAccountByTokenRepository } from "./db-load-account-by-token-protocols";
+import { Decrypter, LoadAccountByTokenRepository } from "./db-load-account-by-token-protocols";
 import { AccountType } from "@/utils/enums";
-import { mockAccountModel, mockDecrypter, throwError } from "@/utils/tests";
+import { mockAccountModel, mockDecrypter, mockLoadAccountByTokenRepository, throwError } from "@/utils/tests";
 
 const FAKE_TOKEN = "token"
 const DECRYPT_RESULT = "result"
@@ -10,18 +10,10 @@ let db: DbLoadAccountByToken
 let decrypter: Decrypter
 let loadAccountByTokenRepository: LoadAccountByTokenRepository
 
-class LoadAccountByTokenRepositoryStub implements LoadAccountByTokenRepository{
-    async loadByToken(token: string, role?: AccountType): Promise<AccountModel | null>{
-        console.log(token, role)
-
-        return await new Promise(resolve => resolve(mockAccountModel()))
-    }
-}
-
 describe(DbLoadAccountByToken.name, () => {
     beforeEach(() => {
         decrypter = mockDecrypter(DECRYPT_RESULT)
-        loadAccountByTokenRepository = new LoadAccountByTokenRepositoryStub()
+        loadAccountByTokenRepository = mockLoadAccountByTokenRepository()
         db = new DbLoadAccountByToken(decrypter, loadAccountByTokenRepository)
     })
 

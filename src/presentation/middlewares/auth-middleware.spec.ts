@@ -3,8 +3,8 @@ import StatusCode from "status-code-enum";
 import { forbidden, serverError, success } from "../helpers/http-helper";
 import { AccessDeniedError } from "../errors";
 import { AccountType, Header } from "@/utils/enums";
-import { HttpRequest, LoadAccountByToken, AccountModel } from "./auth-middleware-protocols";
-import { mockAccountModel, throwError } from "@/utils/tests";
+import { HttpRequest, LoadAccountByToken } from "./auth-middleware-protocols";
+import { mockAccountModel, mockLoadAccountByTokenRepository, throwError } from "@/utils/tests";
 
 let middleware: AuthMiddleware;
 let loadAccountByToken: LoadAccountByToken;
@@ -16,17 +16,9 @@ const makeFakeHttpRequest = (): HttpRequest => ({
     }
 })
 
-class LoadAccountByTokenStub implements LoadAccountByToken{
-    async loadByToken(token: string): Promise<AccountModel | null>{
-        console.log(token)
-
-        return await new Promise(resolve => resolve(mockAccountModel()))
-    }
-}
-
 describe(AuthMiddleware.name, () => {
     beforeEach(() => {
-        loadAccountByToken = new LoadAccountByTokenStub()
+        loadAccountByToken = mockLoadAccountByTokenRepository()
         middleware = new AuthMiddleware(loadAccountByToken)
     })
 
@@ -39,7 +31,7 @@ describe(AuthMiddleware.name, () => {
     it("Should call LoadAccountByToken with correct token", async () => {
         const role = AccountType.USER
 
-        loadAccountByToken = new LoadAccountByTokenStub()
+        loadAccountByToken = mockLoadAccountByTokenRepository()
         middleware = new AuthMiddleware(loadAccountByToken, role)
 
         const loadAccountByTokenSpy = jest.spyOn(loadAccountByToken, "loadByToken")

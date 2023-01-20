@@ -1,13 +1,18 @@
 import { DbAddAccount } from "./db-add-account";
 import {
-    AccountModel,
     AddAccount,
-    AddAccountParams,
     AddAccountRepository,
     Hasher,
     LoadAccountByEmailRepository
 } from "./db-add-account-protocols";
-import { mockAccountModel, mockAddAccountParams, mockHasher, throwError } from "@/utils/tests";
+import {
+    mockAccountModel,
+    mockAddAccountParams,
+    mockAddAccountRepository,
+    mockHasher,
+    mockLoadAccountByEmailRepository,
+    throwError
+} from "@/utils/tests";
 
 let db: AddAccount;
 let hasherSub: Hasher;
@@ -16,31 +21,11 @@ let loadAccountByEmailRepositoryStub: LoadAccountByEmailRepository;
 const HASHED_PASSWORD = "12345678";
 const ID = "123";
 
-class AddAccountRepositoryStub implements AddAccountRepository {
-    async add (account: AddAccountParams): Promise<AccountModel> {
-        const fakeAccount: AccountModel = {
-            ...account,
-            password: HASHED_PASSWORD,
-            id: ID
-        };
-
-        return await new Promise(resolve => resolve(fakeAccount));
-    }
-}
-
-class LoadAccountByEmailRepositoryStub implements LoadAccountByEmailRepository {
-    async loadByEmail (email: string): Promise<null> {
-        console.log(email)
-
-        return await new Promise(resolve => resolve(null));
-    }
-}
-
 describe("DbAddAccount", () => {
     beforeEach(() => {
         hasherSub = mockHasher(HASHED_PASSWORD);
-        addAccountRepositoryStub = new AddAccountRepositoryStub();
-        loadAccountByEmailRepositoryStub = new LoadAccountByEmailRepositoryStub();
+        addAccountRepositoryStub = mockAddAccountRepository(ID, HASHED_PASSWORD);
+        loadAccountByEmailRepositoryStub = mockLoadAccountByEmailRepository();
         db = new DbAddAccount(hasherSub, addAccountRepositoryStub, loadAccountByEmailRepositoryStub);
     });
 
