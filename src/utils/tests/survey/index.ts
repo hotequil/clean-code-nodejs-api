@@ -20,10 +20,10 @@ export const mockSurveysModel = (): SurveysModel => [
     }
 ]
 
-export const mockAddSurveyParams = (): AddSurveyParams => ({
+export const mockAddSurveyParams = (answer = "answer"): AddSurveyParams => ({
     question: "question",
     answers: [
-        { answer: "answer" },
+        { answer },
         { image: "image", answer: "answer" },
         { image: "image", answer: "answer" },
     ],

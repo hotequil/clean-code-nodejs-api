@@ -13,7 +13,7 @@ const SURVEY_ID = "surveyId"
 const VALID_ANSWER = "valid-answer"
 const ACCOUNT_ID = "accountId"
 
-const makeFakeRequest = (): HttpRequest<{ answer: string }, { surveyId: string }> => ({
+const mockHttpRequest = (): HttpRequest<{ answer: string }, { surveyId: string }> => ({
     params: {
         surveyId: SURVEY_ID
     },
@@ -52,7 +52,7 @@ describe(SaveSurveyResultController.name, () => {
     it("Should call LoadSurveyById with correct values", async () => {
         const loadByIdSpy = jest.spyOn(loadSurveyByIdStub, "loadById")
 
-        await controller.handle(makeFakeRequest())
+        await controller.handle(mockHttpRequest())
 
         expect(loadByIdSpy).toHaveBeenCalledWith(SURVEY_ID)
     })
@@ -60,7 +60,7 @@ describe(SaveSurveyResultController.name, () => {
     it(`Should return code ${StatusCode.ClientErrorForbidden} when LoadSurveyById returns null`, async () => {
         jest.spyOn(loadSurveyByIdStub, "loadById").mockReturnValueOnce(new Promise(resolve => resolve(null)))
 
-        const { statusCode } = await controller.handle(makeFakeRequest())
+        const { statusCode } = await controller.handle(mockHttpRequest())
 
         expect(statusCode).toBe(StatusCode.ClientErrorForbidden)
     })
@@ -68,13 +68,13 @@ describe(SaveSurveyResultController.name, () => {
     it(`Should return code ${StatusCode.ServerErrorInternal} if LoadSurveyById throws`, async () => {
         jest.spyOn(loadSurveyByIdStub, "loadById").mockImplementationOnce(throwError)
 
-        const response = await controller.handle(makeFakeRequest())
+        const response = await controller.handle(mockHttpRequest())
 
         expect(response).toEqual(serverError(new Error()))
     })
 
     it(`Should return code ${StatusCode.ClientErrorForbidden} if an invalid answer is provided`, async () => {
-        const request = makeFakeRequest()
+        const request = mockHttpRequest()
 
         if(request?.body) request.body.answer = "invalid-answer"
 
@@ -85,7 +85,7 @@ describe(SaveSurveyResultController.name, () => {
 
     it("Should call SaveSurveyResult with correct values", async () => {
         const saveSpy = jest.spyOn(saveSurveyResultStub, "save")
-        const request = makeFakeRequest()
+        const request = mockHttpRequest()
 
         await controller.handle(request)
 
@@ -100,13 +100,13 @@ describe(SaveSurveyResultController.name, () => {
     it(`Should return code ${StatusCode.ServerErrorInternal} if SaveSurveyResult throws`, async () => {
         jest.spyOn(saveSurveyResultStub, "save").mockImplementationOnce(throwError)
 
-        const response = await controller.handle(makeFakeRequest())
+        const response = await controller.handle(mockHttpRequest())
 
         expect(response).toEqual(serverError(new Error()))
     })
 
     it(`Should return code ${StatusCode.SuccessOK} when handle was called with success`, async () => {
-        const response = await controller.handle(makeFakeRequest())
+        const response = await controller.handle(mockHttpRequest())
 
         expect(response).toEqual(success(mockSurveyResultModel(SURVEY_ID, ACCOUNT_ID, VALID_ANSWER)))
     })

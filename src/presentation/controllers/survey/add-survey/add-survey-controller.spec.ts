@@ -9,27 +9,14 @@ import {
 } from "./add-survey-controller-protocols";
 import StatusCode from "status-code-enum";
 import * as MockDate from "mockdate";
-import { throwError } from "@/utils/tests";
+import { mockAddSurveyParams, throwError } from "@/utils/tests";
 
 let controller: AddSurveyController
 let validationStub: Validation
 let addSurveyStub: AddSurvey
 
-const makeFakeHttpRequest = (): HttpRequest<AddSurveyParams> => ({
-    body: {
-        question: "a question?",
-        answers: [
-            {
-                image: "url",
-                answer: "first"
-            },
-            {
-                image: "url",
-                answer: "second"
-            },
-        ],
-        date: new Date()
-    }
+const mockHttpRequest = (): HttpRequest<AddSurveyParams> => ({
+    body: mockAddSurveyParams()
 })
 
 class ValidationStub implements Validation{
@@ -59,7 +46,7 @@ describe(AddSurveyController.name, () => {
     })
 
     it("Should call Validation with correct values", async () => {
-        const request = makeFakeHttpRequest()
+        const request = mockHttpRequest()
         const validationSpy = jest.spyOn(validationStub, "validate")
 
         await controller.handle(request)
@@ -70,13 +57,13 @@ describe(AddSurveyController.name, () => {
     it(`Should return ${StatusCode.ClientErrorBadRequest} if Validation fails`, async () => {
         jest.spyOn(validationStub, "validate").mockReturnValueOnce(new MissingParamsError("Invalid question"))
 
-        const { statusCode } = await controller.handle(makeFakeHttpRequest())
+        const { statusCode } = await controller.handle(mockHttpRequest())
 
         expect(statusCode).toBe(StatusCode.ClientErrorBadRequest)
     })
 
     it("Should call AddSurvey with correct values", async () => {
-        const request = makeFakeHttpRequest()
+        const request = mockHttpRequest()
         const addSurveySpy = jest.spyOn(addSurveyStub, "add")
 
         await controller.handle(request)
@@ -87,13 +74,13 @@ describe(AddSurveyController.name, () => {
     it(`Should return ${StatusCode.ServerErrorInternal} if AddSurvey throws`, async () => {
         jest.spyOn(addSurveyStub, "add").mockImplementationOnce(throwError)
 
-        const { statusCode } = await controller.handle(makeFakeHttpRequest())
+        const { statusCode } = await controller.handle(mockHttpRequest())
 
         expect(statusCode).toBe(StatusCode.ServerErrorInternal)
     })
 
     it(`Should return code ${StatusCode.SuccessNoContent} on success`, async () => {
-        const { statusCode } = await controller.handle(makeFakeHttpRequest())
+        const { statusCode } = await controller.handle(mockHttpRequest())
 
         expect(statusCode).toBe(StatusCode.SuccessNoContent)
     })

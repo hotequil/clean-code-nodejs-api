@@ -7,8 +7,7 @@ import { mockSurveysModel, throwError } from "@/utils/tests";
 
 let controller: LoadSurveysController
 let loadSurveysStub: LoadSurveys
-
-const makeFakeHttpRequest = (): HttpRequest => ({})
+const mockHttpRequest = (): HttpRequest => ({})
 
 class LoadSurveysStub implements LoadSurveys{
     async load(): Promise<SurveysModel>{
@@ -28,13 +27,13 @@ describe(LoadSurveysController.name, () => {
     it("Should call LoadSurveys when handle was called", async () => {
         const loadSpy = jest.spyOn(loadSurveysStub, "load")
 
-        await controller.handle(makeFakeHttpRequest())
+        await controller.handle(mockHttpRequest())
 
         expect(loadSpy).toHaveBeenCalled()
     })
 
     it(`Should return code ${StatusCode.SuccessOK} when handle was called with success`, async () => {
-        const response = await controller.handle(makeFakeHttpRequest())
+        const response = await controller.handle(mockHttpRequest())
 
         expect(response).toEqual(success(mockSurveysModel()))
     })
@@ -42,7 +41,7 @@ describe(LoadSurveysController.name, () => {
     it(`Should return code ${StatusCode.SuccessNoContent} when handle was called with empty value`, async () => {
         jest.spyOn(loadSurveysStub, "load").mockReturnValueOnce(new Promise(resolve => resolve([])))
 
-        const response = await controller.handle(makeFakeHttpRequest())
+        const response = await controller.handle(mockHttpRequest())
 
         expect(response).toEqual(noContent())
     })
@@ -50,7 +49,7 @@ describe(LoadSurveysController.name, () => {
     it(`Should return code ${StatusCode.ServerErrorInternal} if LoadSurveys throws`, async () => {
         jest.spyOn(loadSurveysStub, "load").mockImplementationOnce(throwError)
 
-        const response = await controller.handle(makeFakeHttpRequest())
+        const response = await controller.handle(mockHttpRequest())
 
         expect(response).toEqual(badRequest(new Error()))
     })

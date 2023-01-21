@@ -18,11 +18,9 @@ describe("LogMongoRepository", () => {
     });
 
     it("Should save an log log when was called", async () => {
-        let count = 0;
-
         await repository.logError("error");
 
-        count = await errors.countDocuments();
+        const count = await errors.countDocuments();
 
         expect(count).toBeTruthy();
     });

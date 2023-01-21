@@ -15,10 +15,10 @@ export const mockAccountModel = (): AccountModel => ({
     accessToken: "accessToken",
 })
 
-export const mockAddAccountParams = (): AddAccountParams => ({
+export const mockAddAccountParams = (password = "password"): AddAccountParams => ({
     name: "name",
     email: "email@email.email",
-    password: "password",
+    password,
 })
 
 export const mockAuthenticationParams = (email: string, password: string): AuthenticationParams => ({

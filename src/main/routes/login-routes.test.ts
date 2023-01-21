@@ -4,15 +4,11 @@ import { Collection } from "mongodb";
 import { hash } from "bcrypt";
 import app from "../config/app";
 import { MongodbHelper } from "@/infra/db/mongodb/helpers/mongodb-helper";
+import { mockAddAccountParams } from "@/utils/tests";
 
 const PASSWORD = "passwordAndConfirmation"
 const SALT = 12;
-
-const ACCOUNT = {
-    name: "name",
-    email: "email@email.email",
-    password: PASSWORD
-};
+const ACCOUNT = mockAddAccountParams(PASSWORD)
 
 describe("LoginRoutes", () => {
     let collection: Collection;

@@ -6,8 +6,7 @@ import { EmailValidator } from "../protocols/email-validator";
 let controller: EmailValidation;
 let emailValidatorStub: EmailValidator;
 const FIELD_NAME = "email";
-
-const makeDefaultObject = (): { email: string } => ({ [FIELD_NAME]: "email@email.email" });
+const mockData = (): { email: string } => ({ [FIELD_NAME]: "email@email.email" });
 
 class EmailValidatorStub implements EmailValidator {
     isValid (email: string): boolean {
@@ -26,14 +25,14 @@ describe("EmailValidation", () => {
     it(`Should return code ${StatusCode.ClientErrorBadRequest} when email is not valid`, () => {
         jest.spyOn(emailValidatorStub, "isValid").mockReturnValueOnce(false);
 
-        const response = controller.validate(makeDefaultObject());
+        const response = controller.validate(mockData());
 
         expect(response).toEqual(new InvalidParamsError(FIELD_NAME));
     });
 
     it("Should receive a valid email when EmailValidator was called", () => {
         const isValidSpy = jest.spyOn(emailValidatorStub, "isValid");
-        const value = makeDefaultObject();
+        const value = mockData();
         const { email } = value;
 
         controller.validate(value);

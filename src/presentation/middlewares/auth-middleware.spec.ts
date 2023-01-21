@@ -10,7 +10,7 @@ let middleware: AuthMiddleware;
 let loadAccountByToken: LoadAccountByToken;
 const FAKE_TOKEN = "token"
 
-const makeFakeHttpRequest = (): HttpRequest => ({
+const mockHttpRequest = (): HttpRequest => ({
     headers: {
         [Header.X_ACCESS_TOKEN]: FAKE_TOKEN
     }
@@ -35,7 +35,7 @@ describe(AuthMiddleware.name, () => {
         middleware = new AuthMiddleware(loadAccountByToken, role)
 
         const loadAccountByTokenSpy = jest.spyOn(loadAccountByToken, "loadByToken")
-        const request: HttpRequest = makeFakeHttpRequest()
+        const request: HttpRequest = mockHttpRequest()
 
         await middleware.handle(request)
 
@@ -45,14 +45,14 @@ describe(AuthMiddleware.name, () => {
     it(`Should return code ${StatusCode.ClientErrorForbidden} if LoadAccountByToken returns null`, async () => {
         jest.spyOn(loadAccountByToken, "loadByToken").mockReturnValueOnce(new Promise(resolve => resolve(null)))
 
-        const response = await middleware.handle(makeFakeHttpRequest())
+        const response = await middleware.handle(mockHttpRequest())
 
         expect(response).toEqual(forbidden(new AccessDeniedError()))
     })
 
     it(`Should return code ${StatusCode.SuccessOK} if LoadAccountByToken returns an account`, async () => {
         const account = mockAccountModel()
-        const response = await middleware.handle(makeFakeHttpRequest())
+        const response = await middleware.handle(mockHttpRequest())
 
         expect(response).toEqual(success({ accountId: account.id }))
     })
@@ -60,7 +60,7 @@ describe(AuthMiddleware.name, () => {
     it(`Should return code ${StatusCode.ServerErrorInternal} if LoadAccountByToken throws`, async () => {
         jest.spyOn(loadAccountByToken, "loadByToken").mockImplementationOnce(throwError)
 
-        const response = await middleware.handle(makeFakeHttpRequest())
+        const response = await middleware.handle(mockHttpRequest())
 
         expect(response).toEqual(serverError(new Error()))
     });
