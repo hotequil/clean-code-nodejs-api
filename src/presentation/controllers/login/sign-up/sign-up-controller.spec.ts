@@ -12,9 +12,8 @@ import {
 import { MissingParamsError, ServerError } from "../../../errors";
 import { badRequest, forbidden, serverError, success } from "../../../helpers/http-helper";
 import { Validation } from "@/presentation/protocols";
-import { AnyObject } from "@/utils/helpers";
 import { EmailInUseError } from "../../../errors/email-in-use/email-in-use-error";
-import { mockAddAccountParams, throwError } from "@/utils/tests";
+import { mockAddAccountParams, mockValidation, throwError } from "@/utils/tests";
 
 const TOKEN = "any-token";
 let controller: SignUpController;
@@ -37,14 +36,6 @@ class AddAccountStub implements AddAccount {
     }
 }
 
-class ValidationStub implements Validation {
-    validate (value: AnyObject): Error|null {
-        console.log(value);
-
-        return null;
-    }
-}
-
 class AuthenticationStub implements Authentication {
     async auth (model: AuthenticationParams): Promise<string|null> {
         console.log(model)
@@ -56,7 +47,7 @@ class AuthenticationStub implements Authentication {
 describe("SignUpController", () => {
     beforeEach(() => {
         addAccountStub = new AddAccountStub();
-        validationStub = new ValidationStub();
+        validationStub = mockValidation();
         authenticationStub = new AuthenticationStub();
         controller = new SignUpController(addAccountStub, validationStub, authenticationStub);
     });

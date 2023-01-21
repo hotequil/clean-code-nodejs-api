@@ -5,3 +5,4 @@ export * from "./log";
 export * from "./survey";
 export * from "./survey-result";
 export * from "./email-validator";
+export * from "./validation";

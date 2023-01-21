@@ -7,10 +7,9 @@ import {
     HttpResponse,
     Authentication,
     Validation,
-    AnyObject,
     AuthenticationParams
 } from "./login-controller-protocols";
-import { throwError } from "@/utils/tests";
+import { mockValidation, throwError } from "@/utils/tests";
 
 const TOKEN = "token";
 
@@ -31,22 +30,14 @@ class AuthenticationStub implements Authentication {
     }
 }
 
-class ValidationStub implements Validation {
-    validate (value: AnyObject): Error|null {
-        console.log(value);
-
-        return null;
-    }
-}
-
 describe("LoginController", () => {
     let loginController: LoginController;
     let authentication: Authentication;
-    let validationStub: ValidationStub;
+    let validationStub: Validation;
 
     beforeEach(() => {
         authentication = new AuthenticationStub();
-        validationStub = new ValidationStub();
+        validationStub = mockValidation();
         loginController = new LoginController(authentication, validationStub);
     });
 
