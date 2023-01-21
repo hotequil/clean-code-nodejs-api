@@ -8,7 +8,7 @@ import {
 } from "./add-survey-controller-protocols";
 import StatusCode from "status-code-enum";
 import * as MockDate from "mockdate";
-import { mockAddSurveyParams, mockValidation, throwError } from "@/utils/tests";
+import { mockAddSurvey, mockAddSurveyParams, mockValidation, throwError } from "@/utils/tests";
 
 let controller: AddSurveyController
 let validationStub: Validation
@@ -18,21 +18,13 @@ const mockHttpRequest = (): HttpRequest<AddSurveyParams> => ({
     body: mockAddSurveyParams()
 })
 
-class AddSurveyStub implements AddSurvey{
-    async add(model: AddSurveyParams): Promise<null>{
-        console.log(model)
-
-        return await new Promise(resolve => resolve(null))
-    }
-}
-
 describe(AddSurveyController.name, () => {
     beforeAll(() => MockDate.set(new Date()))
     afterAll(() => MockDate.reset())
 
     beforeEach(() => {
         validationStub = mockValidation()
-        addSurveyStub = new AddSurveyStub()
+        addSurveyStub = mockAddSurvey()
         controller = new AddSurveyController(validationStub, addSurveyStub)
     })
 

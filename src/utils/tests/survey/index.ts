@@ -1,5 +1,5 @@
 import { AddSurveyRepository } from "@/data/protocols/db/survey/add-survey-repository";
-import { AddSurveyParams } from "@/domain/use-cases/survey/add-survey";
+import { AddSurvey, AddSurveyParams } from "@/domain/use-cases/survey/add-survey";
 import { LoadSurveyByIdRepository } from "@/data/protocols/db/survey/load-survey-by-id-repository";
 import { SurveyModel, SurveysModel } from "@/domain/models/survey";
 import { LoadSurveysRepository } from "@/data/protocols/db/survey/load-surveys-repository";
@@ -73,4 +73,16 @@ export const mockLoadSurveys = (): LoadSurveys => {
     }
 
     return new LoadSurveysStub()
+}
+
+export const mockAddSurvey = (): AddSurvey => {
+    class AddSurveyStub implements AddSurvey{
+        async add(params: AddSurveyParams): Promise<null>{
+            console.log(params)
+
+            return await new Promise(resolve => resolve(null))
+        }
+    }
+
+    return new AddSurveyStub()
 }
