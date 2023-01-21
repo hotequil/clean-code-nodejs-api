@@ -4,7 +4,7 @@ import * as MockDate from "mockdate";
 import StatusCode from "status-code-enum";
 import { forbidden, serverError, success } from "@/presentation/helpers/http-helper";
 import { InvalidParamsError } from "@/presentation/errors";
-import { mockSurveyModel, throwError } from "@/utils/tests";
+import { mockSurveyModel, mockSurveyResultModel, throwError } from "@/utils/tests";
 
 let controller: SaveSurveyResultController
 let loadSurveyByIdStub: LoadSurveyById
@@ -23,14 +23,6 @@ const makeFakeRequest = (): HttpRequest<{ answer: string }, { surveyId: string }
     accountId: ACCOUNT_ID,
 })
 
-const makeFakeSurveyResult = (): SurveyResultModel => ({
-    id: "id",
-    surveyId: SURVEY_ID,
-    accountId: ACCOUNT_ID,
-    answer: VALID_ANSWER,
-    date: new Date(),
-})
-
 class LoadSurveyByIdStub implements LoadSurveyById{
     async loadById(id: string | Object): Promise<SurveyModel | null> {
         console.log(id)
@@ -43,7 +35,7 @@ class SaveSurveyResultStub implements SaveSurveyResult{
     async save(data: SaveSurveyResultParams): Promise<SurveyResultModel | null> {
         console.log(data)
 
-        return await new Promise(resolve => resolve(makeFakeSurveyResult()));
+        return await new Promise(resolve => resolve(mockSurveyResultModel(SURVEY_ID, ACCOUNT_ID, VALID_ANSWER)));
     }
 }
 
@@ -116,6 +108,6 @@ describe(SaveSurveyResultController.name, () => {
     it(`Should return code ${StatusCode.SuccessOK} when handle was called with success`, async () => {
         const response = await controller.handle(makeFakeRequest())
 
-        expect(response).toEqual(success(makeFakeSurveyResult()))
+        expect(response).toEqual(success(mockSurveyResultModel(SURVEY_ID, ACCOUNT_ID, VALID_ANSWER)))
     })
 })
