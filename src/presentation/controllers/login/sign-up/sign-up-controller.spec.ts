@@ -6,7 +6,6 @@ import {
     AddAccount,
     AddAccountParams,
     Authentication,
-    AuthenticationParams,
     HttpResponse
 } from "./sign-up-controller-protocols";
 import { MissingParamsError, ServerError } from "../../../errors";
@@ -14,6 +13,7 @@ import { badRequest, forbidden, serverError, success } from "../../../helpers/ht
 import { Validation } from "@/presentation/protocols";
 import { EmailInUseError } from "../../../errors/email-in-use/email-in-use-error";
 import { mockAddAccountParams, mockValidation, throwError } from "@/utils/tests";
+import { mockAuthentication } from "@/utils/tests/authentication";
 
 const TOKEN = "any-token";
 let controller: SignUpController;
@@ -36,19 +36,11 @@ class AddAccountStub implements AddAccount {
     }
 }
 
-class AuthenticationStub implements Authentication {
-    async auth (model: AuthenticationParams): Promise<string|null> {
-        console.log(model)
-
-        return await new Promise(resolve => resolve(TOKEN))
-    }
-}
-
 describe("SignUpController", () => {
     beforeEach(() => {
         addAccountStub = new AddAccountStub();
         validationStub = mockValidation();
-        authenticationStub = new AuthenticationStub();
+        authenticationStub = mockAuthentication(TOKEN);
         controller = new SignUpController(addAccountStub, validationStub, authenticationStub);
     });
 

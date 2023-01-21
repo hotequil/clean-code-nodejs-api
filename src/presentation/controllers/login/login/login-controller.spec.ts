@@ -2,14 +2,9 @@ import StatusCode from "status-code-enum";
 import { LoginController } from "./login-controller";
 import { badRequest, serverError, success, unauthorized } from "../../../helpers/http-helper";
 import { MissingParamsError, ServerError } from "../../../errors";
-import {
-    HttpRequest,
-    HttpResponse,
-    Authentication,
-    Validation,
-    AuthenticationParams
-} from "./login-controller-protocols";
+import { HttpRequest, HttpResponse, Authentication, Validation } from "./login-controller-protocols";
 import { mockValidation, throwError } from "@/utils/tests";
+import { mockAuthentication } from "@/utils/tests/authentication";
 
 const TOKEN = "token";
 
@@ -22,21 +17,13 @@ const mockHttpRequest = (): HttpRequest => (
     }
 );
 
-class AuthenticationStub implements Authentication {
-    async auth (model: AuthenticationParams): Promise<string|null> {
-        console.log(model);
-
-        return await new Promise(resolve => resolve(TOKEN));
-    }
-}
-
 describe("LoginController", () => {
     let loginController: LoginController;
     let authentication: Authentication;
     let validationStub: Validation;
 
     beforeEach(() => {
-        authentication = new AuthenticationStub();
+        authentication = mockAuthentication(TOKEN);
         validationStub = mockValidation();
         loginController = new LoginController(authentication, validationStub);
     });
