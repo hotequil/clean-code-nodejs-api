@@ -1,26 +1,20 @@
 import { LoadSurveysController } from "./load-surveys-controller";
-import { HttpRequest, LoadSurveys, SurveysModel } from "./load-surveys-controller-protocols";
+import { HttpRequest, LoadSurveys } from "./load-surveys-controller-protocols";
 import * as MockDate from "mockdate";
 import StatusCode from "status-code-enum";
 import { badRequest, noContent, success } from "../../../helpers/http-helper";
-import { mockSurveysModel, throwError } from "@/utils/tests";
+import { mockLoadSurveys, mockSurveysModel, throwError } from "@/utils/tests";
 
 let controller: LoadSurveysController
 let loadSurveysStub: LoadSurveys
 const mockHttpRequest = (): HttpRequest => ({})
-
-class LoadSurveysStub implements LoadSurveys{
-    async load(): Promise<SurveysModel>{
-        return await new Promise(resolve => resolve(mockSurveysModel()))
-    }
-}
 
 describe(LoadSurveysController.name, () => {
     beforeAll(() => MockDate.set(new Date()))
     afterAll(() => MockDate.reset())
 
     beforeEach(() => {
-        loadSurveysStub = new LoadSurveysStub()
+        loadSurveysStub = mockLoadSurveys()
         controller = new LoadSurveysController(loadSurveysStub)
     })
 

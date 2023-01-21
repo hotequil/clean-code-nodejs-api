@@ -3,6 +3,7 @@ import { AddSurveyParams } from "@/domain/use-cases/survey/add-survey";
 import { LoadSurveyByIdRepository } from "@/data/protocols/db/survey/load-survey-by-id-repository";
 import { SurveyModel, SurveysModel } from "@/domain/models/survey";
 import { LoadSurveysRepository } from "@/data/protocols/db/survey/load-surveys-repository";
+import { LoadSurveys } from "@/domain/use-cases/survey/load-surveys";
 
 export const mockSurveyModel = (id = "id", answer = "answer"): SurveyModel => ({
     id,
@@ -62,4 +63,14 @@ export const mockLoadSurveysRepository = (): LoadSurveysRepository => {
     }
 
     return new LoadSurveysRepositoryStub()
+}
+
+export const mockLoadSurveys = (): LoadSurveys => {
+    class LoadSurveysStub implements LoadSurveys{
+        async load(): Promise<SurveysModel>{
+            return await new Promise(resolve => resolve(mockSurveysModel()))
+        }
+    }
+
+    return new LoadSurveysStub()
 }
