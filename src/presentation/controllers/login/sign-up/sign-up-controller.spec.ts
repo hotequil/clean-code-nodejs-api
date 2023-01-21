@@ -1,18 +1,11 @@
 import { StatusCode } from "status-code-enum";
 import { SignUpController } from "./sign-up-controller";
-import {
-    HttpRequest,
-    AccountModel,
-    AddAccount,
-    AddAccountParams,
-    Authentication,
-    HttpResponse
-} from "./sign-up-controller-protocols";
+import { HttpRequest, AddAccount, Authentication, HttpResponse } from "./sign-up-controller-protocols";
 import { MissingParamsError, ServerError } from "../../../errors";
 import { badRequest, forbidden, serverError, success } from "../../../helpers/http-helper";
 import { Validation } from "@/presentation/protocols";
 import { EmailInUseError } from "../../../errors/email-in-use/email-in-use-error";
-import { mockAddAccountParams, mockValidation, throwError } from "@/utils/tests";
+import { mockAddAccount, mockAddAccountParams, mockValidation, throwError } from "@/utils/tests";
 import { mockAuthentication } from "@/utils/tests/authentication";
 
 const TOKEN = "any-token";
@@ -30,15 +23,9 @@ const mockHttpRequest = (): HttpRequest => (
     }
 );
 
-class AddAccountStub implements AddAccount {
-    async add (account: AddAccountParams): Promise<AccountModel> {
-        return await new Promise(resolve => resolve({ ...account, id: "id" }));
-    }
-}
-
 describe("SignUpController", () => {
     beforeEach(() => {
-        addAccountStub = new AddAccountStub();
+        addAccountStub = mockAddAccount();
         validationStub = mockValidation();
         authenticationStub = mockAuthentication(TOKEN);
         controller = new SignUpController(addAccountStub, validationStub, authenticationStub);
