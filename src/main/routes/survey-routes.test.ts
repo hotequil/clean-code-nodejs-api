@@ -2,16 +2,10 @@ import request from "supertest";
 import StatusCode from "status-code-enum";
 import app from "../config/app";
 import { MongodbHelper } from "@/infra/db/mongodb/helpers/mongodb-helper";
-import { AddSurveyParams } from "@/domain/use-cases/survey/add-survey";
 import { sign } from "jsonwebtoken";
 import env from "../config/env";
 import { AccountType, Header } from "@/utils/enums";
-
-const makeAddSurveyModel = (): AddSurveyParams => ({
-    question: "question",
-    answers: [{ answer: "answer", image: "image" }, { answer: "answer", image: "image" }, { answer: "answer", image: "image" }],
-    date: new Date(),
-})
+import { mockAddSurveyParams } from "@/utils/tests";
 
 const makeAccessToken = async (role?: AccountType): Promise<string> => {
     const collection = await MongodbHelper.collection("accounts");
@@ -38,14 +32,14 @@ describe("SurveyRoutes", () => {
     describe("POST: /api/surveys", () => {
         it(`Should return code ${StatusCode.ClientErrorForbidden} when POST in /api/surveys was called without accessToken`, async () => {
             await request(app).post("/api/surveys")
-                              .send(makeAddSurveyModel())
+                              .send(mockAddSurveyParams())
                               .expect(StatusCode.ClientErrorForbidden);
         });
 
         it(`Should return code ${StatusCode.SuccessNoContent} when POST in /api/surveys was called with a valid accessToken`, async () => {
             await request(app).post("/api/surveys")
                               .set(Header.X_ACCESS_TOKEN, await makeAccessToken(AccountType.ADMIN))
-                              .send(makeAddSurveyModel())
+                              .send(mockAddSurveyParams())
                               .expect(StatusCode.SuccessNoContent)
         })
     })

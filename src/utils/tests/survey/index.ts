@@ -20,6 +20,16 @@ export const mockSurveysModel = (): SurveysModel => [
     }
 ]
 
+export const mockAddSurveyParams = (): AddSurveyParams => ({
+    question: "question",
+    answers: [
+        { answer: "answer" },
+        { image: "image", answer: "answer" },
+        { image: "image", answer: "answer" },
+    ],
+    date: new Date(),
+})
+
 export const mockAddSurveyRepository = (): AddSurveyRepository => {
     class AddSurveyRepositoryStub implements AddSurveyRepository{
         async add(model: AddSurveyParams): Promise<null>{

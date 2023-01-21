@@ -1,18 +1,12 @@
 import { SurveyMongoRepository } from "./survey-mongo-repository";
 import { MongodbHelper } from "../helpers/mongodb-helper";
 import { Collection } from "mongodb";
-import { AddSurveyParams } from "@/domain/use-cases/survey/add-survey";
 import { SurveyModel } from "@/domain/models/survey";
 import * as MockDate from "mockdate";
+import { mockAddSurveyParams } from "@/utils/tests";
 
 let repository: SurveyMongoRepository
 let collection: Collection
-
-const makeSurveyData = (): AddSurveyParams => ({
-    question: "question",
-    answers: [{ answer: "answer" }, { answer: "answer", image: "image" }],
-    date: new Date(),
-})
 
 describe(SurveyMongoRepository.name, () => {
     beforeAll(async () => {
@@ -37,7 +31,7 @@ describe(SurveyMongoRepository.name, () => {
 
     describe("add()", () => {
         it("Should create a survey when add was called", async () => {
-            const data = makeSurveyData()
+            const data = mockAddSurveyParams()
 
             await repository.add(data)
 
@@ -49,7 +43,7 @@ describe(SurveyMongoRepository.name, () => {
 
     describe("loadAll()", () => {
         it("Should get all surveys when loadAll was called", async () => {
-            const surveysToAdd = [makeSurveyData(), makeSurveyData()]
+            const surveysToAdd = [mockAddSurveyParams(), mockAddSurveyParams()]
 
             await collection.insertMany(surveysToAdd)
 
@@ -68,7 +62,7 @@ describe(SurveyMongoRepository.name, () => {
 
     describe("loadById()", () => {
         it("Should load survey by id on success", async () => {
-            const surveyData = makeSurveyData()
+            const surveyData = mockAddSurveyParams()
             const { insertedId } = await collection.insertOne(surveyData)
             const survey = await repository.loadById(insertedId) as SurveyModel
 
