@@ -1,15 +1,16 @@
 import StatusCode from "status-code-enum";
-import { Controller, HttpRequest, HttpResponse } from "@/presentation/protocols";
+import { Controller, HttpRequest } from "@/presentation/protocols";
 import { LogDecorator } from "./log-controller-decorator";
 import { serverError } from "@/presentation/helpers/http-helper";
 import { LogErrorRepository } from "@/data/protocols/db/log/log-error-repository";
+import { mockController, mockLogErrorRepository } from "@/utils/tests";
 
 const RESPONSE_MOCK = {
     statusCode: StatusCode.SuccessOK,
     body: null
 };
 
-const makeHttpRequest = (): HttpRequest => (
+const mockHttpRequest = (): HttpRequest => (
     {
         body: {
             name: "name",
@@ -18,38 +19,20 @@ const makeHttpRequest = (): HttpRequest => (
     }
 );
 
-class ControllerStub implements Controller {
-    async handle (request: HttpRequest): Promise<HttpResponse> {
-        console.log(request);
-
-        const response: HttpResponse = RESPONSE_MOCK;
-
-        return await new Promise(resolve => resolve(response));
-    }
-}
-
-class LogErrorRepositoryStub implements LogErrorRepository {
-    async logError (stack: string): Promise<void> {
-        console.log(stack);
-
-        return await new Promise(resolve => resolve());
-    }
-}
-
 describe("LogDecorator", () => {
     let logDecorator: LogDecorator;
-    let controllerStub: ControllerStub;
+    let controllerStub: Controller;
     let logErrorRepositoryStub: LogErrorRepository;
 
     beforeEach(() => {
-        controllerStub = new ControllerStub();
-        logErrorRepositoryStub = new LogErrorRepositoryStub();
+        controllerStub = mockController(RESPONSE_MOCK);
+        logErrorRepositoryStub = mockLogErrorRepository();
         logDecorator = new LogDecorator(controllerStub, logErrorRepositoryStub);
     });
 
     it("Should call handle and send data when was called", async () => {
         const controllerStubHandleSpy = jest.spyOn(controllerStub, "handle");
-        const request: HttpRequest = makeHttpRequest();
+        const request: HttpRequest = mockHttpRequest();
 
         await logDecorator.handle(request);
 
@@ -57,7 +40,7 @@ describe("LogDecorator", () => {
     });
 
     it("Should return the same value in ControllerStub and LogDecorator when was called", async () => {
-        const request: HttpRequest = makeHttpRequest();
+        const request: HttpRequest = mockHttpRequest();
         const httpResponse = await logDecorator.handle(request);
 
         expect(httpResponse).toBe(RESPONSE_MOCK);
@@ -65,7 +48,7 @@ describe("LogDecorator", () => {
 
     it(`Should get a stack trace when throw an error with code ${StatusCode.ServerErrorInternal}`, async () => {
         const logSpy = jest.spyOn(logErrorRepositoryStub, "logError");
-        const httpRequest: HttpRequest = makeHttpRequest();
+        const httpRequest: HttpRequest = mockHttpRequest();
         const error = new Error();
         const stack = "Error from server";
 

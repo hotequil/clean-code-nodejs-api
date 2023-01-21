@@ -2,23 +2,17 @@ import request from "supertest";
 import StatusCode from "status-code-enum";
 import app from "../config/app";
 import { MongodbHelper } from "@/infra/db/mongodb/helpers/mongodb-helper";
-import { AddSurveyModel } from "@/domain/use-cases/survey/add-survey";
 import { sign } from "jsonwebtoken";
 import env from "../config/env";
 import { AccountType, Header } from "@/utils/enums";
+import { mockAddAccountParams, mockAddSurveyParams } from "@/utils/tests";
 
-const makeAddSurveyModel = (): AddSurveyModel => ({
-    question: "question",
-    answers: [{ answer: "answer", image: "image" }, { answer: "answer", image: "image" }, { answer: "answer", image: "image" }],
-    date: new Date(),
-})
-
-const makeAccessToken = async (role?: AccountType): Promise<string> => {
+const mockAccessToken = async (role?: AccountType): Promise<string> => {
     const collection = await MongodbHelper.collection("accounts");
 
     await collection.deleteMany({});
 
-    const { insertedId } = await collection.insertOne({ name: "joao", email: "joao@gmail.com", password: "12345678", role })
+    const { insertedId } = await collection.insertOne({ ...mockAddAccountParams(), role })
     const accessToken = sign({ id: insertedId }, env.JWT_SECRET)
 
     await collection.updateOne({ _id: insertedId }, { $set: { accessToken } })
@@ -38,14 +32,14 @@ describe("SurveyRoutes", () => {
     describe("POST: /api/surveys", () => {
         it(`Should return code ${StatusCode.ClientErrorForbidden} when POST in /api/surveys was called without accessToken`, async () => {
             await request(app).post("/api/surveys")
-                              .send(makeAddSurveyModel())
+                              .send(mockAddSurveyParams())
                               .expect(StatusCode.ClientErrorForbidden);
         });
 
         it(`Should return code ${StatusCode.SuccessNoContent} when POST in /api/surveys was called with a valid accessToken`, async () => {
             await request(app).post("/api/surveys")
-                              .set(Header.X_ACCESS_TOKEN, await makeAccessToken(AccountType.ADMIN))
-                              .send(makeAddSurveyModel())
+                              .set(Header.X_ACCESS_TOKEN, await mockAccessToken(AccountType.ADMIN))
+                              .send(mockAddSurveyParams())
                               .expect(StatusCode.SuccessNoContent)
         })
     })
@@ -57,7 +51,7 @@ describe("SurveyRoutes", () => {
 
         it(`Should return code ${StatusCode.SuccessOK} or ${StatusCode.SuccessNoContent} when GET in /api/surveys was called with a valid accessToken`, async () => {
             await request(app).get("/api/surveys")
-                              .set(Header.X_ACCESS_TOKEN, await makeAccessToken())
+                              .set(Header.X_ACCESS_TOKEN, await mockAccessToken())
                               .then(({ statusCode }) =>
                                   expect(statusCode === StatusCode.SuccessOK || statusCode === StatusCode.SuccessNoContent).toBe(true)
                               )

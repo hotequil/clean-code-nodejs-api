@@ -4,8 +4,9 @@ import { AccountMongoRepository } from "./account-mongo-repository";
 import { copy } from "@/presentation/helpers/manipulator-helper";
 import { AccountModel } from "@/domain/models/account";
 import { AccountType } from "@/utils/enums";
+import { mockAddAccountParams } from "@/utils/tests";
 
-const ACCOUNT = { name: "name", email: "email@email.email", password: "password" };
+const ACCOUNT = mockAddAccountParams();
 const TOKEN = "user1234";
 const ROLE = AccountType.ADMIN
 

@@ -2,63 +2,34 @@ import { AddSurveyController } from "./add-survey-controller";
 import {
     HttpRequest,
     Validation,
-    AnyObject,
     MissingParamsError,
     AddSurvey,
-    AddSurveyModel
+    AddSurveyParams
 } from "./add-survey-controller-protocols";
 import StatusCode from "status-code-enum";
 import * as MockDate from "mockdate";
+import { mockAddSurvey, mockAddSurveyParams, mockValidation, throwError } from "@/utils/tests";
 
 let controller: AddSurveyController
 let validationStub: Validation
 let addSurveyStub: AddSurvey
 
-const makeFakeHttpRequest = (): HttpRequest<AddSurveyModel> => ({
-    body: {
-        question: "a question?",
-        answers: [
-            {
-                image: "url",
-                answer: "first"
-            },
-            {
-                image: "url",
-                answer: "second"
-            },
-        ],
-        date: new Date()
-    }
+const mockHttpRequest = (): HttpRequest<AddSurveyParams> => ({
+    body: mockAddSurveyParams()
 })
-
-class ValidationStub implements Validation{
-    validate(value: AnyObject): Error | null {
-        console.log(value);
-
-        return null;
-    }
-}
-
-class AddSurveyStub implements AddSurvey{
-    async add(model: AddSurveyModel): Promise<null>{
-        console.log(model)
-
-        return await new Promise(resolve => resolve(null))
-    }
-}
 
 describe(AddSurveyController.name, () => {
     beforeAll(() => MockDate.set(new Date()))
     afterAll(() => MockDate.reset())
 
     beforeEach(() => {
-        validationStub = new ValidationStub()
-        addSurveyStub = new AddSurveyStub()
+        validationStub = mockValidation()
+        addSurveyStub = mockAddSurvey()
         controller = new AddSurveyController(validationStub, addSurveyStub)
     })
 
     it("Should call Validation with correct values", async () => {
-        const request = makeFakeHttpRequest()
+        const request = mockHttpRequest()
         const validationSpy = jest.spyOn(validationStub, "validate")
 
         await controller.handle(request)
@@ -69,13 +40,13 @@ describe(AddSurveyController.name, () => {
     it(`Should return ${StatusCode.ClientErrorBadRequest} if Validation fails`, async () => {
         jest.spyOn(validationStub, "validate").mockReturnValueOnce(new MissingParamsError("Invalid question"))
 
-        const { statusCode } = await controller.handle(makeFakeHttpRequest())
+        const { statusCode } = await controller.handle(mockHttpRequest())
 
         expect(statusCode).toBe(StatusCode.ClientErrorBadRequest)
     })
 
     it("Should call AddSurvey with correct values", async () => {
-        const request = makeFakeHttpRequest()
+        const request = mockHttpRequest()
         const addSurveySpy = jest.spyOn(addSurveyStub, "add")
 
         await controller.handle(request)
@@ -84,16 +55,15 @@ describe(AddSurveyController.name, () => {
     })
 
     it(`Should return ${StatusCode.ServerErrorInternal} if AddSurvey throws`, async () => {
-        jest.spyOn(addSurveyStub, "add")
-            .mockReturnValueOnce(new Promise((resolve, reject) => reject(new Error())))
+        jest.spyOn(addSurveyStub, "add").mockImplementationOnce(throwError)
 
-        const { statusCode } = await controller.handle(makeFakeHttpRequest())
+        const { statusCode } = await controller.handle(mockHttpRequest())
 
         expect(statusCode).toBe(StatusCode.ServerErrorInternal)
     })
 
     it(`Should return code ${StatusCode.SuccessNoContent} on success`, async () => {
-        const { statusCode } = await controller.handle(makeFakeHttpRequest())
+        const { statusCode } = await controller.handle(mockHttpRequest())
 
         expect(statusCode).toBe(StatusCode.SuccessNoContent)
     })

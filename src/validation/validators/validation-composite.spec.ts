@@ -1,22 +1,14 @@
 import { ValidationComposite } from "./validation-composite";
 import { InvalidParamsError, MissingParamsError } from "@/presentation/errors";
 import { Validation } from "@/presentation/protocols";
-import { AnyObject } from "@/utils/helpers";
+import { mockValidation } from "@/utils/tests";
 
 let validation: ValidationComposite;
 let validations: Validation[];
 
-class ValidationStub implements Validation {
-    validate (value: AnyObject): Error|null {
-        console.log(value);
-
-        return null;
-    }
-}
-
 describe("ValidationComposite", () => {
     beforeEach(() => {
-        validations = [new ValidationStub(), new ValidationStub()];
+        validations = [mockValidation(), mockValidation()];
         validation = new ValidationComposite(validations);
     });
 
