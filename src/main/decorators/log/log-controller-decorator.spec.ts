@@ -1,9 +1,9 @@
 import StatusCode from "status-code-enum";
-import { Controller, HttpRequest, HttpResponse } from "@/presentation/protocols";
+import { Controller, HttpRequest } from "@/presentation/protocols";
 import { LogDecorator } from "./log-controller-decorator";
 import { serverError } from "@/presentation/helpers/http-helper";
 import { LogErrorRepository } from "@/data/protocols/db/log/log-error-repository";
-import { mockLogErrorRepository } from "@/utils/tests";
+import { mockController, mockLogErrorRepository } from "@/utils/tests";
 
 const RESPONSE_MOCK = {
     statusCode: StatusCode.SuccessOK,
@@ -19,23 +19,13 @@ const mockHttpRequest = (): HttpRequest => (
     }
 );
 
-class ControllerStub implements Controller {
-    async handle (request: HttpRequest): Promise<HttpResponse> {
-        console.log(request);
-
-        const response: HttpResponse = RESPONSE_MOCK;
-
-        return await new Promise(resolve => resolve(response));
-    }
-}
-
 describe("LogDecorator", () => {
     let logDecorator: LogDecorator;
-    let controllerStub: ControllerStub;
+    let controllerStub: Controller;
     let logErrorRepositoryStub: LogErrorRepository;
 
     beforeEach(() => {
-        controllerStub = new ControllerStub();
+        controllerStub = mockController(RESPONSE_MOCK);
         logErrorRepositoryStub = mockLogErrorRepository();
         logDecorator = new LogDecorator(controllerStub, logErrorRepositoryStub);
     });
