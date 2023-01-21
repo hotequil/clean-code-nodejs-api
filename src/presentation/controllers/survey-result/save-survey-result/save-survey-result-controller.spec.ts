@@ -1,10 +1,10 @@
 import { SaveSurveyResultController } from "./save-survey-result-controller";
-import { LoadSurveyById, HttpRequest, SurveyModel, SaveSurveyResult } from "./save-survey-result-protocols";
+import { LoadSurveyById, HttpRequest, SaveSurveyResult } from "./save-survey-result-protocols";
 import * as MockDate from "mockdate";
 import StatusCode from "status-code-enum";
 import { forbidden, serverError, success } from "@/presentation/helpers/http-helper";
 import { InvalidParamsError } from "@/presentation/errors";
-import { mockSaveSurveyResult, mockSurveyModel, mockSurveyResultModel, throwError } from "@/utils/tests";
+import { mockLoadSurveyById, mockSaveSurveyResult, mockSurveyResultModel, throwError } from "@/utils/tests";
 
 let controller: SaveSurveyResultController
 let loadSurveyByIdStub: LoadSurveyById
@@ -23,20 +23,12 @@ const mockHttpRequest = (): HttpRequest<{ answer: string }, { surveyId: string }
     accountId: ACCOUNT_ID,
 })
 
-class LoadSurveyByIdStub implements LoadSurveyById{
-    async loadById(id: string | Object): Promise<SurveyModel | null> {
-        console.log(id)
-
-        return await new Promise(resolve => resolve(mockSurveyModel(SURVEY_ID, VALID_ANSWER)));
-    }
-}
-
 describe(SaveSurveyResultController.name, () => {
     beforeAll(() => MockDate.set(new Date()))
     afterAll(() => MockDate.reset())
 
     beforeEach(() => {
-        loadSurveyByIdStub = new LoadSurveyByIdStub()
+        loadSurveyByIdStub = mockLoadSurveyById(SURVEY_ID, VALID_ANSWER)
         saveSurveyResultStub = mockSaveSurveyResult(SURVEY_ID, ACCOUNT_ID, VALID_ANSWER)
         controller = new SaveSurveyResultController(loadSurveyByIdStub, saveSurveyResultStub)
     })
