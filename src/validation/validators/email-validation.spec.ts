@@ -2,23 +2,16 @@ import { StatusCode } from "status-code-enum";
 import { InvalidParamsError } from "@/presentation/errors";
 import { EmailValidation } from "./email-validation";
 import { EmailValidator } from "../protocols/email-validator";
+import { mockEmailValidator } from "@/utils/tests";
 
 let controller: EmailValidation;
 let emailValidatorStub: EmailValidator;
 const FIELD_NAME = "email";
 const mockData = (): { email: string } => ({ [FIELD_NAME]: "email@email.email" });
 
-class EmailValidatorStub implements EmailValidator {
-    isValid (email: string): boolean {
-        console.log(email);
-
-        return true;
-    }
-}
-
 describe("EmailValidation", () => {
     beforeEach(() => {
-        emailValidatorStub = new EmailValidatorStub();
+        emailValidatorStub = mockEmailValidator();
         controller = new EmailValidation(FIELD_NAME, emailValidatorStub);
     });
 
