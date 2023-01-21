@@ -1,32 +1,17 @@
-import { SurveyModel, DbLoadSurveyById, LoadSurveyByIdRepository } from "./db-load-survey-by-id-protocols";
+import { DbLoadSurveyById, LoadSurveyByIdRepository } from "./db-load-survey-by-id-protocols";
 import * as MockDate from "mockdate";
-import { throwError } from "@/utils/tests";
+import { mockLoadSurveyByIdRepository, mockSurveyModel, throwError } from "@/utils/tests";
 
 let dbLoadSurveyById: DbLoadSurveyById
 let loadSurveyByIdRepositoryStub: LoadSurveyByIdRepository
 const ID = "id"
-
-const makeFakeSurvey = (): SurveyModel => ({
-    id: ID,
-    question: "question",
-    answers: [{ answer: "answer", image: "image" }],
-    date: new Date(),
-})
-
-class LoadSurveyByIdRepositoryStub implements LoadSurveyByIdRepository{
-    async loadById(id: string | Object): Promise<SurveyModel | null>{
-        console.log(id)
-
-        return await new Promise(resolve => resolve(makeFakeSurvey()))
-    }
-}
 
 describe(DbLoadSurveyById.name, () => {
     beforeAll(() => MockDate.set(new Date()))
     afterAll(() => MockDate.reset())
 
     beforeEach(() => {
-        loadSurveyByIdRepositoryStub = new LoadSurveyByIdRepositoryStub()
+        loadSurveyByIdRepositoryStub = mockLoadSurveyByIdRepository(ID)
         dbLoadSurveyById = new DbLoadSurveyById(loadSurveyByIdRepositoryStub)
     })
 
@@ -41,7 +26,7 @@ describe(DbLoadSurveyById.name, () => {
     it("Should return survey when loadById was called with success", async () => {
         const survey = await dbLoadSurveyById.loadById(ID)
 
-        expect(survey).toEqual(makeFakeSurvey())
+        expect(survey).toEqual(mockSurveyModel(ID))
     })
 
     it("Should throw if LoadSurveyByIdRepository throws", async () => {

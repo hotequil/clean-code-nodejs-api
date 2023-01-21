@@ -4,7 +4,7 @@ import * as MockDate from "mockdate";
 import StatusCode from "status-code-enum";
 import { forbidden, serverError, success } from "@/presentation/helpers/http-helper";
 import { InvalidParamsError } from "@/presentation/errors";
-import { throwError } from "@/utils/tests";
+import { mockSurveyModel, throwError } from "@/utils/tests";
 
 let controller: SaveSurveyResultController
 let loadSurveyByIdStub: LoadSurveyById
@@ -23,13 +23,6 @@ const makeFakeRequest = (): HttpRequest<{ answer: string }, { surveyId: string }
     accountId: ACCOUNT_ID,
 })
 
-const makeFakeSurvey = (): SurveyModel => ({
-    id: SURVEY_ID,
-    question: "question",
-    answers: [{ answer: "answer", image: "image" }, { answer: VALID_ANSWER, image: "image" }],
-    date: new Date(),
-})
-
 const makeFakeSurveyResult = (): SurveyResultModel => ({
     id: "id",
     surveyId: SURVEY_ID,
@@ -42,7 +35,7 @@ class LoadSurveyByIdStub implements LoadSurveyById{
     async loadById(id: string | Object): Promise<SurveyModel | null> {
         console.log(id)
 
-        return await new Promise(resolve => resolve(makeFakeSurvey()));
+        return await new Promise(resolve => resolve(mockSurveyModel(SURVEY_ID, VALID_ANSWER)));
     }
 }
 

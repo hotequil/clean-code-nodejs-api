@@ -1,6 +1,6 @@
 import { DbAddSurvey } from "./db-add-survey";
 import { AddSurveyParams, AddSurveyRepository } from "./db-add-survey-protocols";
-import { throwError } from "@/utils/tests";
+import { mockAddSurveyRepository, throwError } from "@/utils/tests";
 
 let db: DbAddSurvey
 let addSurveyRepositoryStub: AddSurveyRepository
@@ -15,17 +15,9 @@ const makeAddSurveyModel = (): AddSurveyParams => ({
     date: new Date(),
 })
 
-class AddSurveyRepositoryStub implements AddSurveyRepository{
-    async add(model: AddSurveyParams): Promise<null>{
-        console.log(model)
-
-        return await new Promise(resolve => resolve(null))
-    }
-}
-
 describe(DbAddSurvey.name, () => {
     beforeEach(() => {
-        addSurveyRepositoryStub = new AddSurveyRepositoryStub()
+        addSurveyRepositoryStub = mockAddSurveyRepository()
         db = new DbAddSurvey(addSurveyRepositoryStub)
     })
 

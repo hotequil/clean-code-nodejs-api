@@ -3,24 +3,16 @@ import { HttpRequest, LoadSurveys, SurveysModel } from "./load-surveys-controlle
 import * as MockDate from "mockdate";
 import StatusCode from "status-code-enum";
 import { badRequest, noContent, success } from "../../../helpers/http-helper";
-import { throwError } from "@/utils/tests";
+import { mockSurveysModel, throwError } from "@/utils/tests";
 
 let controller: LoadSurveysController
 let loadSurveysStub: LoadSurveys
 
 const makeFakeHttpRequest = (): HttpRequest => ({})
-const makeFakeSurveys = (): SurveysModel => [
-    {
-        id: "id",
-        question: "question",
-        answers: [{ answer: "answer", image: "image" }],
-        date: new Date(),
-    }
-]
 
 class LoadSurveysStub implements LoadSurveys{
     async load(): Promise<SurveysModel>{
-        return await new Promise(resolve => resolve(makeFakeSurveys()))
+        return await new Promise(resolve => resolve(mockSurveysModel()))
     }
 }
 
@@ -44,7 +36,7 @@ describe(LoadSurveysController.name, () => {
     it(`Should return code ${StatusCode.SuccessOK} when handle was called with success`, async () => {
         const response = await controller.handle(makeFakeHttpRequest())
 
-        expect(response).toEqual(success(makeFakeSurveys()))
+        expect(response).toEqual(success(mockSurveysModel()))
     })
 
     it(`Should return code ${StatusCode.SuccessNoContent} when handle was called with empty value`, async () => {
