@@ -20,7 +20,7 @@ export const mockSaveSurveyResultParams = (): SaveSurveyResultParams => ({
 export const mockSaveSurveyResultRepository = (id: string): SaveSurveyResultRepository => {
     class SaveSurveyResultRepositoryStub implements SaveSurveyResultRepository{
         async save(data: SaveSurveyResultParams): Promise<SurveyResultModel | null>{
-            return await new Promise(resolve => resolve({ ...data, id }))
+            return { ...data, id }
         }
     }
 
@@ -32,7 +32,7 @@ export const mockSaveSurveyResult = (surveyId: string, accountId: string, answer
         async save(params: SaveSurveyResultParams): Promise<SurveyResultModel | null> {
             console.log(params)
 
-            return await new Promise(resolve => resolve(mockSurveyResultModel(surveyId, accountId, answer)));
+            return mockSurveyResultModel(surveyId, accountId, answer);
         }
     }
 

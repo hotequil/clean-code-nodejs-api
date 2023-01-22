@@ -5,7 +5,7 @@ export const mockController = (response: HttpResponse): Controller => {
         async handle (request: HttpRequest): Promise<HttpResponse> {
             console.log(request);
 
-            return await new Promise(resolve => resolve(response));
+            return response;
         }
     }
 

@@ -33,7 +33,7 @@ describe(LoadSurveysController.name, () => {
     })
 
     it(`Should return code ${StatusCode.SuccessNoContent} when handle was called with empty value`, async () => {
-        jest.spyOn(loadSurveysStub, "load").mockReturnValueOnce(new Promise(resolve => resolve([])))
+        jest.spyOn(loadSurveysStub, "load").mockReturnValueOnce(Promise.resolve([]))
 
         const response = await controller.handle(mockHttpRequest())
 

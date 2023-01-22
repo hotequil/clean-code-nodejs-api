@@ -38,7 +38,7 @@ describe("LoginController", () => {
     });
 
     it(`Should return code ${StatusCode.ClientErrorUnauthorized} if auth is invalid when was called`, async () => {
-        jest.spyOn(authentication, "auth").mockReturnValueOnce(new Promise(resolve => resolve("")));
+        jest.spyOn(authentication, "auth").mockReturnValueOnce(Promise.resolve(""));
 
         const request: HttpRequest = mockHttpRequest();
         const response = await loginController.handle(request);

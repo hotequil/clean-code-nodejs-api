@@ -6,6 +6,6 @@ export class DbAddSurvey implements AddSurvey{
     async add(model: AddSurveyParams): Promise<null>{
         await this.addSurveyRepository.add(model)
 
-        return await new Promise(resolve => resolve(null))
+        return null
     }
 }

@@ -37,7 +37,7 @@ export const mockAddSurveyRepository = (): AddSurveyRepository => {
         async add(model: AddSurveyParams): Promise<null>{
             console.log(model)
 
-            return await new Promise(resolve => resolve(null))
+            return null
         }
     }
 
@@ -49,7 +49,7 @@ export const mockLoadSurveyByIdRepository = (surveyId: string): LoadSurveyByIdRe
         async loadById(id: string | Object): Promise<SurveyModel | null>{
             console.log(id)
 
-            return await new Promise(resolve => resolve(mockSurveyModel(surveyId)))
+            return mockSurveyModel(surveyId)
         }
     }
 
@@ -59,7 +59,7 @@ export const mockLoadSurveyByIdRepository = (surveyId: string): LoadSurveyByIdRe
 export const mockLoadSurveysRepository = (): LoadSurveysRepository => {
     class LoadSurveysRepositoryStub implements LoadSurveysRepository{
         async loadAll(): Promise<SurveysModel>{
-            return await new Promise(resolve => resolve(mockSurveysModel()))
+            return mockSurveysModel()
         }
     }
 
@@ -69,7 +69,7 @@ export const mockLoadSurveysRepository = (): LoadSurveysRepository => {
 export const mockLoadSurveys = (): LoadSurveys => {
     class LoadSurveysStub implements LoadSurveys{
         async load(): Promise<SurveysModel>{
-            return await new Promise(resolve => resolve(mockSurveysModel()))
+            return mockSurveysModel()
         }
     }
 
@@ -81,7 +81,7 @@ export const mockAddSurvey = (): AddSurvey => {
         async add(params: AddSurveyParams): Promise<null>{
             console.log(params)
 
-            return await new Promise(resolve => resolve(null))
+            return null
         }
     }
 
@@ -93,7 +93,7 @@ export const mockLoadSurveyById = (surveyId: string, answer: string): LoadSurvey
         async loadById(id: string | Object): Promise<SurveyModel | null> {
             console.log(id)
 
-            return await new Promise(resolve => resolve(mockSurveyModel(surveyId, answer)));
+            return mockSurveyModel(surveyId, answer)
         }
     }
 

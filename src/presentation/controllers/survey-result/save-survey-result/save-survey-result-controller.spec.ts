@@ -42,7 +42,7 @@ describe(SaveSurveyResultController.name, () => {
     })
 
     it(`Should return code ${StatusCode.ClientErrorForbidden} when LoadSurveyById returns null`, async () => {
-        jest.spyOn(loadSurveyByIdStub, "loadById").mockReturnValueOnce(new Promise(resolve => resolve(null)))
+        jest.spyOn(loadSurveyByIdStub, "loadById").mockReturnValueOnce(Promise.resolve(null))
 
         const { statusCode } = await controller.handle(mockHttpRequest())
 

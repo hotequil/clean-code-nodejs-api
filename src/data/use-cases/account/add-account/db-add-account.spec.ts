@@ -84,7 +84,7 @@ describe("DbAddAccount", () => {
         const fakeAccount = mockAccountModel();
 
         jest.spyOn(loadAccountByEmailRepositoryStub, "loadByEmail")
-            .mockReturnValueOnce(new Promise(resolve => resolve(fakeAccount)))
+            .mockReturnValueOnce(Promise.resolve(fakeAccount))
 
         const account = await db.add(fakeAccount);
 

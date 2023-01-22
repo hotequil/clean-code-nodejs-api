@@ -5,7 +5,7 @@ export const mockAuthentication = (result: string): Authentication => {
         async auth (params: AuthenticationParams): Promise<string | null> {
             console.log(params)
 
-            return await new Promise(resolve => resolve(result))
+            return result;
         }
     }
 

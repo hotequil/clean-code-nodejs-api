@@ -53,7 +53,7 @@ describe("DbAuthentication", () => {
     });
 
     it("Should return null if LoadAccountByEmailRepository returns null when was called", async () => {
-        jest.spyOn(loadAccountByEmailRepositoryStub, "loadByEmail").mockReturnValueOnce(new Promise(resolve => resolve(null)));
+        jest.spyOn(loadAccountByEmailRepositoryStub, "loadByEmail").mockReturnValueOnce(Promise.resolve(null));
 
         const response = await db.auth(mockAuthenticationParams(DEFAULT_EMAIL, DEFAULT_PASSWORD));
 
@@ -77,7 +77,7 @@ describe("DbAuthentication", () => {
     });
 
     it("Should return null if HashComparer returns false when was called", async () => {
-        jest.spyOn(hashComparerStub, "compare").mockReturnValueOnce(new Promise(resolve => resolve(false)));
+        jest.spyOn(hashComparerStub, "compare").mockReturnValueOnce(Promise.resolve(false));
 
         const response = await db.auth(mockAuthenticationParams(DEFAULT_EMAIL, DEFAULT_PASSWORD));
 

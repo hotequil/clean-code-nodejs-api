@@ -9,12 +9,12 @@ const DEFAULT_HASH = "1a2b3c4d";
 
 jest.mock("bcrypt", () => ({
     async hash () {
-        return await new Promise(resolve => resolve(DEFAULT_VALUE));
+        return DEFAULT_VALUE;
     },
     async compare (value: string, hash: string) {
         console.log(value, hash);
 
-        return await new Promise(resolve => resolve(true));
+        return true;
     }
 }));
 
@@ -63,7 +63,7 @@ describe("BcryptAdapter", () => {
 
         it("Should return false when compare fails", async () => {
             // @ts-ignore
-            jest.spyOn(bcrypt, "compare").mockReturnValueOnce(new Promise(resolve => resolve(false)));
+            jest.spyOn(bcrypt, "compare").mockReturnValueOnce(Promise.resolve(false));
 
             const response = await bcryptAdapter.compare(DEFAULT_VALUE, DEFAULT_HASH);
 

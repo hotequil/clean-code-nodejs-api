@@ -43,7 +43,7 @@ describe(AuthMiddleware.name, () => {
     });
 
     it(`Should return code ${StatusCode.ClientErrorForbidden} if LoadAccountByToken returns null`, async () => {
-        jest.spyOn(loadAccountByToken, "loadByToken").mockReturnValueOnce(new Promise(resolve => resolve(null)))
+        jest.spyOn(loadAccountByToken, "loadByToken").mockReturnValueOnce(Promise.resolve(null))
 
         const response = await middleware.handle(mockHttpRequest())
 

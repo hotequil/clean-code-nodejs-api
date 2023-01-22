@@ -56,8 +56,7 @@ describe("LogDecorator", () => {
 
         const errorFromServer = serverError(error);
 
-        jest.spyOn(controllerStub, "handle")
-            .mockImplementationOnce(async () => await new Promise(resolve => resolve(errorFromServer)));
+        jest.spyOn(controllerStub, "handle").mockReturnValueOnce(Promise.resolve(errorFromServer));
 
         await logDecorator.handle(httpRequest);
 

@@ -26,7 +26,7 @@ describe(DbLoadAccountByToken.name, () => {
     })
 
     it("Should return null if Decrypter returns null", async () => {
-        jest.spyOn(decrypter, "decrypt").mockReturnValueOnce(new Promise(resolve => resolve(null)))
+        jest.spyOn(decrypter, "decrypt").mockReturnValueOnce(Promise.resolve(null))
 
         const account = await db.loadByToken(FAKE_TOKEN, ROLE)
 
@@ -42,7 +42,7 @@ describe(DbLoadAccountByToken.name, () => {
     })
 
     it("Should return null if LoadAccountByTokenRepository returns null", async () => {
-        jest.spyOn(loadAccountByTokenRepository, "loadByToken").mockReturnValueOnce(new Promise(resolve => resolve(null)))
+        jest.spyOn(loadAccountByTokenRepository, "loadByToken").mockReturnValueOnce(Promise.resolve(null))
 
         const account = await db.loadByToken(FAKE_TOKEN, ROLE)
 

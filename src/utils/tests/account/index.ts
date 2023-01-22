@@ -29,7 +29,7 @@ export const mockAuthenticationParams = (email: string, password: string): Authe
 export const mockAddAccountRepository = (id: string, password: string): AddAccountRepository => {
     class AddAccountRepositoryStub implements AddAccountRepository {
         async add (account: AddAccountParams): Promise<AccountModel> {
-            return await new Promise(resolve => resolve({ ...account, password, id }));
+            return { ...account, password, id };
         }
     }
 
@@ -41,7 +41,7 @@ export const mockLoadAccountByEmailRepository = (
 ): LoadAccountByEmailRepository => {
     class LoadAccountByEmailRepositoryStub implements LoadAccountByEmailRepository {
         async loadByEmail (email: string): Promise<AccountModel | null> {
-            return await new Promise(resolve => resolve(account ? { ...account, email } : null));
+            return account ? { ...account, email } : null;
         }
     }
 
@@ -53,7 +53,7 @@ export const mockLoadAccountByTokenRepository = (): LoadAccountByTokenRepository
         async loadByToken(token: string, role?: AccountType): Promise<AccountModel | null>{
             console.log(token, role)
 
-            return await new Promise(resolve => resolve(mockAccountModel()))
+            return mockAccountModel()
         }
     }
 
@@ -65,7 +65,7 @@ export const mockUpdateAccessTokenRepository = (): UpdateAccessTokenRepository =
         async updateAccessToken (id: string, token: string): Promise<void> {
             console.log(id, token);
 
-            await new Promise<void>(resolve => resolve());
+            await Promise.resolve()
         }
     }
 
@@ -75,7 +75,7 @@ export const mockUpdateAccessTokenRepository = (): UpdateAccessTokenRepository =
 export const mockAddAccount = (): AddAccount => {
     class AddAccountStub implements AddAccount {
         async add (account: AddAccountParams): Promise<AccountModel> {
-            return await new Promise(resolve => resolve({ ...account, id: "id" }));
+            return { ...account, id: "id" };
         }
     }
 

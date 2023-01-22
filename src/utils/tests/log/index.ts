@@ -5,7 +5,7 @@ export const mockLogErrorRepository = (): LogErrorRepository => {
         async logError (stack: string): Promise<void> {
             console.log(stack);
 
-            return await new Promise(resolve => resolve());
+            return await Promise.resolve();
         }
     }
 

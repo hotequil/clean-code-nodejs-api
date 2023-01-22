@@ -8,7 +8,7 @@ export const mockHasher = (result: string): Hasher => {
         async hash (value: string): Promise<string> {
             console.log(value);
 
-            return await new Promise(resolve => resolve(result));
+            return result;
         }
     }
 
@@ -20,7 +20,7 @@ export const mockDecrypter = (result: string): Decrypter => {
         async decrypt(value: string): Promise<string | null> {
             console.log(value)
 
-            return await new Promise(resolve => resolve(result));
+            return result;
         }
     }
 
@@ -32,7 +32,7 @@ export const mockEncrypter = (result: string): Encrypter => {
         async encrypt (value: string): Promise<string> {
             console.log(value);
 
-            return await new Promise(resolve => resolve(result));
+            return result;
         }
     }
 
@@ -44,7 +44,7 @@ export const mockHashComparer = (): HashComparer => {
         async compare (value: string, hash: string): Promise<boolean> {
             console.log(value, hash);
 
-            return await new Promise(resolve => resolve(true));
+            return true;
         }
     }
 

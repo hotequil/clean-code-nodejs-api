@@ -21,7 +21,7 @@ export class DbAddAccount implements AddAccount {
             const password = await this.hasher.hash(account.password);
             const fakeAccount = await this.addAccountRepository.add({ ...account, password });
 
-            return await new Promise(resolve => resolve({ ...account, ...fakeAccount }));
+            return { ...account, ...fakeAccount };
         }
 
         return null;

@@ -106,7 +106,7 @@ describe("SignUpController", () => {
     });
 
     it(`Should return code ${StatusCode.ClientErrorForbidden} if AddAccount returns null`, async () => {
-        jest.spyOn(addAccountStub, "add").mockReturnValueOnce(new Promise(resolve => resolve(null)));
+        jest.spyOn(addAccountStub, "add").mockReturnValueOnce(Promise.resolve(null));
 
         const request: HttpRequest = mockHttpRequest();
         const response: HttpResponse = await controller.handle(request);
