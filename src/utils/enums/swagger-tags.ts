@@ -1,3 +1,3 @@
-export enum Tags {
+export enum SwaggerTags {
     ACCOUNT = "Account"
 }

@@ -1,10 +1,10 @@
-import { Tags } from "@/main/docs/tags";
 import StatusCode from "status-code-enum";
+import { SwaggerTags } from "@/utils/enums";
 
 export const loginPath = {
     post: {
         summary: "Authenticate user",
-        tags: [Tags.ACCOUNT],
+        tags: [SwaggerTags.ACCOUNT],
         requestBody: {
             description: "Body",
             content: {
@@ -17,7 +17,7 @@ export const loginPath = {
         },
         responses: {
             [StatusCode.SuccessOK]: {
-                description: "Success",
+                description: "Ok",
                 content: {
                     "application/json": {
                         schema: {
@@ -25,6 +25,18 @@ export const loginPath = {
                         }
                     }
                 }
+            },
+            [StatusCode.ClientErrorBadRequest]: {
+                $ref: "#/components/badRequest"
+            },
+            [StatusCode.ClientErrorUnauthorized]: {
+                $ref: "#/components/unauthorized"
+            },
+            [StatusCode.ClientErrorNotFound]: {
+                $ref: "#/components/notFound"
+            },
+            [StatusCode.ServerErrorInternal]: {
+                $ref: "#/components/serverError"
             },
         }
     }
