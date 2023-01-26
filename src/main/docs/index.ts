@@ -1,11 +1,15 @@
 // @ts-ignore
 import { version, description, name } from "../../../package.json"
-import { loginPath } from "./paths";
+import { loadSurveysPath, loginPath } from "./paths";
 import { accountSchema } from "@/main/docs/schemas/account-schema";
 import { loginSchema } from "@/main/docs/schemas/login-schema";
 import { errorSchema } from "@/main/docs/schemas/error-schema";
-import { badRequestComponent, serverErrorComponent, unauthorizedComponent, notFoundComponent } from "./components";
+import { badRequestComponent, serverErrorComponent, unauthorizedComponent, notFoundComponent, forbiddenComponent } from "./components";
 import { SwaggerTags } from "@/utils/enums";
+import { surveysSchema } from "@/main/docs/schemas/surveys-schema";
+import { surveySchema } from "@/main/docs/schemas/survey-schema";
+import { surveyAnswerSchema } from "@/main/docs/schemas/survey-answer-schema";
+import { apiKeyAuthSchema } from "@/main/docs/schemas/api-key-auth-schema";
 
 export default {
     openapi: "3.0.0",
@@ -27,19 +31,30 @@ export default {
         {
             name: SwaggerTags.ACCOUNT
         },
+        {
+            name: SwaggerTags.SURVEY
+        },
     ],
     paths: {
-        "/login": loginPath
+        "/login": loginPath,
+        "/surveys": loadSurveysPath,
     },
     schemas: {
         account: accountSchema,
         login: loginSchema,
         error: errorSchema,
+        surveyAnswer: surveyAnswerSchema,
+        survey: surveySchema,
+        surveys: surveysSchema,
     },
     components: {
+        securitySchemes: {
+            apiKeyAuth: apiKeyAuthSchema
+        },
         badRequest: badRequestComponent,
         serverError: serverErrorComponent,
         unauthorized: unauthorizedComponent,
         notFound: notFoundComponent,
+        forbidden: forbiddenComponent,
     },
 }
