@@ -1,3 +1,4 @@
 export enum SwaggerTags {
-    ACCOUNT = "Account"
+    ACCOUNT = "Account",
+    SURVEY = "Survey",
 }
