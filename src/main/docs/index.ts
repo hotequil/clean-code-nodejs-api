@@ -1,6 +1,6 @@
 // @ts-ignore
 import { version, description, name } from "../../../package.json"
-import { loadSurveysPath, loginPath, signUpPath } from "./paths";
+import { addSurveyPath, loadSurveysPath, loginPath, signUpPath } from "./paths";
 import { accountSchema } from "@/main/docs/schemas/account-schema";
 import { loginSchema } from "@/main/docs/schemas/login-schema";
 import { errorSchema } from "@/main/docs/schemas/error-schema";
@@ -11,6 +11,7 @@ import { surveySchema } from "@/main/docs/schemas/survey-schema";
 import { surveyAnswerSchema } from "@/main/docs/schemas/survey-answer-schema";
 import { apiKeyAuthSchema } from "@/main/docs/schemas/api-key-auth-schema";
 import { signUpSchema } from "@/main/docs/schemas/sign-up-schema";
+import { addSurveySchema } from "@/main/docs/schemas/add-survey-schema";
 
 export default {
     openapi: "3.0.0",
@@ -38,7 +39,10 @@ export default {
     ],
     paths: {
         "/login": loginPath,
-        "/surveys": loadSurveysPath,
+        "/surveys": {
+            ...loadSurveysPath,
+            ...addSurveyPath,
+        },
         "/sign-up": signUpPath,
     },
     schemas: {
@@ -49,6 +53,7 @@ export default {
         survey: surveySchema,
         surveys: surveysSchema,
         signUp: signUpSchema,
+        addSurvey: addSurveySchema,
     },
     components: {
         securitySchemes: {
