@@ -1,6 +1,6 @@
 // @ts-ignore
 import { version, description, name } from "../../../package.json"
-import { addSurveyPath, loadSurveysPath, loginPath, signUpPath } from "./paths";
+import { addSurveyPath, loadSurveysPath, loginPath, signUpPath, saveSurveyResultPath } from "./paths";
 import { accountSchema } from "@/main/docs/schemas/account-schema";
 import { loginSchema } from "@/main/docs/schemas/login-schema";
 import { errorSchema } from "@/main/docs/schemas/error-schema";
@@ -12,6 +12,8 @@ import { surveyAnswerSchema } from "@/main/docs/schemas/survey-answer-schema";
 import { apiKeyAuthSchema } from "@/main/docs/schemas/api-key-auth-schema";
 import { signUpSchema } from "@/main/docs/schemas/sign-up-schema";
 import { addSurveySchema } from "@/main/docs/schemas/add-survey-schema";
+import { saveSurveyResultSchema } from "@/main/docs/schemas/save-survey-result-schema";
+import { surveyResultSchema } from "@/main/docs/schemas/survey-result-schema";
 
 export default {
     openapi: "3.0.0",
@@ -36,6 +38,9 @@ export default {
         {
             name: SwaggerTags.SURVEY
         },
+        {
+            name: SwaggerTags.SURVEY_RESULT
+        },
     ],
     paths: {
         "/login": loginPath,
@@ -44,6 +49,7 @@ export default {
             ...addSurveyPath,
         },
         "/sign-up": signUpPath,
+        "/surveys/{surveyId}/results": saveSurveyResultPath,
     },
     schemas: {
         account: accountSchema,
@@ -54,6 +60,8 @@ export default {
         surveys: surveysSchema,
         signUp: signUpSchema,
         addSurvey: addSurveySchema,
+        saveSurveyResult: saveSurveyResultSchema,
+        surveyResult: surveyResultSchema,
     },
     components: {
         securitySchemes: {
