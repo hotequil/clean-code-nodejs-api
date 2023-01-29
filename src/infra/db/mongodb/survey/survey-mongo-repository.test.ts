@@ -1,5 +1,5 @@
 import { SurveyMongoRepository } from "./survey-mongo-repository";
-import { MongodbHelper } from "../helpers/mongodb-helper";
+import { MongodbHelper } from "../helpers";
 import { Collection } from "mongodb";
 import { SurveyModel } from "@/domain/models/survey";
 import * as MockDate from "mockdate";

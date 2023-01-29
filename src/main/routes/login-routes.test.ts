@@ -3,7 +3,7 @@ import StatusCode from "status-code-enum";
 import { Collection } from "mongodb";
 import { hash } from "bcrypt";
 import app from "../config/app";
-import { MongodbHelper } from "@/infra/db/mongodb/helpers/mongodb-helper";
+import { MongodbHelper } from "@/infra/db/mongodb/helpers";
 import { mockAddAccountParams } from "@/utils/tests";
 
 const PASSWORD = "passwordAndConfirmation"

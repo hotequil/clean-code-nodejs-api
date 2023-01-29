@@ -1,7 +1,7 @@
 import request from "supertest";
 import StatusCode from "status-code-enum";
 import app from "../config/app";
-import { MongodbHelper } from "@/infra/db/mongodb/helpers/mongodb-helper";
+import { MongodbHelper } from "@/infra/db/mongodb/helpers";
 import { sign } from "jsonwebtoken";
 import env from "../config/env";
 import { AccountType, Header } from "@/utils/enums";

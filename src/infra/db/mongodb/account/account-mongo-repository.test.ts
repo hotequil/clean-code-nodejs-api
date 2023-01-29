@@ -1,5 +1,5 @@
 import { Collection } from "mongodb";
-import { MongodbHelper } from "../helpers/mongodb-helper";
+import { MongodbHelper } from "../helpers";
 import { AccountMongoRepository } from "./account-mongo-repository";
 import { copy } from "@/presentation/helpers/manipulator-helper";
 import { AccountModel } from "@/domain/models/account";
