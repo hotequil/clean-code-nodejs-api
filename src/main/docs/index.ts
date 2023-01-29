@@ -14,6 +14,7 @@ import { signUpSchema } from "@/main/docs/schemas/sign-up-schema";
 import { addSurveySchema } from "@/main/docs/schemas/add-survey-schema";
 import { saveSurveyResultSchema } from "@/main/docs/schemas/save-survey-result-schema";
 import { surveyResultSchema } from "@/main/docs/schemas/survey-result-schema";
+import { surveyAnswerResultSchema } from "@/main/docs/schemas/survey-answer-result-schema";
 
 export default {
     openapi: "3.0.0",
@@ -62,6 +63,7 @@ export default {
         addSurvey: addSurveySchema,
         saveSurveyResult: saveSurveyResultSchema,
         surveyResult: surveyResultSchema,
+        surveyAnswerResult: surveyAnswerResultSchema,
     },
     components: {
         securitySchemes: {
