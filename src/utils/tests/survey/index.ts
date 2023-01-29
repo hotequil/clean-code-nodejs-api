@@ -22,12 +22,12 @@ export const mockSurveysModel = (): SurveysModel => [
     }
 ]
 
-export const mockAddSurveyParams = (answer = "answer"): AddSurveyParams => ({
+export const mockAddSurveyParams = (answer = "answer", otherAnswer = "other-answer"): AddSurveyParams => ({
     question: "question",
     answers: [
         { answer },
-        { image: "image", answer: "answer" },
-        { image: "image", answer: "answer" },
+        { image: "image", answer: otherAnswer },
+        { image: "image", answer: "last-answer" },
     ],
     date: new Date(),
 })
