@@ -29,7 +29,7 @@ describe(SaveSurveyResultController.name, () => {
 
     beforeEach(() => {
         loadSurveyByIdStub = mockLoadSurveyById(SURVEY_ID, VALID_ANSWER)
-        saveSurveyResultStub = mockSaveSurveyResult(SURVEY_ID, ACCOUNT_ID, VALID_ANSWER)
+        saveSurveyResultStub = mockSaveSurveyResult(SURVEY_ID)
         controller = new SaveSurveyResultController(loadSurveyByIdStub, saveSurveyResultStub)
     })
 
@@ -92,6 +92,6 @@ describe(SaveSurveyResultController.name, () => {
     it(`Should return code ${StatusCode.SuccessOK} when handle was called with success`, async () => {
         const response = await controller.handle(mockHttpRequest())
 
-        expect(response).toEqual(success(mockSurveyResultModel(SURVEY_ID, ACCOUNT_ID, VALID_ANSWER)))
+        expect(response).toEqual(success(mockSurveyResultModel(SURVEY_ID)))
     })
 })

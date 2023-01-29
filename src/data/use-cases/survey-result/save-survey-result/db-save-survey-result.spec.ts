@@ -1,17 +1,18 @@
-import { DbSaveSurveyResult, SaveSurveyResultRepository } from "./db-save-survey-result-protocols";
+import { DbSaveSurveyResult, SaveSurveyResultRepository, SurveyAnswersResultModel } from "./db-save-survey-result-protocols";
 import * as MockDate from "mockdate";
 import { mockSaveSurveyResultParams, mockSaveSurveyResultRepository, throwError } from "@/utils/tests";
 
 let dbSaveSurveyResult: DbSaveSurveyResult
 let saveSurveyResultRepositoryStub: SaveSurveyResultRepository
-const SURVEY_ID = "id"
+const QUESTION = "question"
+const ANSWERS: SurveyAnswersResultModel = []
 
 describe(DbSaveSurveyResult.name, () => {
     beforeAll(() => MockDate.set(new Date()))
     afterAll(() => MockDate.reset())
 
     beforeEach(() => {
-        saveSurveyResultRepositoryStub = mockSaveSurveyResultRepository(SURVEY_ID)
+        saveSurveyResultRepositoryStub = mockSaveSurveyResultRepository(QUESTION, ANSWERS)
         dbSaveSurveyResult = new DbSaveSurveyResult(saveSurveyResultRepositoryStub)
     })
 
@@ -34,8 +35,9 @@ describe(DbSaveSurveyResult.name, () => {
 
     it("Should return a survey result when SaveSurveyResultRepository gives success", async () => {
         const surveyData = mockSaveSurveyResultParams()
+        const { surveyId, date } = surveyData
         const survey = await dbSaveSurveyResult.save(surveyData)
 
-        expect(survey).toEqual({ ...surveyData, id: SURVEY_ID })
+        expect(survey).toEqual({ surveyId, date, question: QUESTION, answers: ANSWERS })
     })
 })
