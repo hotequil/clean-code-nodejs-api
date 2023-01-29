@@ -9,9 +9,11 @@ let repository: SurveyResultMongoRepository
 let collection: Collection
 let surveysCollection: Collection
 let accountsCollection: Collection
+const FIRST_ANSWER = "first-answer"
+const SECOND_ANSWER = "second-answer"
 
 const mockSurveyId = async (): Promise<Object> => {
-    const { insertedId } = await surveysCollection.insertOne(mockAddSurveyParams())
+    const { insertedId } = await surveysCollection.insertOne(mockAddSurveyParams(FIRST_ANSWER, SECOND_ANSWER))
 
     return insertedId
 }
@@ -49,27 +51,33 @@ describe(SurveyResultMongoRepository.name, () => {
     it("Should add a survey result if it's new", async () => {
         const surveyId = await mockSurveyId()
         const accountId = await mockAccountId()
-        const answer = "answer"
-        const result = await repository.save({ surveyId, accountId, answer, date: new Date() }) as SurveyResultModel
+        const result = await repository.save({ surveyId, accountId, answer: FIRST_ANSWER, date: new Date() }) as SurveyResultModel
+        const [firstAnswer] = result.answers
 
-        expect(result.id).toBeTruthy()
+        expect(result).toBeTruthy()
+        expect(result.question).toBeTruthy()
         expect(result.surveyId).toEqual(surveyId)
-        expect(result.accountId).toEqual(accountId)
-        expect(result.answer).toBe(answer)
+        expect(firstAnswer.answer).toBe(FIRST_ANSWER)
+        expect(firstAnswer.count).toBe(1)
+        expect(firstAnswer.percent).toBe(100)
         expect(result.date).toBeTruthy()
     })
 
     it("Should update survey result if it isn't new", async () => {
         const surveyId = await mockSurveyId()
         const accountId = await mockAccountId()
-        const newAnswer = "new answer"
-        const { insertedId } = await collection.insertOne({ surveyId, accountId, answer: "answer", date: new Date() })
-        const result = await repository.save({ surveyId, accountId, answer: newAnswer, date: new Date() }) as SurveyResultModel
 
-        expect(result.id).toEqual(insertedId)
+        await collection.insertOne({ surveyId, accountId, answer: FIRST_ANSWER, date: new Date() })
+
+        const result = await repository.save({ surveyId, accountId, answer: SECOND_ANSWER, date: new Date() }) as SurveyResultModel
+        const [first] = result.answers
+
+        expect(result).toBeTruthy()
+        expect(result.question).toBeTruthy()
         expect(result.surveyId).toEqual(surveyId)
-        expect(result.accountId).toEqual(accountId)
-        expect(result.answer).toBe(newAnswer)
+        expect(first.answer).toBe(SECOND_ANSWER)
+        expect(first.count).toBe(1)
+        expect(first.percent).toBe(100)
         expect(result.date).toBeTruthy()
     })
 })
