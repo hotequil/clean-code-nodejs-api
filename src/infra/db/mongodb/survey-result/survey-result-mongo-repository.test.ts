@@ -52,7 +52,7 @@ describe(SurveyResultMongoRepository.name, () => {
         const surveyId = await mockSurveyId()
         const accountId = await mockAccountId()
         const result = await repository.save({ surveyId, accountId, answer: FIRST_ANSWER, date: new Date() }) as SurveyResultModel
-        const [firstAnswer] = result.answers
+        const [firstAnswer, secondAnswer] = result.answers
 
         expect(result).toBeTruthy()
         expect(result.question).toBeTruthy()
@@ -60,6 +60,9 @@ describe(SurveyResultMongoRepository.name, () => {
         expect(firstAnswer.answer).toBe(FIRST_ANSWER)
         expect(firstAnswer.count).toBe(1)
         expect(firstAnswer.percent).toBe(100)
+        expect(secondAnswer.answer).toBe(SECOND_ANSWER)
+        expect(secondAnswer.count).toBe(0)
+        expect(secondAnswer.percent).toBe(0)
         expect(result.date).toBeTruthy()
     })
 
@@ -70,7 +73,7 @@ describe(SurveyResultMongoRepository.name, () => {
         await collection.insertOne({ surveyId, accountId, answer: FIRST_ANSWER, date: new Date() })
 
         const result = await repository.save({ surveyId, accountId, answer: SECOND_ANSWER, date: new Date() }) as SurveyResultModel
-        const [first] = result.answers
+        const [first, second] = result.answers
 
         expect(result).toBeTruthy()
         expect(result.question).toBeTruthy()
@@ -78,6 +81,9 @@ describe(SurveyResultMongoRepository.name, () => {
         expect(first.answer).toBe(SECOND_ANSWER)
         expect(first.count).toBe(1)
         expect(first.percent).toBe(100)
+        expect(second.answer).toBe(FIRST_ANSWER)
+        expect(second.count).toBe(0)
+        expect(second.percent).toBe(0)
         expect(result.date).toBeTruthy()
     })
 })
