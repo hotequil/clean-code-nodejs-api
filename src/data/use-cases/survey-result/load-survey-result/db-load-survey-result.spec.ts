@@ -1,6 +1,6 @@
 import { DbLoadSurveyResult } from "./db-load-survey-result";
 import { LoadSurveyResultRepository } from "./db-load-survey-result-protocols";
-import { mockLoadSurveyResultRepository } from "@/utils/tests";
+import { mockLoadSurveyResultRepository, throwError } from "@/utils/tests";
 
 let db: DbLoadSurveyResult
 let loadSurveyResultRepositoryStub: LoadSurveyResultRepository
@@ -18,5 +18,13 @@ describe(DbLoadSurveyResult.name, () => {
         await db.load(SURVEY_ID)
 
         expect(loadBySurveyIdSpy).toBeCalledWith(SURVEY_ID)
+    })
+
+    it("Should throw if LoadSurveyResultRepository throws", async () => {
+        jest.spyOn(loadSurveyResultRepositoryStub, "loadBySurveyId").mockImplementationOnce(throwError)
+
+        const promise = db.load(SURVEY_ID)
+
+        await expect(promise).rejects.toThrow()
     })
 })
