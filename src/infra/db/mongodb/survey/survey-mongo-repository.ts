@@ -4,9 +4,9 @@ import { MongodbHelper } from "../helpers";
 import { LoadSurveysRepository } from "@/data/protocols/db/survey/load-surveys-repository";
 import { SurveyModel, SurveysModel } from "@/domain/models/survey";
 import { Collection, ObjectId } from "mongodb";
-import { LoadSurveyById } from "@/domain/use-cases/survey/load-survey-by-id";
+import { LoadSurveyByIdRepository } from "@/data/protocols/db/survey/load-survey-by-id-repository";
 
-export class SurveyMongoRepository implements AddSurveyRepository, LoadSurveysRepository, LoadSurveyById{
+export class SurveyMongoRepository implements AddSurveyRepository, LoadSurveysRepository, LoadSurveyByIdRepository{
     async add(model: AddSurveyParams): Promise<null>{
         const collection = await MongodbHelper.collection("surveys")
 

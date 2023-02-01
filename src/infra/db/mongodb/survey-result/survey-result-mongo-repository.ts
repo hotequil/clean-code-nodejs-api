@@ -1,9 +1,11 @@
-import { SaveSurveyResult, SaveSurveyResultParams } from "@/domain/use-cases/survey-result/save-survey-result";
+import { SaveSurveyResultParams } from "@/domain/use-cases/survey-result/save-survey-result";
 import { SurveyResultModel } from "@/domain/models/survey-result";
 import { MongodbHelper, QueryBuilderHelper } from "@/infra/db/mongodb/helpers";
 import { ObjectId } from "mongodb";
+import { LoadSurveyResultRepository } from "@/data/protocols/db/survey-result/load-survey-result-repository";
+import { SaveSurveyResultRepository } from "@/data/protocols/db/survey-result/save-survey-result-repository";
 
-export class SurveyResultMongoRepository implements SaveSurveyResult {
+export class SurveyResultMongoRepository implements SaveSurveyResultRepository, LoadSurveyResultRepository {
     async save(data: SaveSurveyResultParams): Promise<SurveyResultModel | null> {
         const collection = await MongodbHelper.collection("surveyResults")
         const { answer, date } = data
@@ -21,7 +23,7 @@ export class SurveyResultMongoRepository implements SaveSurveyResult {
         return await this.loadBySurveyId(surveyId);
     }
 
-    private async loadBySurveyId(surveyId: Object): Promise<SurveyResultModel | null> {
+    async loadBySurveyId(surveyId: Object): Promise<SurveyResultModel | null> {
         const collection = await MongodbHelper.collection("surveyResults")
         const query = new QueryBuilderHelper().match({ surveyId })
                                               .group({
