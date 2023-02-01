@@ -48,42 +48,73 @@ describe(SurveyResultMongoRepository.name, () => {
         await accountsCollection.deleteMany({})
     })
 
-    it("Should add a survey result if it's new", async () => {
-        const surveyId = await mockSurveyId()
-        const accountId = await mockAccountId()
-        const result = await repository.save({ surveyId, accountId, answer: FIRST_ANSWER, date: new Date() }) as SurveyResultModel
-        const [firstAnswer, secondAnswer] = result.answers
+    describe("save()", () => {
+        it("Should add a survey result if it's new", async () => {
+            const surveyId = await mockSurveyId()
+            const accountId = await mockAccountId()
+            const result = await repository.save({ surveyId, accountId, answer: FIRST_ANSWER, date: new Date() }) as SurveyResultModel
+            const [firstAnswer, secondAnswer] = result.answers
 
-        expect(result).toBeTruthy()
-        expect(result.question).toBeTruthy()
-        expect(result.surveyId).toEqual(surveyId)
-        expect(firstAnswer.answer).toBe(FIRST_ANSWER)
-        expect(firstAnswer.count).toBe(1)
-        expect(firstAnswer.percent).toBe(100)
-        expect(secondAnswer.answer).toBe(SECOND_ANSWER)
-        expect(secondAnswer.count).toBe(0)
-        expect(secondAnswer.percent).toBe(0)
-        expect(result.date).toBeTruthy()
+            expect(result).toBeTruthy()
+            expect(result.question).toBeTruthy()
+            expect(result.surveyId).toEqual(surveyId)
+            expect(firstAnswer.answer).toBe(FIRST_ANSWER)
+            expect(firstAnswer.count).toBe(1)
+            expect(firstAnswer.percent).toBe(100)
+            expect(secondAnswer.answer).toBe(SECOND_ANSWER)
+            expect(secondAnswer.count).toBe(0)
+            expect(secondAnswer.percent).toBe(0)
+            expect(result.date).toBeTruthy()
+        })
+
+        it("Should update survey result if it isn't new", async () => {
+            const surveyId = await mockSurveyId()
+            const accountId = await mockAccountId()
+
+            await collection.insertOne({ surveyId, accountId, answer: FIRST_ANSWER, date: new Date() })
+
+            const result = await repository.save({ surveyId, accountId, answer: SECOND_ANSWER, date: new Date() }) as SurveyResultModel
+            const [first, second] = result.answers
+
+            expect(result).toBeTruthy()
+            expect(result.question).toBeTruthy()
+            expect(result.surveyId).toEqual(surveyId)
+            expect(first.answer).toBe(SECOND_ANSWER)
+            expect(first.count).toBe(1)
+            expect(first.percent).toBe(100)
+            expect(second.answer).toBe(FIRST_ANSWER)
+            expect(second.count).toBe(0)
+            expect(second.percent).toBe(0)
+            expect(result.date).toBeTruthy()
+        })
     })
 
-    it("Should update survey result if it isn't new", async () => {
-        const surveyId = await mockSurveyId()
-        const accountId = await mockAccountId()
+    describe("loadBySurveyId()", () => {
+        it("Should return survey result model when loadBySurveyId was called with success", async () => {
+            const surveyId = await mockSurveyId()
+            const accountId = await mockAccountId()
 
-        await collection.insertOne({ surveyId, accountId, answer: FIRST_ANSWER, date: new Date() })
+            await collection.insertMany([
+                { surveyId, accountId, answer: FIRST_ANSWER, date: new Date() },
+                { surveyId, accountId, answer: FIRST_ANSWER, date: new Date() },
+                { surveyId, accountId, answer: FIRST_ANSWER, date: new Date() },
+                { surveyId, accountId, answer: SECOND_ANSWER, date: new Date() },
+                { surveyId, accountId, answer: SECOND_ANSWER, date: new Date() },
+            ])
 
-        const result = await repository.save({ surveyId, accountId, answer: SECOND_ANSWER, date: new Date() }) as SurveyResultModel
-        const [first, second] = result.answers
+            const result = await repository.loadBySurveyId(surveyId) as SurveyResultModel
+            const [firstAnswer, secondAnswer] = result.answers
 
-        expect(result).toBeTruthy()
-        expect(result.question).toBeTruthy()
-        expect(result.surveyId).toEqual(surveyId)
-        expect(first.answer).toBe(SECOND_ANSWER)
-        expect(first.count).toBe(1)
-        expect(first.percent).toBe(100)
-        expect(second.answer).toBe(FIRST_ANSWER)
-        expect(second.count).toBe(0)
-        expect(second.percent).toBe(0)
-        expect(result.date).toBeTruthy()
+            expect(result).toBeTruthy()
+            expect(result.question).toBeTruthy()
+            expect(result.surveyId).toEqual(surveyId)
+            expect(firstAnswer.answer).toBe(FIRST_ANSWER)
+            expect(firstAnswer.count).toBe(3)
+            expect(firstAnswer.percent).toBe(60)
+            expect(secondAnswer.answer).toBe(SECOND_ANSWER)
+            expect(secondAnswer.count).toBe(2)
+            expect(secondAnswer.percent).toBe(40)
+            expect(result.date).toBeTruthy()
+        })
     })
 })
