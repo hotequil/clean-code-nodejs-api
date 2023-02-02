@@ -1,8 +1,9 @@
+import { ObjectId } from "mongodb";
 import { SurveyResultModel } from "@/domain/models/survey-result";
 
 export type SaveSurveyResultParams = {
-    surveyId: string | Object
-    accountId: string | Object
+    surveyId: string | ObjectId
+    accountId: string | ObjectId
     answer: string
     date: Date
 }
