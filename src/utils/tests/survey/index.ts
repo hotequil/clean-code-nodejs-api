@@ -5,6 +5,7 @@ import { SurveyModel, SurveysModel } from "@/domain/models/survey";
 import { LoadSurveysRepository } from "@/data/protocols/db/survey/load-surveys-repository";
 import { LoadSurveys } from "@/domain/use-cases/survey/load-surveys";
 import { LoadSurveyById } from "@/domain/use-cases/survey/load-survey-by-id";
+import { ObjectId } from "mongodb";
 
 export const mockSurveyModel = (id = "id", answer = "answer"): SurveyModel => ({
     id,
@@ -45,7 +46,7 @@ export const mockAddSurveyRepository = (): AddSurveyRepository => {
 
 export const mockLoadSurveyByIdRepository = (surveyId: string): LoadSurveyByIdRepository => {
     class LoadSurveyByIdRepositoryStub implements LoadSurveyByIdRepository{
-        async loadById(id: string | Object): Promise<SurveyModel | null>{
+        async loadById(id: string | ObjectId): Promise<SurveyModel | null>{
             console.log(id)
 
             return mockSurveyModel(surveyId)
@@ -89,7 +90,7 @@ export const mockAddSurvey = (): AddSurvey => {
 
 export const mockLoadSurveyById = (surveyId: string, answer: string): LoadSurveyById => {
     class LoadSurveyByIdStub implements LoadSurveyById{
-        async loadById(id: string | Object): Promise<SurveyModel | null> {
+        async loadById(id: string | ObjectId): Promise<SurveyModel | null> {
             console.log(id)
 
             return mockSurveyModel(surveyId, answer)
