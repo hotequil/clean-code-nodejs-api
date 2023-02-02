@@ -6,7 +6,7 @@ import { LoadSurveyResultRepository } from "@/data/protocols/db/survey-result/lo
 import { SaveSurveyResultRepository } from "@/data/protocols/db/survey-result/save-survey-result-repository";
 
 export class SurveyResultMongoRepository implements SaveSurveyResultRepository, LoadSurveyResultRepository {
-    async save(data: SaveSurveyResultParams): Promise<SurveyResultModel | null> {
+    async save(data: SaveSurveyResultParams): Promise<void> {
         const collection = await MongodbHelper.collection("surveyResults")
         const { answer, date } = data
         let { surveyId, accountId } = data
@@ -19,13 +19,13 @@ export class SurveyResultMongoRepository implements SaveSurveyResultRepository, 
             { $set: { answer, date } },
             { upsert: true }
         )
-
-        return await this.loadBySurveyId(surveyId);
     }
 
-    async loadBySurveyId(surveyId: Object): Promise<SurveyResultModel | null> {
+    async loadBySurveyId(surveyId: ObjectId | string): Promise<SurveyResultModel | null> {
         const collection = await MongodbHelper.collection("surveyResults")
-        const query = new QueryBuilderHelper().match({ surveyId })
+        const query = new QueryBuilderHelper().match({
+                                                  surveyId: typeof (surveyId) === "string" ? new ObjectId(surveyId) : surveyId
+                                              })
                                               .group({
                                                   _id: 0,
                                                   data: {

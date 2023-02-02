@@ -1,9 +1,10 @@
-import { SurveyAnswersResultModel, SurveyResultModel } from "@/domain/models/survey-result";
+import { SurveyResultModel } from "@/domain/models/survey-result";
 import { SaveSurveyResult, SaveSurveyResultParams } from "@/domain/use-cases/survey-result/save-survey-result";
 import { SaveSurveyResultRepository } from "@/data/protocols/db/survey-result/save-survey-result-repository";
 import { LoadSurveyResultRepository } from "@/data/protocols/db/survey-result/load-survey-result-repository";
+import { ObjectId } from "mongodb";
 
-export const mockSurveyResultModel = (surveyId: string): SurveyResultModel => ({
+export const mockSurveyResultModel = (surveyId: string | ObjectId): SurveyResultModel => ({
     surveyId,
     question: "question",
     answers: [
@@ -29,12 +30,10 @@ export const mockSaveSurveyResultParams = (): SaveSurveyResultParams => ({
     date: new Date(),
 })
 
-export const mockSaveSurveyResultRepository = (question: string, answers: SurveyAnswersResultModel): SaveSurveyResultRepository => {
+export const mockSaveSurveyResultRepository = (): SaveSurveyResultRepository => {
     class SaveSurveyResultRepositoryStub implements SaveSurveyResultRepository{
-        async save(data: SaveSurveyResultParams): Promise<SurveyResultModel | null>{
-            const { surveyId, date } = data
-
-            return { surveyId, date, question, answers }
+        async save(data: SaveSurveyResultParams): Promise<void>{
+            console.log(data)
         }
     }
 
@@ -55,7 +54,7 @@ export const mockSaveSurveyResult = (surveyId: string): SaveSurveyResult => {
 
 export const mockLoadSurveyResultRepository = (): LoadSurveyResultRepository => {
     class LoadSurveyResultRepositoryStub implements LoadSurveyResultRepository{
-        async loadBySurveyId(surveyId: string): Promise<SurveyResultModel | null>{
+        async loadBySurveyId(surveyId: string | ObjectId): Promise<SurveyResultModel | null>{
             return mockSurveyResultModel(surveyId);
         }
     }
