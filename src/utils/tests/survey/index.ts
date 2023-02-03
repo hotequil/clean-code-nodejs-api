@@ -10,7 +10,7 @@ import { ObjectId } from "mongodb";
 export const mockSurveyModel = (id = "id", answer = "answer"): SurveyModel => ({
     id,
     question: "question",
-    answers: [{ answer: "answer", image: "image" }, { answer, image: "image" }],
+    answers: [{ answer: "answer" }, { answer, image: "image" }],
     date: new Date(),
 })
 
@@ -44,12 +44,12 @@ export const mockAddSurveyRepository = (): AddSurveyRepository => {
     return new AddSurveyRepositoryStub()
 }
 
-export const mockLoadSurveyByIdRepository = (surveyId: string): LoadSurveyByIdRepository => {
+export const mockLoadSurveyByIdRepository = (surveyId: string, answer?: string): LoadSurveyByIdRepository => {
     class LoadSurveyByIdRepositoryStub implements LoadSurveyByIdRepository{
         async loadById(id: string | ObjectId): Promise<SurveyModel | null>{
             console.log(id)
 
-            return mockSurveyModel(surveyId)
+            return mockSurveyModel(surveyId, answer)
         }
     }
 

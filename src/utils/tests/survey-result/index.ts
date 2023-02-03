@@ -4,24 +4,28 @@ import { SaveSurveyResultRepository } from "@/data/protocols/db/survey-result/sa
 import { LoadSurveyResultRepository } from "@/data/protocols/db/survey-result/load-survey-result-repository";
 import { ObjectId } from "mongodb";
 
-export const mockSurveyResultModel = (surveyId: string | ObjectId): SurveyResultModel => ({
-    surveyId,
-    question: "question",
-    answers: [
-        {
-            answer: "answer",
-            count: 1,
-            percent: 50
-        },
-        {
-            image: "image",
-            answer: "other-answer",
-            count: 10,
-            percent: 80
-        }
-    ],
-    date: new Date(),
-})
+export const mockSurveyResultModel = (surveyId: string | ObjectId, reset?: boolean): SurveyResultModel => {
+    const value = reset ? 0 : null
+
+    return {
+        surveyId,
+        question: "question",
+        answers: [
+            {
+                answer: "answer",
+                count: value ?? 1,
+                percent: value ?? 50
+            },
+            {
+                image: "image",
+                answer: "other-answer",
+                count: value ?? 10,
+                percent: value ?? 80
+            }
+        ],
+        date: new Date(),
+    }
+}
 
 export const mockSaveSurveyResultParams = (): SaveSurveyResultParams => ({
     surveyId: "surveyId",
