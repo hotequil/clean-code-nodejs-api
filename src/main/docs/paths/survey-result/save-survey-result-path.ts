@@ -33,14 +33,7 @@ export const saveSurveyResultPath = {
         },
         responses: {
             [StatusCode.SuccessOK]: {
-                description: "Ok",
-                content: {
-                    "application/json": {
-                        schema: {
-                            $ref: "#/schemas/surveyResult"
-                        }
-                    }
-                }
+                description: "Ok"
             },
             [StatusCode.ClientErrorForbidden]: {
                 $ref: "#/components/forbidden"
