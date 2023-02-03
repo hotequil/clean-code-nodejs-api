@@ -19,7 +19,7 @@ describe(DbLoadSurveyResult.name, () => {
 
     beforeEach(() => {
         loadSurveyResultRepositoryStub = mockLoadSurveyResultRepository()
-        loadSurveyByIdRepositoryStub = mockLoadSurveyByIdRepository(SURVEY_ID)
+        loadSurveyByIdRepositoryStub = mockLoadSurveyByIdRepository(SURVEY_ID, "other-answer")
         db = new DbLoadSurveyResult(loadSurveyResultRepositoryStub, loadSurveyByIdRepositoryStub)
     })
 
@@ -47,6 +47,14 @@ describe(DbLoadSurveyResult.name, () => {
         await db.load(SURVEY_ID)
 
         expect(loadByIdSpy).toBeCalledWith(SURVEY_ID)
+    })
+
+    it("Should return survey result model with all reset answers when LoadSurveyResultRepository returns null", async () => {
+        jest.spyOn(loadSurveyResultRepositoryStub, "loadBySurveyId").mockReturnValueOnce(Promise.resolve(null))
+
+        const result = await db.load(SURVEY_ID)
+
+        expect(result).toEqual(mockSurveyResultModel(SURVEY_ID, true))
     })
 
     it("Should return survey result model when load was called with success", async () => {
