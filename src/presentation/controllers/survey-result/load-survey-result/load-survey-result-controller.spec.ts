@@ -1,12 +1,13 @@
 import { LoadSurveyResultController } from "./load-survey-result-controller";
-import { LoadSurveyById, HttpRequest } from "./load-survey-result-protocols";
-import { mockLoadSurveyById, throwError } from "@/utils/tests";
+import { LoadSurveyById, HttpRequest, LoadSurveyResult } from "./load-survey-result-protocols";
+import { mockLoadSurveyById, mockLoadSurveyResult, throwError } from "@/utils/tests";
 import StatusCode from "status-code-enum";
 import { forbidden, serverError } from "@/presentation/helpers/http-helper";
 import { InvalidParamsError } from "@/presentation/errors";
 
 let controller: LoadSurveyResultController
 let loadSurveyByIdStub: LoadSurveyById
+let loadSurveyResultStub: LoadSurveyResult
 const SURVEY_ID = "survey-id"
 
 const mockHttpRequest = (): HttpRequest<any, { surveyId: string }> => ({
@@ -18,7 +19,8 @@ const mockHttpRequest = (): HttpRequest<any, { surveyId: string }> => ({
 describe(LoadSurveyResultController.name, () => {
     beforeEach(() => {
         loadSurveyByIdStub = mockLoadSurveyById(SURVEY_ID)
-        controller = new LoadSurveyResultController(loadSurveyByIdStub)
+        loadSurveyResultStub = mockLoadSurveyResult()
+        controller = new LoadSurveyResultController(loadSurveyByIdStub, loadSurveyResultStub)
     })
 
     it("Should call LoadSurveyById with correct value", async () => {
@@ -43,5 +45,13 @@ describe(LoadSurveyResultController.name, () => {
         const response = await controller.handle(mockHttpRequest())
 
         expect(response).toEqual(serverError(new Error()))
+    })
+
+    it("Should call LoadSurveyResult with correct value", async () => {
+        const loadSpy = jest.spyOn(loadSurveyResultStub, "load")
+
+        await controller.handle(mockHttpRequest())
+
+        expect(loadSpy).toBeCalledWith(SURVEY_ID)
     })
 })
