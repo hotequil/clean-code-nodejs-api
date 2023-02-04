@@ -10,7 +10,9 @@ const config: Config.InitialOptions = {
     collectCoverageFrom: [
         "<rootDir>/src/**/*.ts",
         "!<rootDir>/src/main/**",
-        "!<rootDir>/src/utils/tests/**"
+        "!<rootDir>/src/utils/tests/**",
+        "!<rootDir>/src/presentation/errors/**",
+        "!<rootDir>/src/**/*-protocols.ts",
     ],
     transform: {
         ".+\\.ts$": "ts-jest"
