@@ -62,5 +62,11 @@ describe("SurveyResultRoutes", () => {
             await request(app).get("/api/surveys/1/results")
                               .expect(StatusCode.ClientErrorForbidden);
         })
+
+        it(`Should return code ${StatusCode.SuccessOK} when GET in /api/surveys/:surveyId/results was called with a valid accessToken`, async () => {
+            await request(app).get(`/api/surveys/${await mockSurveyId()}/results`)
+                              .set(Header.X_ACCESS_TOKEN, await mockAccessToken())
+                              .expect(StatusCode.SuccessOK);
+        })
     })
 });
