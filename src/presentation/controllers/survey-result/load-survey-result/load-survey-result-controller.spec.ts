@@ -1,9 +1,10 @@
 import { LoadSurveyResultController } from "./load-survey-result-controller";
 import { LoadSurveyById, HttpRequest, LoadSurveyResult } from "./load-survey-result-protocols";
-import { mockLoadSurveyById, mockLoadSurveyResult, throwError } from "@/utils/tests";
+import { mockLoadSurveyById, mockLoadSurveyResult, mockSurveyResultModel, throwError } from "@/utils/tests";
 import StatusCode from "status-code-enum";
-import { forbidden, serverError } from "@/presentation/helpers/http-helper";
+import { forbidden, serverError, success } from "@/presentation/helpers/http-helper";
 import { InvalidParamsError } from "@/presentation/errors";
+import MockDate from "mockdate";
 
 let controller: LoadSurveyResultController
 let loadSurveyByIdStub: LoadSurveyById
@@ -17,6 +18,14 @@ const mockHttpRequest = (): HttpRequest<any, { surveyId: string }> => ({
 })
 
 describe(LoadSurveyResultController.name, () => {
+    beforeAll(() => {
+        MockDate.set(new Date())
+    })
+
+    afterAll(() => {
+        MockDate.reset()
+    })
+
     beforeEach(() => {
         loadSurveyByIdStub = mockLoadSurveyById(SURVEY_ID)
         loadSurveyResultStub = mockLoadSurveyResult()
@@ -61,5 +70,11 @@ describe(LoadSurveyResultController.name, () => {
         const response = await controller.handle(mockHttpRequest())
 
         expect(response).toEqual(serverError(new Error()))
+    })
+
+    it(`Should return code ${StatusCode.SuccessOK} on success`, async () => {
+        const response = await controller.handle(mockHttpRequest())
+
+        expect(response).toEqual(success(mockSurveyResultModel(SURVEY_ID)))
     })
 })
