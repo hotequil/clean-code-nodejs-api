@@ -54,4 +54,12 @@ describe(LoadSurveyResultController.name, () => {
 
         expect(loadSpy).toBeCalledWith(SURVEY_ID)
     })
+
+    it(`Should return code ${StatusCode.ServerErrorInternal} if LoadSurveyResult throws`, async () => {
+        jest.spyOn(loadSurveyResultStub, "load").mockImplementationOnce(throwError)
+
+        const response = await controller.handle(mockHttpRequest())
+
+        expect(response).toEqual(serverError(new Error()))
+    })
 })
