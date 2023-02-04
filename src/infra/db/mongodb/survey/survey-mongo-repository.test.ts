@@ -71,5 +71,11 @@ describe(SurveyMongoRepository.name, () => {
             expect(survey.date).toEqual(surveyData.date)
             expect(survey.answers).toEqual(surveyData.answers)
         })
+
+        it("Should return null if id is invalid", async () => {
+            const survey = await repository.loadById("6348acd2e1a47ca32e79f46f")
+
+            expect(survey).toBeNull()
+        })
     })
 })
