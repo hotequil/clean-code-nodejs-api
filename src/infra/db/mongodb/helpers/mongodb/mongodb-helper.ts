@@ -7,16 +7,12 @@ let client: Client = null;
 
 export class MongodbHelper {
     static async connect (): Promise<void> {
-        if (client) return;
-
         // @ts-ignore
         client = await MongoClient.connect(env.MONGO_URL, { useNewUrlParser: true, useUnifiedTopology: true });
     }
 
     static async disconnect (): Promise<void> {
-        if (!client) return;
-
-        await client.close();
+        await client?.close();
 
         client = null;
     }
