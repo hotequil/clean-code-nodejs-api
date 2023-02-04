@@ -3,6 +3,7 @@ import { SaveSurveyResult, SaveSurveyResultParams } from "@/domain/use-cases/sur
 import { SaveSurveyResultRepository } from "@/data/protocols/db/survey-result/save-survey-result-repository";
 import { LoadSurveyResultRepository } from "@/data/protocols/db/survey-result/load-survey-result-repository";
 import { ObjectId } from "mongodb";
+import { LoadSurveyResult } from "@/domain/use-cases/survey-result/load-survey-result";
 
 export const mockSurveyResultModel = (surveyId: string | ObjectId, reset?: boolean): SurveyResultModel => {
     const value = reset ? 0 : null
@@ -64,4 +65,14 @@ export const mockLoadSurveyResultRepository = (): LoadSurveyResultRepository => 
     }
 
     return new LoadSurveyResultRepositoryStub()
+}
+
+export const mockLoadSurveyResult = (): LoadSurveyResult => {
+    class LoadSurveyResultStub implements LoadSurveyResult{
+        async load(surveyId: string): Promise<SurveyResultModel>{
+            return mockSurveyResultModel(surveyId)
+        }
+    }
+
+    return new LoadSurveyResultStub()
 }
