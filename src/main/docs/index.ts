@@ -1,6 +1,6 @@
 // @ts-ignore
 import { version, description, name } from "../../../package.json"
-import { addSurveyPath, loadSurveysPath, loginPath, signUpPath, saveSurveyResultPath } from "./paths";
+import { addSurveyPath, loadSurveysPath, loginPath, signUpPath, saveSurveyResultPath, loadSurveyResultPath } from "./paths";
 import { accountSchema } from "@/main/docs/schemas/account-schema";
 import { loginSchema } from "@/main/docs/schemas/login-schema";
 import { errorSchema } from "@/main/docs/schemas/error-schema";
@@ -50,7 +50,10 @@ export default {
             ...addSurveyPath,
         },
         "/sign-up": signUpPath,
-        "/surveys/{surveyId}/results": saveSurveyResultPath,
+        "/surveys/{surveyId}/results": {
+            ...saveSurveyResultPath,
+            ...loadSurveyResultPath,
+        },
     },
     schemas: {
         account: accountSchema,
