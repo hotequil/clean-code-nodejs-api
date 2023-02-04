@@ -1,7 +1,7 @@
 import request from "supertest";
 import StatusCode from "status-code-enum";
 import app from "../config/app";
-import { MongodbHelper } from "@/infra/db/mongodb/helpers/mongodb-helper";
+import { MongodbHelper } from "@/infra/db/mongodb/helpers";
 import { Header } from "@/utils/enums";
 import { sign } from "jsonwebtoken";
 import env from "@/main/config/env";
@@ -53,6 +53,19 @@ describe("SurveyResultRoutes", () => {
             await request(app).put(`/api/surveys/${await mockSurveyId()}/results`)
                               .set(Header.X_ACCESS_TOKEN, await mockAccessToken())
                               .send(mockData())
+                              .expect(StatusCode.SuccessOK);
+        })
+    })
+
+    describe("GET: /api/surveys/:surveyId/results", () => {
+        it(`Should return code ${StatusCode.ClientErrorForbidden} when GET in /api/surveys/:surveyId/results was called without accessToken`, async () => {
+            await request(app).get("/api/surveys/1/results")
+                              .expect(StatusCode.ClientErrorForbidden);
+        })
+
+        it(`Should return code ${StatusCode.SuccessOK} when GET in /api/surveys/:surveyId/results was called with a valid accessToken`, async () => {
+            await request(app).get(`/api/surveys/${await mockSurveyId()}/results`)
+                              .set(Header.X_ACCESS_TOKEN, await mockAccessToken())
                               .expect(StatusCode.SuccessOK);
         })
     })

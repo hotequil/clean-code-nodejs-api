@@ -1,9 +1,9 @@
-export type SurveyAnswerModel = {
+type SurveyAnswerModel = {
     answer: string
     image?: string
 }
 
-export type SurveyAnswersModel = SurveyAnswerModel[]
+type SurveyAnswersModel = SurveyAnswerModel[]
 
 export type SurveyModel = {
     id: string

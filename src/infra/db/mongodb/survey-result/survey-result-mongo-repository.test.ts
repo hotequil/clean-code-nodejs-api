@@ -1,6 +1,6 @@
 import { SurveyResultMongoRepository } from "@/infra/db/mongodb/survey-result/survey-result-mongo-repository";
-import { MongodbHelper } from "@/infra/db/mongodb/helpers/mongodb-helper";
-import { Collection } from "mongodb";
+import { MongodbHelper } from "@/infra/db/mongodb/helpers";
+import { Collection, ObjectId } from "mongodb";
 import * as MockDate from "mockdate";
 import { SurveyResultModel } from "@/domain/models/survey-result";
 import { mockAddAccountParams, mockAddSurveyParams } from "@/utils/tests";
@@ -9,14 +9,16 @@ let repository: SurveyResultMongoRepository
 let collection: Collection
 let surveysCollection: Collection
 let accountsCollection: Collection
+const FIRST_ANSWER = "first-answer"
+const SECOND_ANSWER = "second-answer"
 
-const mockSurveyId = async (): Promise<Object> => {
-    const { insertedId } = await surveysCollection.insertOne(mockAddSurveyParams())
+const mockSurveyId = async (): Promise<ObjectId> => {
+    const { insertedId } = await surveysCollection.insertOne(mockAddSurveyParams(FIRST_ANSWER, SECOND_ANSWER))
 
     return insertedId
 }
 
-const mockAccountId = async (): Promise<Object> => {
+const mockAccountId = async (): Promise<ObjectId> => {
     const { insertedId } = await accountsCollection.insertOne(mockAddAccountParams())
 
     return insertedId
@@ -46,30 +48,59 @@ describe(SurveyResultMongoRepository.name, () => {
         await accountsCollection.deleteMany({})
     })
 
-    it("Should add a survey result if it's new", async () => {
-        const surveyId = await mockSurveyId()
-        const accountId = await mockAccountId()
-        const answer = "answer"
-        const result = await repository.save({ surveyId, accountId, answer, date: new Date() }) as SurveyResultModel
+    describe("save()", () => {
+        it("Should add a survey result if it's new", async () => {
+            const surveyId = await mockSurveyId()
+            const accountId = await mockAccountId()
 
-        expect(result.id).toBeTruthy()
-        expect(result.surveyId).toEqual(surveyId)
-        expect(result.accountId).toEqual(accountId)
-        expect(result.answer).toBe(answer)
-        expect(result.date).toBeTruthy()
+            await repository.save({ surveyId, accountId, answer: FIRST_ANSWER, date: new Date() })
+
+            const result = await collection.findOne({ surveyId, accountId })
+
+            expect(result).toBeTruthy()
+            expect(result?._id).toBeTruthy()
+        })
+
+        it("Should update survey result if it isn't new", async () => {
+            const surveyId = await mockSurveyId()
+            const accountId = await mockAccountId()
+
+            await collection.insertOne({ surveyId, accountId, answer: FIRST_ANSWER, date: new Date() })
+            await repository.save({ surveyId, accountId, answer: SECOND_ANSWER, date: new Date() })
+
+            const result = await collection.find({ surveyId, accountId }).toArray()
+
+            expect(result).toBeTruthy()
+            expect(result.length).toBe(1)
+        })
     })
 
-    it("Should update survey result if it isn't new", async () => {
-        const surveyId = await mockSurveyId()
-        const accountId = await mockAccountId()
-        const newAnswer = "new answer"
-        const { insertedId } = await collection.insertOne({ surveyId, accountId, answer: "answer", date: new Date() })
-        const result = await repository.save({ surveyId, accountId, answer: newAnswer, date: new Date() }) as SurveyResultModel
+    describe("loadBySurveyId()", () => {
+        it("Should return survey result model when loadBySurveyId was called with success", async () => {
+            const surveyId = await mockSurveyId()
+            const accountId = await mockAccountId()
 
-        expect(result.id).toEqual(insertedId)
-        expect(result.surveyId).toEqual(surveyId)
-        expect(result.accountId).toEqual(accountId)
-        expect(result.answer).toBe(newAnswer)
-        expect(result.date).toBeTruthy()
+            await collection.insertMany([
+                { surveyId, accountId, answer: FIRST_ANSWER, date: new Date() },
+                { surveyId, accountId, answer: FIRST_ANSWER, date: new Date() },
+                { surveyId, accountId, answer: FIRST_ANSWER, date: new Date() },
+                { surveyId, accountId, answer: SECOND_ANSWER, date: new Date() },
+                { surveyId, accountId, answer: SECOND_ANSWER, date: new Date() },
+            ])
+
+            const result = await repository.loadBySurveyId(surveyId) as SurveyResultModel
+            const [firstAnswer, secondAnswer] = result.answers
+
+            expect(result).toBeTruthy()
+            expect(result.question).toBeTruthy()
+            expect(result.surveyId).toEqual(surveyId)
+            expect(firstAnswer.answer).toBe(FIRST_ANSWER)
+            expect(firstAnswer.count).toBe(3)
+            expect(firstAnswer.percent).toBe(60)
+            expect(secondAnswer.answer).toBe(SECOND_ANSWER)
+            expect(secondAnswer.count).toBe(2)
+            expect(secondAnswer.percent).toBe(40)
+            expect(result.date).toBeTruthy()
+        })
     })
 })

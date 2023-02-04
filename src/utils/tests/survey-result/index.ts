@@ -1,14 +1,32 @@
 import { SurveyResultModel } from "@/domain/models/survey-result";
 import { SaveSurveyResult, SaveSurveyResultParams } from "@/domain/use-cases/survey-result/save-survey-result";
 import { SaveSurveyResultRepository } from "@/data/protocols/db/survey-result/save-survey-result-repository";
+import { LoadSurveyResultRepository } from "@/data/protocols/db/survey-result/load-survey-result-repository";
+import { ObjectId } from "mongodb";
+import { LoadSurveyResult } from "@/domain/use-cases/survey-result/load-survey-result";
 
-export const mockSurveyResultModel = (surveyId: string, accountId: string, answer: string): SurveyResultModel => ({
-    id: "id",
-    surveyId,
-    accountId,
-    answer,
-    date: new Date(),
-})
+export const mockSurveyResultModel = (surveyId: string | ObjectId, reset?: boolean): SurveyResultModel => {
+    const value = reset ? 0 : null
+
+    return {
+        surveyId,
+        question: "question",
+        answers: [
+            {
+                answer: "answer",
+                count: value ?? 1,
+                percent: value ?? 50
+            },
+            {
+                image: "image",
+                answer: "other-answer",
+                count: value ?? 10,
+                percent: value ?? 80
+            }
+        ],
+        date: new Date(),
+    }
+}
 
 export const mockSaveSurveyResultParams = (): SaveSurveyResultParams => ({
     surveyId: "surveyId",
@@ -17,24 +35,44 @@ export const mockSaveSurveyResultParams = (): SaveSurveyResultParams => ({
     date: new Date(),
 })
 
-export const mockSaveSurveyResultRepository = (id: string): SaveSurveyResultRepository => {
+export const mockSaveSurveyResultRepository = (): SaveSurveyResultRepository => {
     class SaveSurveyResultRepositoryStub implements SaveSurveyResultRepository{
-        async save(data: SaveSurveyResultParams): Promise<SurveyResultModel | null>{
-            return { ...data, id }
+        async save(data: SaveSurveyResultParams): Promise<void>{
+            console.log(data)
         }
     }
 
     return new SaveSurveyResultRepositoryStub()
 }
 
-export const mockSaveSurveyResult = (surveyId: string, accountId: string, answer: string): SaveSurveyResult => {
+export const mockSaveSurveyResult = (surveyId: string): SaveSurveyResult => {
     class SaveSurveyResultStub implements SaveSurveyResult{
         async save(params: SaveSurveyResultParams): Promise<SurveyResultModel | null> {
             console.log(params)
 
-            return mockSurveyResultModel(surveyId, accountId, answer);
+            return mockSurveyResultModel(surveyId);
         }
     }
 
     return new SaveSurveyResultStub()
+}
+
+export const mockLoadSurveyResultRepository = (): LoadSurveyResultRepository => {
+    class LoadSurveyResultRepositoryStub implements LoadSurveyResultRepository{
+        async loadBySurveyId(surveyId: string | ObjectId): Promise<SurveyResultModel | null>{
+            return mockSurveyResultModel(surveyId);
+        }
+    }
+
+    return new LoadSurveyResultRepositoryStub()
+}
+
+export const mockLoadSurveyResult = (): LoadSurveyResult => {
+    class LoadSurveyResultStub implements LoadSurveyResult{
+        async load(surveyId: string): Promise<SurveyResultModel>{
+            return mockSurveyResultModel(surveyId)
+        }
+    }
+
+    return new LoadSurveyResultStub()
 }
