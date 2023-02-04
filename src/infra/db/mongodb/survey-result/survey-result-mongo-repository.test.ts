@@ -102,5 +102,13 @@ describe(SurveyResultMongoRepository.name, () => {
             expect(secondAnswer.percent).toBe(40)
             expect(result.date).toBeTruthy()
         })
+
+        it("Should return null when loadBySurveyId was called with invalid surveyId", async () => {
+            jest.spyOn(repository, "loadBySurveyId").mockReturnValueOnce(Promise.resolve(null))
+
+            const result = await repository.loadBySurveyId("other-survey-id")
+
+            expect(result).toBeNull()
+        })
     })
 })

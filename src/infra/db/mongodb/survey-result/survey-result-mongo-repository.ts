@@ -179,8 +179,8 @@ export class SurveyResultMongoRepository implements SaveSurveyResultRepository, 
                                               })
                                               .build()
 
-        const results = await collection.aggregate<SurveyResultModel>(query).toArray()
+        const [result] = await collection.aggregate<SurveyResultModel>(query).toArray()
 
-        return results?.length ? results[0] : null
+        return result || null
     }
 }
