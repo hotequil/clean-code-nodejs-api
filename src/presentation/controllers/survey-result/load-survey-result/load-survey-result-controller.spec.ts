@@ -1,8 +1,8 @@
 import { LoadSurveyResultController } from "./load-survey-result-controller";
 import { LoadSurveyById, HttpRequest } from "./load-survey-result-protocols";
-import { mockLoadSurveyById } from "@/utils/tests";
+import { mockLoadSurveyById, throwError } from "@/utils/tests";
 import StatusCode from "status-code-enum";
-import { forbidden } from "@/presentation/helpers/http-helper";
+import { forbidden, serverError } from "@/presentation/helpers/http-helper";
 import { InvalidParamsError } from "@/presentation/errors";
 
 let controller: LoadSurveyResultController
@@ -35,5 +35,13 @@ describe(LoadSurveyResultController.name, () => {
         const response = await controller.handle(mockHttpRequest())
 
         expect(response).toEqual(forbidden(new InvalidParamsError("surveyId")))
+    })
+
+    it(`Should return code ${StatusCode.ServerErrorInternal} if LoadSurveyById throws`, async () => {
+        jest.spyOn(loadSurveyByIdStub, "loadById").mockImplementationOnce(throwError)
+
+        const response = await controller.handle(mockHttpRequest())
+
+        expect(response).toEqual(serverError(new Error()))
     })
 })
