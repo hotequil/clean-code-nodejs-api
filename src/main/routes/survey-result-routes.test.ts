@@ -56,4 +56,11 @@ describe("SurveyResultRoutes", () => {
                               .expect(StatusCode.SuccessOK);
         })
     })
+
+    describe("GET: /api/surveys/:surveyId/results", () => {
+        it(`Should return code ${StatusCode.ClientErrorForbidden} when GET in /api/surveys/:surveyId/results was called without accessToken`, async () => {
+            await request(app).get("/api/surveys/1/results")
+                              .expect(StatusCode.ClientErrorForbidden);
+        })
+    })
 });
