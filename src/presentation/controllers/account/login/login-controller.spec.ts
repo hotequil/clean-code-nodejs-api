@@ -7,6 +7,7 @@ import { mockValidation, throwError } from "@/utils/tests";
 import { mockAuthentication } from "@/utils/tests/authentication";
 
 const TOKEN = "token";
+const NAME = "name";
 
 const mockHttpRequest = (): HttpRequest => (
     {
@@ -23,7 +24,7 @@ describe("LoginController", () => {
     let validationStub: Validation;
 
     beforeEach(() => {
-        authentication = mockAuthentication(TOKEN);
+        authentication = mockAuthentication(TOKEN, NAME);
         validationStub = mockValidation();
         loginController = new LoginController(authentication, validationStub);
     });
@@ -38,7 +39,7 @@ describe("LoginController", () => {
     });
 
     it(`Should return code ${StatusCode.ClientErrorUnauthorized} if auth is invalid when was called`, async () => {
-        jest.spyOn(authentication, "auth").mockReturnValueOnce(Promise.resolve(""));
+        jest.spyOn(authentication, "auth").mockReturnValueOnce(Promise.resolve(null));
 
         const request: HttpRequest = mockHttpRequest();
         const response = await loginController.handle(request);
@@ -59,7 +60,7 @@ describe("LoginController", () => {
         const request: HttpRequest = mockHttpRequest();
         const response: HttpResponse = await loginController.handle(request);
 
-        expect(response).toEqual(success({ token: TOKEN }));
+        expect(response).toEqual(success({ token: { token: TOKEN, name: NAME } }));
     });
 
     it("Should call Validation with correct values when was called", async () => {

@@ -9,6 +9,7 @@ import { mockAddAccount, mockAddAccountParams, mockValidation, throwError } from
 import { mockAuthentication } from "@/utils/tests/authentication";
 
 const TOKEN = "any-token";
+const NAME = "user-name";
 let controller: SignUpController;
 let addAccountStub: AddAccount;
 let validationStub: Validation;
@@ -27,7 +28,7 @@ describe("SignUpController", () => {
     beforeEach(() => {
         addAccountStub = mockAddAccount();
         validationStub = mockValidation();
-        authenticationStub = mockAuthentication(TOKEN);
+        authenticationStub = mockAuthentication(TOKEN, NAME);
         controller = new SignUpController(addAccountStub, validationStub, authenticationStub);
     });
 
@@ -98,11 +99,11 @@ describe("SignUpController", () => {
         expect(response).toEqual(serverError(new ServerError()))
     });
 
-    it(`Should return code ${StatusCode.SuccessOK} when was called with token`, async () => {
+    it(`Should return code ${StatusCode.SuccessOK} when was called with token object (AuthenticationModel)`, async () => {
         const request: HttpRequest = mockHttpRequest();
         const response: HttpResponse = await controller.handle(request);
 
-        expect(response).toEqual(success({ token: TOKEN }));
+        expect(response).toEqual(success({ token: { token: TOKEN, name: NAME } }));
     });
 
     it(`Should return code ${StatusCode.ClientErrorForbidden} if AddAccount returns null`, async () => {

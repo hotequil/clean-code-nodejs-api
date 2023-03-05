@@ -1,11 +1,12 @@
 import { Authentication, AuthenticationParams } from "@/domain/use-cases/account/authentication";
+import { AuthenticationModel } from "@/domain/models/authentication";
 
-export const mockAuthentication = (result: string): Authentication => {
+export const mockAuthentication = (token: string, name: string): Authentication => {
     class AuthenticationStub implements Authentication {
-        async auth (params: AuthenticationParams): Promise<string | null> {
+        async auth (params: AuthenticationParams): Promise<AuthenticationModel | null> {
             console.log(params)
 
-            return result;
+            return { token, name };
         }
     }
 
