@@ -20,6 +20,7 @@ const DEFAULT_PASSWORD = "1a2b3c4d";
 const ACCOUNT_PASSWORD = "password";
 const ACCOUNT_ID = "id";
 const TOKEN = "token";
+const NAME = "name"
 
 describe("DbAuthentication", () => {
     let db: Authentication;
@@ -29,7 +30,7 @@ describe("DbAuthentication", () => {
     let updateAccessTokenRepositoryStub: UpdateAccessTokenRepository;
 
     beforeEach(() => {
-        loadAccountByEmailRepositoryStub = mockLoadAccountByEmailRepository({ id: ACCOUNT_ID, name: "name", password: ACCOUNT_PASSWORD });
+        loadAccountByEmailRepositoryStub = mockLoadAccountByEmailRepository({ id: ACCOUNT_ID, name: NAME, password: ACCOUNT_PASSWORD });
         hashComparerStub = mockHashComparer();
         encrypterStub = mockEncrypter(TOKEN);
         updateAccessTokenRepositoryStub = mockUpdateAccessTokenRepository();
@@ -100,10 +101,10 @@ describe("DbAuthentication", () => {
         await expect(promise).rejects.toThrow();
     });
 
-    it("Should return token on success when Encrypter was called", async () => {
-        const token = await db.auth(mockAuthenticationParams(DEFAULT_EMAIL, DEFAULT_PASSWORD));
+    it("Should return AuthenticationModel on success when Encrypter was called", async () => {
+        const authenticationModel = await db.auth(mockAuthenticationParams(DEFAULT_EMAIL, DEFAULT_PASSWORD));
 
-        expect(token).toBe(TOKEN);
+        expect(authenticationModel).toEqual({ token: TOKEN, name: NAME });
     });
 
     it("Should call UpdateAccessTokenRepository with correct values when was called", async () => {
