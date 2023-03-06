@@ -3,10 +3,12 @@ import { MongodbHelper } from "../helpers";
 import { Collection } from "mongodb";
 import { SurveyModel } from "@/domain/models/survey";
 import * as MockDate from "mockdate";
-import { mockAddSurveyParams } from "@/utils/tests";
+import { mockAddAccountParams, mockAddSurveyParams, mockSaveSurveyResultParams } from "@/utils/tests";
 
 let repository: SurveyMongoRepository
 let collection: Collection
+let accountsCollection: Collection
+let surveyResultsCollection: Collection
 
 describe(SurveyMongoRepository.name, () => {
     beforeAll(async () => {
@@ -23,8 +25,12 @@ describe(SurveyMongoRepository.name, () => {
 
     beforeEach(async () => {
         collection = await MongodbHelper.collection("surveys");
+        accountsCollection = await MongodbHelper.collection("accounts")
+        surveyResultsCollection = await MongodbHelper.collection("surveyResults")
 
         await collection.deleteMany({});
+        await accountsCollection.deleteMany({})
+        await surveyResultsCollection.deleteMany({})
 
         repository = new SurveyMongoRepository()
     })
@@ -42,19 +48,36 @@ describe(SurveyMongoRepository.name, () => {
     })
 
     describe("loadAll()", () => {
+        const ACCOUNT_ID = "6348acd2e1a47ca32e79f46f"
+
+        it("Should call loadAll with correct values", async () => {
+            const loadAllSpy = jest.spyOn(repository, "loadAll")
+
+            await repository.loadAll(ACCOUNT_ID)
+
+            expect(loadAllSpy).toHaveBeenCalledWith(ACCOUNT_ID)
+        })
+
         it("Should get all surveys when loadAll was called", async () => {
             const surveysToAdd = [mockAddSurveyParams(), mockAddSurveyParams()]
+            const addAccountParams = mockAddAccountParams()
+            const { insertedIds } = await collection.insertMany(surveysToAdd)
+            const surveyId = insertedIds[0]
+            const { insertedId: accountId } = await accountsCollection.insertOne(addAccountParams)
 
-            await collection.insertMany(surveysToAdd)
+            await surveyResultsCollection.insertOne(mockSaveSurveyResultParams(surveyId, accountId))
 
-            const surveys = await repository.loadAll()
+            const surveys = await repository.loadAll(accountId)
 
             expect(surveys.length).toBe(surveysToAdd.length)
             expect(surveys[0].question).toBe(surveysToAdd[0].question)
+            expect(surveys[0].didAnswer).toBe(true)
+            expect(surveys[1].question).toBe(surveysToAdd[1].question)
+            expect(surveys[1].didAnswer).toBe(false)
         })
 
         it("Should get an empty list of surveys when loadAll was called", async () => {
-            const surveys = await repository.loadAll()
+            const surveys = await repository.loadAll(ACCOUNT_ID)
 
             expect(surveys.length).toBe(0)
         })
