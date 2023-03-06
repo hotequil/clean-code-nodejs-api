@@ -1,6 +1,6 @@
 import { AddSurveyRepository } from "@/data/protocols/db/survey/add-survey-repository";
 import { AddSurveyParams } from "@/domain/use-cases/survey/add-survey";
-import { MongodbHelper } from "../helpers";
+import { MongodbHelper, QueryBuilderHelper } from "../helpers";
 import { LoadSurveysRepository } from "@/data/protocols/db/survey/load-surveys-repository";
 import { SurveyModel, SurveysModel } from "@/domain/models/survey";
 import { Collection, ObjectId } from "mongodb";
@@ -15,10 +15,42 @@ export class SurveyMongoRepository implements AddSurveyRepository, LoadSurveysRe
         return null
     }
 
-    async loadAll(): Promise<SurveysModel> {
+    async loadAll(accountId: string | ObjectId): Promise<SurveysModel> {
+        accountId = typeof (accountId) === "string" ? new ObjectId(accountId) : accountId
+
+        const query = new QueryBuilderHelper().lookup({
+                                                  from: "surveyResults",
+                                                  foreignField: "surveyId",
+                                                  localField: "_id",
+                                                  as: "result",
+                                              })
+                                              .project({
+                                                  _id: 1,
+                                                  question: 1,
+                                                  answers: 1,
+                                                  date: 1,
+                                                  didAnswer: {
+                                                      $gte: [
+                                                          {
+                                                              $size: {
+                                                                  $filter: {
+                                                                      input: "$result",
+                                                                      as: "item",
+                                                                      cond: {
+                                                                          $eq: ["$$item.accountId", accountId]
+                                                                      },
+                                                                  }
+                                                              }
+                                                          },
+                                                          1
+                                                      ]
+                                                  }
+                                              })
+                                              .build()
+
         const collection = await MongodbHelper.collection("surveys") as unknown as Collection<SurveyModel>
 
-        return MongodbHelper.mapAll<SurveyModel>(await collection.find().toArray());
+        return MongodbHelper.mapAll<SurveyModel>(await collection.aggregate(query).toArray());
     }
 
     async loadById(id: ObjectId | string): Promise<SurveyModel | null> {

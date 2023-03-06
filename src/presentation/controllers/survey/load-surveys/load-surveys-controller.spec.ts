@@ -7,7 +7,8 @@ import { mockLoadSurveys, mockSurveysModel, throwError } from "@/utils/tests";
 
 let controller: LoadSurveysController
 let loadSurveysStub: LoadSurveys
-const mockHttpRequest = (): HttpRequest => ({})
+const ACCOUNT_ID = "id"
+const mockHttpRequest = (): HttpRequest => ({ accountId: ACCOUNT_ID })
 
 describe(LoadSurveysController.name, () => {
     beforeAll(() => MockDate.set(new Date()))
@@ -18,12 +19,12 @@ describe(LoadSurveysController.name, () => {
         controller = new LoadSurveysController(loadSurveysStub)
     })
 
-    it("Should call LoadSurveys when handle was called", async () => {
+    it("Should call LoadSurveys when handle was called with correct values", async () => {
         const loadSpy = jest.spyOn(loadSurveysStub, "load")
 
         await controller.handle(mockHttpRequest())
 
-        expect(loadSpy).toHaveBeenCalled()
+        expect(loadSpy).toHaveBeenCalledWith(ACCOUNT_ID)
     })
 
     it(`Should return code ${StatusCode.SuccessOK} when handle was called with success`, async () => {
