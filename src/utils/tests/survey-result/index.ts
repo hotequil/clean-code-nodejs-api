@@ -28,10 +28,14 @@ export const mockSurveyResultModel = (surveyId: string | ObjectId, reset?: boole
     }
 }
 
-export const mockSaveSurveyResultParams = (): SaveSurveyResultParams => ({
-    surveyId: "surveyId",
-    accountId: "accountId",
-    answer: "answer",
+export const mockSaveSurveyResultParams = (
+    surveyId: string | ObjectId = "surveyId",
+    accountId: string | ObjectId = "accountId",
+    answer = "answer"
+): SaveSurveyResultParams => ({
+    surveyId,
+    accountId,
+    answer,
     date: new Date(),
 })
 
