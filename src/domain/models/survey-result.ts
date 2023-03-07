@@ -4,6 +4,7 @@ type SurveyAnswerResultModel = {
     answer: string
     count: number
     percent: number
+    isCurrentAccountAnswer: boolean
     image?: string
 }
 

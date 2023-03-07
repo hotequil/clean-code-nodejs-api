@@ -21,7 +21,7 @@ export class LoadSurveyResultController implements Controller{
 
             if(!survey) return forbidden(new InvalidParamsError("surveyId"))
 
-            return success(await this.loadSurveyResult.load(surveyId));
+            return success(await this.loadSurveyResult.load(surveyId, request.accountId as string));
         } catch (error) {
             return serverError(error as Error)
         }
