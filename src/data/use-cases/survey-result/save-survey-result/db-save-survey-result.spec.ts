@@ -40,7 +40,7 @@ describe(DbSaveSurveyResult.name, () => {
 
         await dbSaveSurveyResult.save(data)
 
-        expect(loadBySurveyIdSpy).toBeCalledWith(data.surveyId)
+        expect(loadBySurveyIdSpy).toBeCalledWith(data.surveyId, data.accountId)
     })
 
     it("Should throw if LoadSurveyResultRepository throws", async () => {
