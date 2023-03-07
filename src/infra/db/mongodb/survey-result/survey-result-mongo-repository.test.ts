@@ -79,24 +79,27 @@ describe(SurveyResultMongoRepository.name, () => {
         it("Should return survey result model when loadBySurveyId was called with success", async () => {
             const surveyId = await mockSurveyId()
             const accountId = await mockAccountId()
+            const otherAccountId = await mockAccountId()
 
             await collection.insertMany([
                 { surveyId, accountId, answer: FIRST_ANSWER, date: new Date() },
                 { surveyId, accountId, answer: FIRST_ANSWER, date: new Date() },
                 { surveyId, accountId, answer: FIRST_ANSWER, date: new Date() },
-                { surveyId, accountId, answer: SECOND_ANSWER, date: new Date() },
-                { surveyId, accountId, answer: SECOND_ANSWER, date: new Date() },
+                { surveyId, otherAccountId, answer: SECOND_ANSWER, date: new Date() },
+                { surveyId, otherAccountId, answer: SECOND_ANSWER, date: new Date() },
             ])
 
-            const result = await repository.loadBySurveyId(surveyId) as SurveyResultModel
+            const result = await repository.loadBySurveyId(surveyId, accountId) as SurveyResultModel
             const [firstAnswer, secondAnswer] = result.answers
 
             expect(result).toBeTruthy()
             expect(result.question).toBeTruthy()
             expect(result.surveyId).toEqual(surveyId)
+            expect(firstAnswer.isCurrentAccountAnswer).toBe(true)
             expect(firstAnswer.answer).toBe(FIRST_ANSWER)
             expect(firstAnswer.count).toBe(3)
             expect(firstAnswer.percent).toBe(60)
+            expect(secondAnswer.isCurrentAccountAnswer).toBe(false)
             expect(secondAnswer.answer).toBe(SECOND_ANSWER)
             expect(secondAnswer.count).toBe(2)
             expect(secondAnswer.percent).toBe(40)
@@ -106,7 +109,8 @@ describe(SurveyResultMongoRepository.name, () => {
         it("Should return null when loadBySurveyId was called with invalid surveyId", async () => {
             jest.spyOn(repository, "loadBySurveyId").mockReturnValueOnce(Promise.resolve(null))
 
-            const result = await repository.loadBySurveyId("other-survey-id")
+            const accountId = await mockAccountId()
+            const result = await repository.loadBySurveyId("other-survey-id", accountId)
 
             expect(result).toBeNull()
         })

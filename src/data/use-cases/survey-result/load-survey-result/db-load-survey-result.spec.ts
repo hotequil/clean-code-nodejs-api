@@ -12,6 +12,7 @@ let db: DbLoadSurveyResult
 let loadSurveyResultRepositoryStub: LoadSurveyResultRepository
 let loadSurveyByIdRepositoryStub: LoadSurveyByIdRepository
 const SURVEY_ID = "survey-id"
+const ACCOUNT_ID = "account-id"
 
 describe(DbLoadSurveyResult.name, () => {
     beforeAll(() => MockDate.set(new Date()))
@@ -26,15 +27,15 @@ describe(DbLoadSurveyResult.name, () => {
     it("Should call LoadSurveyResultRepository with correct values", async () => {
         const loadBySurveyIdSpy = jest.spyOn(loadSurveyResultRepositoryStub, "loadBySurveyId")
 
-        await db.load(SURVEY_ID)
+        await db.load(SURVEY_ID, ACCOUNT_ID)
 
-        expect(loadBySurveyIdSpy).toBeCalledWith(SURVEY_ID)
+        expect(loadBySurveyIdSpy).toBeCalledWith(SURVEY_ID, ACCOUNT_ID)
     })
 
     it("Should throw if LoadSurveyResultRepository throws", async () => {
         jest.spyOn(loadSurveyResultRepositoryStub, "loadBySurveyId").mockImplementationOnce(throwError)
 
-        const promise = db.load(SURVEY_ID)
+        const promise = db.load(SURVEY_ID, ACCOUNT_ID)
 
         await expect(promise).rejects.toThrow()
     })
@@ -44,7 +45,7 @@ describe(DbLoadSurveyResult.name, () => {
 
         const loadByIdSpy = jest.spyOn(loadSurveyByIdRepositoryStub, "loadById")
 
-        await db.load(SURVEY_ID)
+        await db.load(SURVEY_ID, ACCOUNT_ID)
 
         expect(loadByIdSpy).toBeCalledWith(SURVEY_ID)
     })
@@ -52,13 +53,13 @@ describe(DbLoadSurveyResult.name, () => {
     it("Should return survey result model with all reset answers when LoadSurveyResultRepository returns null", async () => {
         jest.spyOn(loadSurveyResultRepositoryStub, "loadBySurveyId").mockReturnValueOnce(Promise.resolve(null))
 
-        const result = await db.load(SURVEY_ID)
+        const result = await db.load(SURVEY_ID, ACCOUNT_ID)
 
-        expect(result).toEqual(mockSurveyResultModel(SURVEY_ID, true))
+        expect(result).toEqual(mockSurveyResultModel(SURVEY_ID, true, false))
     })
 
     it("Should return survey result model when load was called with success", async () => {
-        const result = await db.load(SURVEY_ID)
+        const result = await db.load(SURVEY_ID, ACCOUNT_ID)
 
         expect(result).toEqual(mockSurveyResultModel(SURVEY_ID))
     })

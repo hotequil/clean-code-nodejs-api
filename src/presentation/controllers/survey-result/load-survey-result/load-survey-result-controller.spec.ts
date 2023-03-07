@@ -10,11 +10,13 @@ let controller: LoadSurveyResultController
 let loadSurveyByIdStub: LoadSurveyById
 let loadSurveyResultStub: LoadSurveyResult
 const SURVEY_ID = "survey-id"
+const ACCOUNT_ID = "account-id"
 
 const mockHttpRequest = (): HttpRequest<any, { surveyId: string }> => ({
     params: {
         surveyId: SURVEY_ID
-    }
+    },
+    accountId: ACCOUNT_ID
 })
 
 describe(LoadSurveyResultController.name, () => {
@@ -56,12 +58,12 @@ describe(LoadSurveyResultController.name, () => {
         expect(response).toEqual(serverError(new Error()))
     })
 
-    it("Should call LoadSurveyResult with correct value", async () => {
+    it("Should call LoadSurveyResult with correct values", async () => {
         const loadSpy = jest.spyOn(loadSurveyResultStub, "load")
 
         await controller.handle(mockHttpRequest())
 
-        expect(loadSpy).toBeCalledWith(SURVEY_ID)
+        expect(loadSpy).toBeCalledWith(SURVEY_ID, ACCOUNT_ID)
     })
 
     it(`Should return code ${StatusCode.ServerErrorInternal} if LoadSurveyResult throws`, async () => {
