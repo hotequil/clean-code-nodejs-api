@@ -1,6 +1,6 @@
 import { StatusCode } from "status-code-enum";
 import { SignUpController } from "./sign-up-controller";
-import { HttpRequest, AddAccount, Authentication, HttpResponse } from "./sign-up-controller-protocols";
+import { AddAccount, Authentication, HttpResponse } from "./sign-up-controller-protocols";
 import { MissingParamsError, ServerError } from "../../../errors";
 import { badRequest, forbidden, serverError, success } from "../../../helpers/http-helper";
 import { Validation } from "@/presentation/protocols";
@@ -15,14 +15,10 @@ let addAccountStub: AddAccount;
 let validationStub: Validation;
 let authenticationStub: Authentication;
 
-const mockHttpRequest = (): HttpRequest => (
-    {
-        body: {
-            ...mockAddAccountParams("passwordAndConfirmation"),
-            passwordConfirmation: "passwordAndConfirmation"
-        }
-    }
-);
+const mockRequest = (): SignUpController.Request => ({
+    ...mockAddAccountParams("passwordAndConfirmation"),
+    passwordConfirmation: "passwordAndConfirmation",
+});
 
 describe("SignUpController", () => {
     beforeEach(() => {
@@ -35,7 +31,7 @@ describe("SignUpController", () => {
     it(`Should return an AddAccount exception with code ${StatusCode.ServerErrorInternal} when was called`, async () => {
         jest.spyOn(addAccountStub, "add").mockImplementationOnce(throwError)
 
-        const request = mockHttpRequest();
+        const request = mockRequest();
         const response = await controller.handle(request);
 
         expect(response).toEqual(serverError(new ServerError()));
@@ -47,13 +43,11 @@ describe("SignUpController", () => {
         const password = "passwordAndConfirmation";
         const addSpy = jest.spyOn(addAccountStub, "add");
 
-        const request = {
-            body: {
-                name,
-                email,
-                password,
-                passwordConfirmation: password
-            }
+        const request: SignUpController.Request = {
+            name,
+            email,
+            password,
+            passwordConfirmation: password
         };
 
         await controller.handle(request);
@@ -63,11 +57,11 @@ describe("SignUpController", () => {
 
     it("Should call Validation with correct values when was called", async () => {
         const spy = jest.spyOn(validationStub, "validate");
-        const request = mockHttpRequest();
+        const request = mockRequest();
 
         await controller.handle(request);
 
-        expect(spy).toHaveBeenCalledWith(request.body);
+        expect(spy).toHaveBeenCalledWith(request);
     });
 
     it(`Should return code ${StatusCode.ClientErrorBadRequest} if Validation throws an error when was called`, async () => {
@@ -75,32 +69,33 @@ describe("SignUpController", () => {
 
         jest.spyOn(validationStub, "validate").mockReturnValueOnce(error);
 
-        const request = mockHttpRequest();
+        const request = mockRequest();
         const response = await controller.handle(request);
 
         expect(response).toEqual(badRequest(error));
     })
 
     it("Should call Authentication with correct values", async () => {
-        const request: HttpRequest = mockHttpRequest();
+        const request = mockRequest();
+        const { email, password } = request;
         const spy = jest.spyOn(authenticationStub, "auth");
 
         await controller.handle(request);
 
-        expect(spy).toHaveBeenCalledWith({ email: request.body.email, password: request.body.password });
+        expect(spy).toHaveBeenCalledWith({ email, password });
     })
 
     it(`Should return code ${StatusCode.ServerErrorInternal} if Authentication throws when was called`, async () => {
         jest.spyOn(authenticationStub, "auth").mockImplementationOnce(throwError)
 
-        const request: HttpRequest = mockHttpRequest()
+        const request = mockRequest()
         const response: HttpResponse = await controller.handle(request)
 
         expect(response).toEqual(serverError(new ServerError()))
     });
 
     it(`Should return code ${StatusCode.SuccessOK} when was called with token object (AuthenticationModel)`, async () => {
-        const request: HttpRequest = mockHttpRequest();
+        const request = mockRequest();
         const response: HttpResponse = await controller.handle(request);
 
         expect(response).toEqual(success({ token: { token: TOKEN, name: NAME } }));
@@ -109,7 +104,7 @@ describe("SignUpController", () => {
     it(`Should return code ${StatusCode.ClientErrorForbidden} if AddAccount returns null`, async () => {
         jest.spyOn(addAccountStub, "add").mockReturnValueOnce(Promise.resolve(null));
 
-        const request: HttpRequest = mockHttpRequest();
+        const request = mockRequest();
         const response: HttpResponse = await controller.handle(request);
 
         expect(response).toEqual(forbidden(new EmailInUseError()))

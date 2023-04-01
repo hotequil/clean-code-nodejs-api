@@ -3,7 +3,7 @@ type SurveyAnswerModel = {
     image?: string
 }
 
-type SurveyAnswersModel = SurveyAnswerModel[]
+export type SurveyAnswersModel = SurveyAnswerModel[]
 
 export type SurveyModel = {
     id: string

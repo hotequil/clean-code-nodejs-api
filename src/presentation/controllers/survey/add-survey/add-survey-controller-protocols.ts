@@ -3,3 +3,4 @@ export * from "../../../../utils/helpers";
 export * from "../../../errors";
 export * from "../../../helpers/http-helper";
 export * from "../../../../domain/use-cases/survey/add-survey";
+export * from "@/domain/models/survey";
