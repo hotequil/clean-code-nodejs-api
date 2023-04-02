@@ -69,10 +69,9 @@ describe("AccountMongoDBRepository", () => {
 
             await collection.insertOne(copy(account))
 
-            const { id, ...otherAccountProps } = await repository.loadByToken(TOKEN) as AccountModel;
+            const result = await repository.loadByToken(TOKEN);
 
-            expect(id).toBeTruthy();
-            expect(account).toEqual(otherAccountProps);
+            expect(result?.id).toBeTruthy();
         })
 
         it("Should return an account when loadByToken was called with role", async () => {
@@ -80,10 +79,9 @@ describe("AccountMongoDBRepository", () => {
 
             await collection.insertOne(copy(account))
 
-            const { id, ...otherAccountProps } = await repository.loadByToken(TOKEN, ROLE) as AccountModel;
+            const result = await repository.loadByToken(TOKEN, ROLE);
 
-            expect(id).toBeTruthy();
-            expect(account).toEqual(otherAccountProps);
+            expect(result?.id).toBeTruthy();
         })
 
         it("Should return null when loadByToken was called with an invalid role", async () => {
@@ -101,16 +99,15 @@ describe("AccountMongoDBRepository", () => {
 
             await collection.insertOne(copy(account))
 
-            const { id, ...otherAccountProps } = await repository.loadByToken(TOKEN) as AccountModel;
+            const result = await repository.loadByToken(TOKEN);
 
-            expect(id).toBeTruthy();
-            expect(account).toEqual(otherAccountProps);
+            expect(result?.id).toBeTruthy();
         })
 
         it("Should return null if loadByToken fails when decrypt was called", async () => {
-            const account = await repository.loadByToken(TOKEN, ROLE)
+            const result = await repository.loadByToken(TOKEN, ROLE)
 
-            expect(account).toBeNull()
+            expect(result).toBeNull()
         })
     })
 });

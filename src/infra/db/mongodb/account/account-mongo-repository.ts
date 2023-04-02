@@ -31,17 +31,28 @@ export class AccountMongoRepository implements AddAccountRepository, LoadAccount
         await collection.updateOne({ _id: id }, { $set: { accessToken: token } });
     }
 
-    async loadByToken (accessToken: string, role?: AccountType): Promise<AccountModel | null> {
+    async loadByToken (accessToken: string, role?: AccountType): Promise<LoadAccountByTokenRepository.Result> {
         const collection = await MongodbHelper.collection("accounts")
 
-        const account = await collection.findOne<AccountModel>({
-            accessToken,
-            $or: [
-                { role },
-                { role: AccountType.ADMIN },
-            ]
-        })
+        const account = await collection.findOne<AccountModel>(
+            {
+                accessToken,
+                $or: [
+                    { role },
+                    { role: AccountType.ADMIN },
+                ]
+            },
+            {
+                projection: { _id: 1 }
+            }
+        )
 
-        return account ? MongodbHelper.map<AccountModel>(account) : null
+        if(account){
+            const { id } = MongodbHelper.map<AccountModel>(account)
+
+            return { id }
+        }
+
+        return null
     }
 }

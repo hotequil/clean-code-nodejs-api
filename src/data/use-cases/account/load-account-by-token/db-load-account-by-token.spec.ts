@@ -28,9 +28,9 @@ describe(DbLoadAccountByToken.name, () => {
     it("Should return null if Decrypter returns null", async () => {
         jest.spyOn(decrypter, "decrypt").mockReturnValueOnce(Promise.resolve(null))
 
-        const account = await db.loadByToken(FAKE_TOKEN, ROLE)
+        const result = await db.loadByToken(FAKE_TOKEN, ROLE)
 
-        expect(account).toBeNull()
+        expect(result).toBeNull()
     })
 
     it("Should call LoadAccountByTokenRepository with correct values", async () => {
@@ -44,23 +44,24 @@ describe(DbLoadAccountByToken.name, () => {
     it("Should return null if LoadAccountByTokenRepository returns null", async () => {
         jest.spyOn(loadAccountByTokenRepository, "loadByToken").mockReturnValueOnce(Promise.resolve(null))
 
-        const account = await db.loadByToken(FAKE_TOKEN, ROLE)
+        const result = await db.loadByToken(FAKE_TOKEN, ROLE)
 
-        expect(account).toBeNull()
+        expect(result).toBeNull()
     })
 
     it("Should return an account on success", async () => {
-        const account = await db.loadByToken(FAKE_TOKEN, ROLE)
+        const result = await db.loadByToken(FAKE_TOKEN, ROLE)
+        const { id } = mockAccountModel()
 
-        expect(account).toEqual(mockAccountModel())
+        expect(result).toEqual({ id })
     })
 
     it("Should return null if Decrypter throws", async () => {
         jest.spyOn(decrypter, "decrypt").mockImplementationOnce(throwError)
 
-        const account = await db.loadByToken(FAKE_TOKEN, ROLE)
+        const result = await db.loadByToken(FAKE_TOKEN, ROLE)
 
-        expect(account).toBeNull()
+        expect(result).toBeNull()
     })
 
     it("Should throw if LoadAccountByTokenRepository throws", async () => {
