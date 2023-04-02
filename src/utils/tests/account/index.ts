@@ -1,5 +1,5 @@
 import { AccountModel } from "@/domain/models/account";
-import { AddAccount, AddAccountParams } from "@/domain/use-cases/account/add-account";
+import { AddAccount } from "@/domain/use-cases/account/add-account";
 import { AddAccountRepository } from "@/data/protocols/db/account/add-account-repository";
 import { LoadAccountByEmailRepository } from "@/data/protocols/db/account/load-account-by-email-repository";
 import { LoadAccountByTokenRepository } from "@/data/protocols/db/account/load-account-by-token-repository";
@@ -15,7 +15,7 @@ export const mockAccountModel = (): AccountModel => ({
     accessToken: "accessToken",
 })
 
-export const mockAddAccountParams = (password = "password"): AddAccountParams => ({
+export const mockAddAccountParams = (password = "password"): AddAccount.Params => ({
     name: "name",
     email: "email@email.email",
     password,
@@ -28,8 +28,8 @@ export const mockAuthenticationParams = (email: string, password: string): Authe
 
 export const mockAddAccountRepository = (id: string, password: string): AddAccountRepository => {
     class AddAccountRepositoryStub implements AddAccountRepository {
-        async add (account: AddAccountParams): Promise<AccountModel> {
-            return { ...account, password, id };
+        async add (account: AddAccountRepository.Params): Promise<AddAccountRepository.Result> {
+            return !!{ ...account, password, id };
         }
     }
 
@@ -74,8 +74,8 @@ export const mockUpdateAccessTokenRepository = (): UpdateAccessTokenRepository =
 
 export const mockAddAccount = (): AddAccount => {
     class AddAccountStub implements AddAccount {
-        async add (account: AddAccountParams): Promise<AccountModel> {
-            return { ...account, id: "id" };
+        async add (account: AddAccount.Params): Promise<AddAccount.Result> {
+            return !!{ ...account, id: "id" };
         }
     }
 

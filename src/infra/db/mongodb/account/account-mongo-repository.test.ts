@@ -28,10 +28,9 @@ describe("AccountMongoDBRepository", () => {
 
     describe("add()", () => {
         it("Should return a new account when add was called", async () => {
-            const { id, name, email, password } = await repository.add(copy(ACCOUNT));
+            const result = await repository.add(copy(ACCOUNT));
 
-            expect(id).toBeTruthy();
-            expect(ACCOUNT).toEqual({ name, email, password });
+            expect(result).toBe(true);
         });
     })
 

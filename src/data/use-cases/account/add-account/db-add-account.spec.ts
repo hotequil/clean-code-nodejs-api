@@ -65,9 +65,9 @@ describe("DbAddAccount", () => {
     });
 
     it("Should return an account on success when DbAddAccount was called", async () => {
-        const account = await db.add(mockAddAccountParams());
+        const result = await db.add(mockAddAccountParams());
 
-        expect(account).toEqual({ ...account, id: ID, password: HASHED_PASSWORD });
+        expect(result).toBe(true);
     });
 
     it("Should call LoadAccountByEmailRepository with correct email when was called", async () => {
@@ -88,6 +88,6 @@ describe("DbAddAccount", () => {
 
         const account = await db.add(fakeAccount);
 
-        expect(account).toBeNull();
+        expect(account).toBe(false);
     });
 });

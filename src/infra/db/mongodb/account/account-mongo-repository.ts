@@ -1,5 +1,5 @@
 import { AddAccountRepository } from "@/data/protocols/db/account/add-account-repository";
-import { AddAccountParams } from "@/domain/use-cases/account/add-account";
+import { AddAccount } from "@/domain/use-cases/account/add-account";
 import { AccountModel } from "@/domain/models/account";
 import { MongodbHelper } from "../helpers";
 import { LoadAccountByEmailRepository } from "@/data/protocols/db/account/load-account-by-email-repository";
@@ -8,12 +8,12 @@ import { LoadAccountByTokenRepository } from "@/data/protocols/db/account/load-a
 import { AccountType } from "@/utils/enums";
 
 export class AccountMongoRepository implements AddAccountRepository, LoadAccountByEmailRepository, UpdateAccessTokenRepository, LoadAccountByTokenRepository {
-    async add (account: AddAccountParams): Promise<AccountModel> {
+    async add (account: AddAccount.Params): Promise<AddAccount.Result> {
         const collection = await MongodbHelper.collection("accounts");
         const { insertedId } = await collection.insertOne(account);
         const response = await collection.findOne({ _id: insertedId });
 
-        return MongodbHelper.map<AccountModel>(response);
+        return !!MongodbHelper.map<AccountModel>(response);
     }
 
     async loadByEmail (email: string): Promise<AccountModel|null> {
