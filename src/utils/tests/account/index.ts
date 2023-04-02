@@ -5,7 +5,7 @@ import { LoadAccountByEmailRepository } from "@/data/protocols/db/account/load-a
 import { LoadAccountByTokenRepository } from "@/data/protocols/db/account/load-account-by-token-repository";
 import { AccountType } from "@/utils/enums";
 import { UpdateAccessTokenRepository } from "@/data/protocols/db/account/update-access-token-repository";
-import { AuthenticationParams } from "@/domain/use-cases/account/authentication";
+import { Authentication } from "@/domain/use-cases/account/authentication";
 
 export const mockAccountModel = (): AccountModel => ({
     id: "id",
@@ -21,7 +21,7 @@ export const mockAddAccountParams = (password = "password"): AddAccount.Params =
     password,
 })
 
-export const mockAuthenticationParams = (email: string, password: string): AuthenticationParams => ({
+export const mockAuthenticationParams = (email: string, password: string): Authentication.Params => ({
     email,
     password,
 });
