@@ -1,5 +1,5 @@
 import { AddSurveyRepository } from "@/data/protocols/db/survey/add-survey-repository";
-import { AddSurvey, AddSurveyParams } from "@/domain/use-cases/survey/add-survey";
+import { AddSurvey } from "@/domain/use-cases/survey/add-survey";
 import { LoadSurveyByIdRepository } from "@/data/protocols/db/survey/load-survey-by-id-repository";
 import { SurveyModel, SurveysModel } from "@/domain/models/survey";
 import { LoadSurveysRepository } from "@/data/protocols/db/survey/load-surveys-repository";
@@ -23,7 +23,7 @@ export const mockSurveysModel = (): SurveysModel => [
     }
 ]
 
-export const mockAddSurveyParams = (answer = "answer", otherAnswer = "other-answer"): AddSurveyParams => ({
+export const mockAddSurveyParams = (answer = "answer", otherAnswer = "other-answer"): AddSurvey.Params => ({
     question: "question",
     answers: [
         { answer },
@@ -34,7 +34,7 @@ export const mockAddSurveyParams = (answer = "answer", otherAnswer = "other-answ
 
 export const mockAddSurveyRepository = (): AddSurveyRepository => {
     class AddSurveyRepositoryStub implements AddSurveyRepository{
-        async add(model: AddSurveyParams): Promise<null>{
+        async add(model: AddSurveyRepository.Params): Promise<AddSurveyRepository.Result>{
             console.log(model)
 
             return null
@@ -82,7 +82,7 @@ export const mockLoadSurveys = (): LoadSurveys => {
 
 export const mockAddSurvey = (): AddSurvey => {
     class AddSurveyStub implements AddSurvey{
-        async add(params: AddSurveyParams): Promise<null>{
+        async add(params: AddSurvey.Params): Promise<AddSurvey.Result>{
             console.log(params)
 
             return null
