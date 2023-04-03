@@ -40,8 +40,10 @@ export const mockLoadAccountByEmailRepository = (
     account?: { id: string, name: string, password: string }
 ): LoadAccountByEmailRepository => {
     class LoadAccountByEmailRepositoryStub implements LoadAccountByEmailRepository {
-        async loadByEmail (email: string): Promise<AccountModel | null> {
-            return account ? { ...account, email } : null;
+        async loadByEmail (email: string): Promise<LoadAccountByEmailRepository.Result> {
+            console.log(email)
+
+            return account ?? null;
         }
     }
 

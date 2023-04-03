@@ -7,3 +7,5 @@ export * from "./survey-result";
 export * from "./email-validator";
 export * from "./validation";
 export * from "./controller";
+
+export const MONGO_OBJECT_ID = "6348acd2e1a47ca32e79f46f"

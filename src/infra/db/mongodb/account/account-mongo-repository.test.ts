@@ -38,10 +38,11 @@ describe("AccountMongoDBRepository", () => {
         it("Should return an account when loadByEmail was called", async () => {
             await collection.insertOne(copy(ACCOUNT));
 
-            const { id, name, email, password } = await repository.loadByEmail(ACCOUNT.email) as AccountModel;
+            const result = await repository.loadByEmail(ACCOUNT.email);
 
-            expect(id).toBeTruthy();
-            expect(ACCOUNT).toEqual({ name, email, password });
+            expect(result?.id).toBeTruthy();
+            expect(result?.name).toBe(ACCOUNT.name);
+            expect(result?.password).toBe(ACCOUNT.password);
         });
 
         it("Should return null if there is no account with email when was called", async () => {
@@ -89,7 +90,7 @@ describe("AccountMongoDBRepository", () => {
 
             await collection.insertOne(copy(account))
 
-            const response = await repository.loadByToken(TOKEN, ROLE) as AccountModel;
+            const response = await repository.loadByToken(TOKEN, ROLE);
 
             expect(response).toBeNull();
         })

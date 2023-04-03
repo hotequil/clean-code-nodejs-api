@@ -1,6 +1,5 @@
 import { AddAccountRepository } from "@/data/protocols/db/account/add-account-repository";
 import { AddAccount } from "@/domain/use-cases/account/add-account";
-import { AccountModel } from "@/domain/models/account";
 import { MongodbHelper } from "../helpers";
 import { LoadAccountByEmailRepository } from "@/data/protocols/db/account/load-account-by-email-repository";
 import { UpdateAccessTokenRepository } from "@/data/protocols/db/account/update-access-token-repository";
@@ -13,14 +12,23 @@ export class AccountMongoRepository implements AddAccountRepository, LoadAccount
         const { insertedId } = await collection.insertOne(account);
         const response = await collection.findOne({ _id: insertedId });
 
-        return !!MongodbHelper.map<AccountModel>(response);
+        return !!MongodbHelper.map(response);
     }
 
-    async loadByEmail (email: string): Promise<AccountModel|null> {
+    async loadByEmail (email: string): Promise<LoadAccountByEmailRepository.Result> {
         const collection = await MongodbHelper.collection("accounts");
-        const account = await collection.findOne<AccountModel>({ email });
+        const account = await collection.findOne(
+            { email },
+            {
+                projection: {
+                    _id: 1,
+                    name: 1,
+                    password: 1,
+                }
+            }
+        );
 
-        if (account) return MongodbHelper.map<AccountModel>(account);
+        if (account) return await MongodbHelper.map(account);
 
         return null;
     }
@@ -34,7 +42,7 @@ export class AccountMongoRepository implements AddAccountRepository, LoadAccount
     async loadByToken (accessToken: string, role?: AccountType): Promise<LoadAccountByTokenRepository.Result> {
         const collection = await MongodbHelper.collection("accounts")
 
-        const account = await collection.findOne<AccountModel>(
+        const account = await collection.findOne(
             {
                 accessToken,
                 $or: [
@@ -48,7 +56,7 @@ export class AccountMongoRepository implements AddAccountRepository, LoadAccount
         )
 
         if(account){
-            const { id } = MongodbHelper.map<AccountModel>(account)
+            const { id } = MongodbHelper.map(account)
 
             return { id }
         }
