@@ -52,7 +52,7 @@ export class SurveyMongoRepository implements AddSurveyRepository, LoadSurveysRe
         return MongodbHelper.mapAll<SurveyModel>(await collection.aggregate(query).toArray());
     }
 
-    async loadById(id: ObjectId | string): Promise<SurveyModel | null> {
+    async loadById(id: ObjectId | string): Promise<LoadSurveyByIdRepository.Result> {
         const collection = await MongodbHelper.collection("surveys")
         const response = await collection.findOne({ _id: typeof id === "string" ? new ObjectId(id) : id }) as unknown
 
