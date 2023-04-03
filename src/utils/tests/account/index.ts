@@ -6,6 +6,7 @@ import { LoadAccountByTokenRepository } from "@/data/protocols/db/account/load-a
 import { AccountType } from "@/utils/enums";
 import { UpdateAccessTokenRepository } from "@/data/protocols/db/account/update-access-token-repository";
 import { Authentication } from "@/domain/use-cases/account/authentication";
+import { CheckAccountByEmailRepository } from "@/data/protocols/db/account/check-account-by-email-repository";
 
 export const mockAccountModel = (): AccountModel => ({
     id: "id",
@@ -48,6 +49,18 @@ export const mockLoadAccountByEmailRepository = (
     }
 
     return new LoadAccountByEmailRepositoryStub()
+}
+
+export const mockCheckAccountByEmailRepository = (): CheckAccountByEmailRepository => {
+    class CheckAccountByEmailRepositoryStub implements CheckAccountByEmailRepository {
+        async checkByEmail (email: string): Promise<CheckAccountByEmailRepository.Result> {
+            console.log(email)
+
+            return false;
+        }
+    }
+
+    return new CheckAccountByEmailRepositoryStub()
 }
 
 export const mockLoadAccountByTokenRepository = (): LoadAccountByTokenRepository => {

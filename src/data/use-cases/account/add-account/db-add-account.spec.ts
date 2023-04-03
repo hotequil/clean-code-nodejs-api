@@ -1,23 +1,18 @@
 import { DbAddAccount } from "./db-add-account";
-import {
-    AddAccount,
-    AddAccountRepository,
-    Hasher,
-    LoadAccountByEmailRepository
-} from "./db-add-account-protocols";
+import { AddAccount, AddAccountRepository, CheckAccountByEmailRepository, Hasher } from "./db-add-account-protocols";
 import {
     mockAccountModel,
     mockAddAccountParams,
     mockAddAccountRepository,
     mockHasher,
-    mockLoadAccountByEmailRepository,
+    mockCheckAccountByEmailRepository,
     throwError
 } from "@/utils/tests";
 
 let db: AddAccount;
 let hasherSub: Hasher;
 let addAccountRepositoryStub: AddAccountRepository;
-let loadAccountByEmailRepositoryStub: LoadAccountByEmailRepository;
+let checkAccountByEmailRepositoryStub: CheckAccountByEmailRepository;
 const HASHED_PASSWORD = "12345678";
 const ID = "123";
 
@@ -25,8 +20,8 @@ describe("DbAddAccount", () => {
     beforeEach(() => {
         hasherSub = mockHasher(HASHED_PASSWORD);
         addAccountRepositoryStub = mockAddAccountRepository(ID, HASHED_PASSWORD);
-        loadAccountByEmailRepositoryStub = mockLoadAccountByEmailRepository();
-        db = new DbAddAccount(hasherSub, addAccountRepositoryStub, loadAccountByEmailRepositoryStub);
+        checkAccountByEmailRepositoryStub = mockCheckAccountByEmailRepository();
+        db = new DbAddAccount(hasherSub, addAccountRepositoryStub, checkAccountByEmailRepositoryStub);
     });
 
     it("Should call Hasher with correct password", async () => {
@@ -70,8 +65,8 @@ describe("DbAddAccount", () => {
         expect(result).toBe(true);
     });
 
-    it("Should call LoadAccountByEmailRepository with correct email when was called", async () => {
-        const loadSpy = jest.spyOn(loadAccountByEmailRepositoryStub, "loadByEmail");
+    it("Should call CheckAccountByEmailRepository with correct email when was called", async () => {
+        const loadSpy = jest.spyOn(checkAccountByEmailRepositoryStub, "checkByEmail");
         const account = mockAddAccountParams()
         const { email } = account
 
@@ -80,14 +75,13 @@ describe("DbAddAccount", () => {
         expect(loadSpy).toHaveBeenCalledWith(email);
     });
 
-    it("Should return null if LoadAccountByEmailRepository find an account with email", async () => {
+    it("Should return false if CheckAccountByEmailRepository returns true", async () => {
         const fakeAccount = mockAccountModel();
 
-        jest.spyOn(loadAccountByEmailRepositoryStub, "loadByEmail")
-            .mockReturnValueOnce(Promise.resolve(fakeAccount))
+        jest.spyOn(checkAccountByEmailRepositoryStub, "checkByEmail").mockReturnValueOnce(Promise.resolve(true))
 
-        const account = await db.add(fakeAccount);
+        const result = await db.add(fakeAccount);
 
-        expect(account).toBe(false);
+        expect(result).toBe(false);
     });
 });

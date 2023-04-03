@@ -5,8 +5,9 @@ import { LoadAccountByEmailRepository } from "@/data/protocols/db/account/load-a
 import { UpdateAccessTokenRepository } from "@/data/protocols/db/account/update-access-token-repository";
 import { LoadAccountByTokenRepository } from "@/data/protocols/db/account/load-account-by-token-repository";
 import { AccountType } from "@/utils/enums";
+import { CheckAccountByEmailRepository } from "@/data/protocols/db/account/check-account-by-email-repository";
 
-export class AccountMongoRepository implements AddAccountRepository, LoadAccountByEmailRepository, UpdateAccessTokenRepository, LoadAccountByTokenRepository {
+export class AccountMongoRepository implements AddAccountRepository, LoadAccountByEmailRepository, UpdateAccessTokenRepository, LoadAccountByTokenRepository, CheckAccountByEmailRepository {
     async add (account: AddAccount.Params): Promise<AddAccount.Result> {
         const collection = await MongodbHelper.collection("accounts");
         const { insertedId } = await collection.insertOne(account);
@@ -31,6 +32,13 @@ export class AccountMongoRepository implements AddAccountRepository, LoadAccount
         if (account) return await MongodbHelper.map(account);
 
         return null;
+    }
+
+    async checkByEmail (email: string): Promise<CheckAccountByEmailRepository.Result> {
+        const collection = await MongodbHelper.collection("accounts");
+        const result = await collection.findOne({ email }, { projection: { _id: 1 } });
+
+        return !!result;
     }
 
     async updateAccessToken (id: any, token: string): Promise<void> {

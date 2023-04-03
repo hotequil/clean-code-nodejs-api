@@ -52,6 +52,22 @@ describe("AccountMongoDBRepository", () => {
         });
     })
 
+    describe("checkByEmail()", () => {
+        it("Should return true if there is an account with email when was called", async () => {
+            await collection.insertOne(copy(ACCOUNT));
+
+            const result = await repository.checkByEmail(ACCOUNT.email);
+
+            expect(result).toBe(true);
+        });
+
+        it("Should return false if there is no account with email when was called", async () => {
+            const result = await repository.checkByEmail(ACCOUNT.email);
+
+            expect(result).toBe(false);
+        });
+    })
+
     describe("updateAccessToken()", () => {
         it("Should update the accessToken when updateAccessToken was called", async () => {
             const { insertedId } = await collection.insertOne(copy(ACCOUNT));
