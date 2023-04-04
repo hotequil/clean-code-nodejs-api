@@ -100,6 +100,22 @@ describe(SurveyMongoRepository.name, () => {
         })
     })
 
+    describe("loadAnswers()", () => {
+        it("Should load answers on success", async () => {
+            const surveyData = mockAddSurveyParams()
+            const { insertedId } = await collection.insertOne(surveyData)
+            const answers = await repository.loadAnswers(insertedId)
+
+            expect(answers).toEqual(surveyData.answers.map(({ answer }) => answer))
+        })
+
+        it("Should return an empty array if survey id is invalid", async () => {
+            const answers = await repository.loadAnswers(MONGO_OBJECT_ID)
+
+            expect(answers).toEqual([])
+        })
+    })
+
     describe("checkById()", () => {
         it("Should check survey by id on success", async () => {
             const surveyData = mockAddSurveyParams()

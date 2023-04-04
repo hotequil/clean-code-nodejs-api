@@ -5,8 +5,9 @@ import { SurveyModel, SurveysModel } from "@/domain/models/survey";
 import { Collection, ObjectId } from "mongodb";
 import { LoadSurveyByIdRepository } from "@/data/protocols/db/survey/load-survey-by-id-repository";
 import { CheckSurveyByIdRepository } from "@/data/protocols/db/survey/check-survey-by-id-repository";
+import { LoadAnswersBySurveyRepository } from "@/data/protocols/db/survey/load-answers-by-survey-repository";
 
-export class SurveyMongoRepository implements AddSurveyRepository, LoadSurveysRepository, LoadSurveyByIdRepository, CheckSurveyByIdRepository{
+export class SurveyMongoRepository implements AddSurveyRepository, LoadSurveysRepository, LoadSurveyByIdRepository, CheckSurveyByIdRepository, LoadAnswersBySurveyRepository{
     async add(model: AddSurveyRepository.Params): Promise<AddSurveyRepository.Result>{
         const collection = await MongodbHelper.collection("surveys")
 
@@ -58,6 +59,21 @@ export class SurveyMongoRepository implements AddSurveyRepository, LoadSurveysRe
         const response = await collection.findOne({ _id: typeof id === "string" ? new ObjectId(id) : id }) as unknown
 
         return response ? MongodbHelper.map<SurveyModel>(response) : null;
+    }
+
+    async loadAnswers(id: ObjectId | string): Promise<LoadAnswersBySurveyRepository.Result> {
+        const collection = await MongodbHelper.collection("surveys")
+
+        const query = new QueryBuilderHelper().match({ _id: typeof id === "string" ? new ObjectId(id) : id })
+                                              .project({
+                                                  _id: 0,
+                                                  answers: "$answers.answer",
+                                              })
+                                              .build()
+
+        const surveys = await collection.aggregate(query).toArray()
+
+        return surveys?.[0]?.answers || []
     }
 
     async checkById(id: ObjectId | string): Promise<CheckSurveyByIdRepository.Result> {
