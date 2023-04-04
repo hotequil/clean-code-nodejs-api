@@ -1,13 +1,13 @@
 import { SaveSurveyResultController } from "./save-survey-result-controller";
-import { LoadSurveyById, SaveSurveyResult } from "./save-survey-result-protocols";
+import { LoadAnswersBySurvey, SaveSurveyResult } from "./save-survey-result-protocols";
 import * as MockDate from "mockdate";
 import StatusCode from "status-code-enum";
 import { forbidden, serverError, success } from "@/presentation/helpers/http-helper";
 import { InvalidParamsError } from "@/presentation/errors";
-import { mockLoadSurveyById, mockSaveSurveyResult, mockSurveyResultModel, throwError } from "@/utils/tests";
+import { mockLoadAnswersBySurvey, mockSaveSurveyResult, mockSurveyResultModel, throwError } from "@/utils/tests";
 
 let controller: SaveSurveyResultController
-let loadSurveyByIdStub: LoadSurveyById
+let loadAnswersBySurveyStub: LoadAnswersBySurvey
 let saveSurveyResultStub: SaveSurveyResult
 const SURVEY_ID = "surveyId"
 const VALID_ANSWER = "valid-answer"
@@ -24,29 +24,29 @@ describe(SaveSurveyResultController.name, () => {
     afterAll(() => MockDate.reset())
 
     beforeEach(() => {
-        loadSurveyByIdStub = mockLoadSurveyById(SURVEY_ID, VALID_ANSWER)
+        loadAnswersBySurveyStub = mockLoadAnswersBySurvey(SURVEY_ID, VALID_ANSWER)
         saveSurveyResultStub = mockSaveSurveyResult(SURVEY_ID)
-        controller = new SaveSurveyResultController(loadSurveyByIdStub, saveSurveyResultStub)
+        controller = new SaveSurveyResultController(loadAnswersBySurveyStub, saveSurveyResultStub)
     })
 
-    it("Should call LoadSurveyById with correct values", async () => {
-        const loadByIdSpy = jest.spyOn(loadSurveyByIdStub, "loadById")
+    it("Should call LoadAnswersBySurvey with correct values", async () => {
+        const loadAnswersSpy = jest.spyOn(loadAnswersBySurveyStub, "loadAnswers")
 
         await controller.handle(mockRequest())
 
-        expect(loadByIdSpy).toHaveBeenCalledWith(SURVEY_ID)
+        expect(loadAnswersSpy).toHaveBeenCalledWith(SURVEY_ID)
     })
 
-    it(`Should return code ${StatusCode.ClientErrorForbidden} when LoadSurveyById returns null`, async () => {
-        jest.spyOn(loadSurveyByIdStub, "loadById").mockReturnValueOnce(Promise.resolve(null))
+    it(`Should return code ${StatusCode.ClientErrorForbidden} when LoadAnswersBySurvey returns an empty array`, async () => {
+        jest.spyOn(loadAnswersBySurveyStub, "loadAnswers").mockReturnValueOnce(Promise.resolve([]))
 
         const { statusCode } = await controller.handle(mockRequest())
 
         expect(statusCode).toBe(StatusCode.ClientErrorForbidden)
     })
 
-    it(`Should return code ${StatusCode.ServerErrorInternal} if LoadSurveyById throws`, async () => {
-        jest.spyOn(loadSurveyByIdStub, "loadById").mockImplementationOnce(throwError)
+    it(`Should return code ${StatusCode.ServerErrorInternal} if LoadAnswersBySurvey throws`, async () => {
+        jest.spyOn(loadAnswersBySurveyStub, "loadAnswers").mockImplementationOnce(throwError)
 
         const response = await controller.handle(mockRequest())
 
