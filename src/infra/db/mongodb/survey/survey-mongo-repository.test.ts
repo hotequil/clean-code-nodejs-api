@@ -99,4 +99,20 @@ describe(SurveyMongoRepository.name, () => {
             expect(survey).toBeNull()
         })
     })
+
+    describe("checkById()", () => {
+        it("Should check survey by id on success", async () => {
+            const surveyData = mockAddSurveyParams()
+            const { insertedId } = await collection.insertOne(surveyData)
+            const result = await repository.checkById(insertedId)
+
+            expect(result).toBe(true)
+        })
+
+        it("Should return false if survey id is invalid", async () => {
+            const result = await repository.checkById(MONGO_OBJECT_ID)
+
+            expect(result).toBe(false)
+        })
+    })
 })
