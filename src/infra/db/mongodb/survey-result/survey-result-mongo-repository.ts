@@ -21,7 +21,7 @@ export class SurveyResultMongoRepository implements SaveSurveyResultRepository, 
         )
     }
 
-    async loadBySurveyId(surveyId: ObjectId | string, accountId: ObjectId | string): Promise<SurveyResultModel | null> {
+    async loadBySurveyId(surveyId: ObjectId | string, accountId: ObjectId | string): Promise<LoadSurveyResultRepository.Result> {
         const collection = await MongodbHelper.collection("surveyResults")
         const query = new QueryBuilderHelper().match({
                                                   surveyId: typeof (surveyId) === "string" ? new ObjectId(surveyId) : surveyId
