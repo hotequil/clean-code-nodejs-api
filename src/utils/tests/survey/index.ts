@@ -86,7 +86,7 @@ export const mockLoadSurveysRepository = (): LoadSurveysRepository => {
 
 export const mockLoadSurveys = (): LoadSurveys => {
     class LoadSurveysStub implements LoadSurveys{
-        async load(accountId: string): Promise<SurveysModel>{
+        async load(accountId: string): Promise<LoadSurveys.Result>{
             console.log(accountId)
 
             return mockSurveysModel()
