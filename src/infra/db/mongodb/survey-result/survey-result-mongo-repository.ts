@@ -1,4 +1,3 @@
-import { SaveSurveyResultParams } from "@/domain/use-cases/survey-result/save-survey-result";
 import { SurveyResultModel } from "@/domain/models/survey-result";
 import { MongodbHelper, QueryBuilderHelper } from "@/infra/db/mongodb/helpers";
 import { ObjectId } from "mongodb";
@@ -6,7 +5,7 @@ import { LoadSurveyResultRepository } from "@/data/protocols/db/survey-result/lo
 import { SaveSurveyResultRepository } from "@/data/protocols/db/survey-result/save-survey-result-repository";
 
 export class SurveyResultMongoRepository implements SaveSurveyResultRepository, LoadSurveyResultRepository {
-    async save(data: SaveSurveyResultParams): Promise<void> {
+    async save(data: SaveSurveyResultRepository.Params): Promise<void> {
         const collection = await MongodbHelper.collection("surveyResults")
         const { answer, date } = data
         let { surveyId, accountId } = data
