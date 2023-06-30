@@ -4,6 +4,8 @@ import typeDefs from "@/main/graphql/type-defs";
 import resolvers from "@/main/graphql/resolvers";
 import { GraphQLError } from "graphql";
 import StatusCode from "status-code-enum";
+import { makeExecutableSchema } from "graphql-tools";
+import directives from "@/main/graphql/directives";
 
 type GraphQLErrors = readonly GraphQLError[]
 
@@ -15,10 +17,19 @@ const applyGraphQLErrorResponse = (statusCode: StatusCode, response: any): void 
     response.http.status = statusCode
 }
 
+let schema = makeExecutableSchema({
+    resolvers,
+    typeDefs,
+})
+
+schema = directives.auth(schema)
+
 export default async (app: Express): Promise<void> => {
     const apolloServer = new ApolloServer({
         resolvers,
         typeDefs,
+        schema,
+        context: context => context,
         plugins: [
             {
                 // @ts-ignore
