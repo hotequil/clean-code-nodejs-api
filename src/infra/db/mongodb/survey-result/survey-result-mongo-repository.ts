@@ -173,8 +173,8 @@ export class SurveyResultMongoRepository implements SaveSurveyResultRepository, 
                                                   answer: {
                                                       answer: "$_id.answer",
                                                       image: "$_id.image",
-                                                      count: { $round: ["$count", 2] },
-                                                      percent: { $round: ["$percent", 2] },
+                                                      count: { $multiply: [{ $trunc: { $multiply: ["$count", 100] } }, 0.01] },
+                                                      percent: { $multiply: [{ $trunc: { $multiply: ["$percent", 100] } }, 0.01] },
                                                       isCurrentAccountAnswer: "$_id.isCurrentAccountAnswer",
                                                   }
                                               })
