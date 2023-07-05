@@ -12,7 +12,7 @@ const salt = 12
 const validPassword = "1234"
 const account = mockAddAccountParams(validPassword)
 
-describe("Login GraphQL", () => {
+describe("Account GraphQL", () => {
     let collection: Collection;
     let app: Express
 
