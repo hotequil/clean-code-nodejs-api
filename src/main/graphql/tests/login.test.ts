@@ -59,4 +59,23 @@ describe("Login GraphQL", () => {
             expect(statusCode).toBe(StatusCode.ClientErrorUnauthorized)
         })
     });
+
+    describe("SignUp Mutation", () => {
+        const mutation = `
+            mutation signUp($name: String!, $email: String!, $password: String!, $passwordConfirmation: String!){
+                signUp(name: $name, email: $email, password: $password, passwordConfirmation: $passwordConfirmation){
+                    accessToken
+                    name
+                }
+            }
+        `
+
+        it(`Should create an account on success (${StatusCode.SuccessOK}) request`, async () => {
+            const { body, statusCode } = await request(app).post(route).send({ query: mutation, variables: { ...account, passwordConfirmation: account.password } });
+
+            expect(body.data.signUp.accessToken).toBeTruthy()
+            expect(body.data.signUp.name).toBe(account.name)
+            expect(statusCode).toBe(StatusCode.SuccessOK)
+        })
+    })
 })
