@@ -5,7 +5,9 @@ import { hash } from "bcrypt";
 import { Express } from "express";
 import request from "supertest";
 import { makeApp } from "@/main/graphql/tests/helper";
+import StatusCode from "status-code-enum";
 
+const route = "/graphql"
 const validPassword = "1234"
 const account = mockAddAccountParams(validPassword)
 
@@ -43,10 +45,18 @@ describe("Login GraphQL", () => {
             await collection.insertOne({ ...account, password: await hash(validPassword, 12) })
 
             const { email, password } = account
-            const { body } = await request(app).post("/graphql").send({ query, variables: { email, password } });
+            const { body } = await request(app).post(route).send({ query, variables: { email, password } });
 
             expect(body.data.login.accessToken).toBeTruthy()
             expect(body.data.login.name).toBe(account.name)
+        })
+
+        it(`Should return unauthorized (${StatusCode.ClientErrorUnauthorized}) on invalid credentials`, async () => {
+            const { email, password } = account
+            const { body, statusCode } = await request(app).post(route).send({ query, variables: { email, password } });
+
+            expect(body.data).toBe(null)
+            expect(statusCode).toBe(StatusCode.ClientErrorUnauthorized)
         })
     });
 })
