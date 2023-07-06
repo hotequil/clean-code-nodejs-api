@@ -7,6 +7,9 @@ import { AccountType } from "@/utils/enums";
 import { UpdateAccessTokenRepository } from "@/data/protocols/db/account/update-access-token-repository";
 import { Authentication } from "@/domain/use-cases/account/authentication";
 import { CheckAccountByEmailRepository } from "@/data/protocols/db/account/check-account-by-email-repository";
+import { MongodbHelper } from "@/infra/db/mongodb/helpers";
+import { sign } from "jsonwebtoken";
+import env from "@/main/config/env";
 
 export const mockAccountModel = (): AccountModel => ({
     id: "id",
@@ -26,6 +29,16 @@ export const mockAuthenticationParams = (email: string, password: string): Authe
     email,
     password,
 });
+
+export const mockAccessToken = async (): Promise<string> => {
+    const accountsCollection = await MongodbHelper.collection("accounts");
+    const { insertedId: id } = await accountsCollection.insertOne(mockAddAccountParams())
+    const accessToken = sign({ id }, env.JWT_SECRET)
+
+    await accountsCollection.updateOne({ _id: id }, { $set: { accessToken } })
+
+    return accessToken
+}
 
 export const mockAddAccountRepository = (id: string, password: string): AddAccountRepository => {
     class AddAccountRepositoryStub implements AddAccountRepository {
