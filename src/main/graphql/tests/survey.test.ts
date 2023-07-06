@@ -65,5 +65,12 @@ describe("Survey GraphQL", () => {
             expect(firstSurvey.didAnswer).toEqual(!!survey.didAnswer)
             expect(statusCode).toBe(StatusCode.SuccessOK)
         })
+
+        it(`Should return an error (${StatusCode.ClientErrorForbidden}) on query if there is no access token`, async () => {
+            const { body, statusCode } = await request(app).post(route).send({ query });
+
+            expect(body.data).toBe(null)
+            expect(statusCode).toBe(StatusCode.ClientErrorForbidden)
+        })
     });
 })
