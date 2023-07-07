@@ -127,5 +127,15 @@ describe("SurveyResult GraphQL", () => {
             expect(saveSurveyResult.answers[1].isCurrentAccountAnswer).toBe(false)
             expect(statusCode).toBe(StatusCode.SuccessOK)
         })
+
+        it(`Should returns status code ${StatusCode.ClientErrorForbidden} on mutation`, async () => {
+            const survey = mockAddSurveyParams()
+            const { insertedId: surveyId } = await surveysCollection.insertOne(survey)
+            const { body, statusCode } = await request(app).post(route)
+                                                           .send({ query: mutation, variables: { surveyId, answer: survey.answers[0].answer } });
+
+            expect(body.data).toBe(null)
+            expect(statusCode).toBe(StatusCode.ClientErrorForbidden)
+        })
     })
 })
