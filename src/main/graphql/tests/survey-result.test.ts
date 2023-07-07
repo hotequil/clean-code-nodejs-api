@@ -84,4 +84,48 @@ describe("SurveyResult GraphQL", () => {
             expect(statusCode).toBe(StatusCode.ClientErrorForbidden)
         })
     });
+
+    describe("SaveSurveyResult Mutation", () => {
+        const mutation = `
+            mutation saveSurveyResult($surveyId: ID!, $answer: String!){
+                saveSurveyResult(surveyId: $surveyId, answer: $answer){
+                    surveyId
+                    question
+                    answers{
+                        answer
+                        count
+                        percent
+                        isCurrentAccountAnswer
+                        image
+                    }
+                    date
+                }
+            }
+        `
+
+        it(`Should save survey result with status code ${StatusCode.SuccessOK} on mutation`, async () => {
+            const survey = mockAddSurveyParams()
+            const { insertedId: surveyId } = await surveysCollection.insertOne(survey)
+            const { body, statusCode } = await request(app).post(route)
+                                                           .set(Header.X_ACCESS_TOKEN, await mockAccessToken())
+                                                           .send({ query: mutation, variables: { surveyId, answer: survey.answers[0].answer } });
+
+            const { saveSurveyResult } = body.data
+
+            expect(saveSurveyResult.surveyId).toBe(surveyId.toJSON())
+            expect(saveSurveyResult.question).toBe(survey.question)
+            expect(new Date(saveSurveyResult.date).toLocaleDateString()).toBe(survey.date.toLocaleDateString())
+            expect(saveSurveyResult.answers[0].answer).toBe(survey.answers[0].answer)
+            expect(saveSurveyResult.answers[0].image).toBe(null)
+            expect(saveSurveyResult.answers[0].percent).toBe(100)
+            expect(saveSurveyResult.answers[0].count).toBe(1)
+            expect(saveSurveyResult.answers[0].isCurrentAccountAnswer).toBe(true)
+            expect(saveSurveyResult.answers[1].answer).toBe(survey.answers[1].answer)
+            expect(saveSurveyResult.answers[1].image).toBe(survey.answers[1].image)
+            expect(saveSurveyResult.answers[1].percent).toBe(0)
+            expect(saveSurveyResult.answers[1].count).toBe(0)
+            expect(saveSurveyResult.answers[1].isCurrentAccountAnswer).toBe(false)
+            expect(statusCode).toBe(StatusCode.SuccessOK)
+        })
+    })
 })
