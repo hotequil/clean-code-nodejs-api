@@ -10,7 +10,7 @@ const PASSWORD = "passwordAndConfirmation"
 const SALT = 12;
 const ACCOUNT = mockAddAccountParams(PASSWORD)
 
-describe("LoginRoutes", () => {
+describe("AccountRoutes", () => {
     let collection: Collection;
 
     beforeAll(async () => {

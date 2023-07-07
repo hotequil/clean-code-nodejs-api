@@ -2,4 +2,4 @@
 Clean code NodeJS API.
 
 ## Diagram
-![Diagram](./assets/diagram.png)
+![Diagram](./public/images/diagram.png)

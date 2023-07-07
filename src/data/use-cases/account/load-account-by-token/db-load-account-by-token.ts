@@ -1,6 +1,5 @@
 import { AccountType } from "@/utils/enums";
 import {
-    AccountModel,
     Decrypter,
     LoadAccountByToken,
     LoadAccountByTokenRepository
@@ -12,7 +11,7 @@ export class DbLoadAccountByToken implements LoadAccountByToken{
         private readonly loadAccountByTokenRepository: LoadAccountByTokenRepository,
     ){}
 
-    async loadByToken(token: string, role?: AccountType): Promise<AccountModel | null> {
+    async loadByToken(token: string, role?: AccountType): Promise<LoadAccountByToken.Result> {
         let decryptedToken: string | null = null
 
         try {

@@ -28,10 +28,9 @@ describe("AccountMongoDBRepository", () => {
 
     describe("add()", () => {
         it("Should return a new account when add was called", async () => {
-            const { id, name, email, password } = await repository.add(copy(ACCOUNT));
+            const result = await repository.add(copy(ACCOUNT));
 
-            expect(id).toBeTruthy();
-            expect(ACCOUNT).toEqual({ name, email, password });
+            expect(result).toBe(true);
         });
     })
 
@@ -39,16 +38,33 @@ describe("AccountMongoDBRepository", () => {
         it("Should return an account when loadByEmail was called", async () => {
             await collection.insertOne(copy(ACCOUNT));
 
-            const { id, name, email, password } = await repository.loadByEmail(ACCOUNT.email) as AccountModel;
+            const result = await repository.loadByEmail(ACCOUNT.email);
 
-            expect(id).toBeTruthy();
-            expect(ACCOUNT).toEqual({ name, email, password });
+            expect(result?.id).toBeTruthy();
+            expect(result?.name).toBe(ACCOUNT.name);
+            expect(result?.password).toBe(ACCOUNT.password);
         });
 
         it("Should return null if there is no account with email when was called", async () => {
             const account = await repository.loadByEmail(ACCOUNT.email);
 
             expect(account).toBe(null);
+        });
+    })
+
+    describe("checkByEmail()", () => {
+        it("Should return true if there is an account with email when was called", async () => {
+            await collection.insertOne(copy(ACCOUNT));
+
+            const result = await repository.checkByEmail(ACCOUNT.email);
+
+            expect(result).toBe(true);
+        });
+
+        it("Should return false if there is no account with email when was called", async () => {
+            const result = await repository.checkByEmail(ACCOUNT.email);
+
+            expect(result).toBe(false);
         });
     })
 
@@ -70,10 +86,9 @@ describe("AccountMongoDBRepository", () => {
 
             await collection.insertOne(copy(account))
 
-            const { id, ...otherAccountProps } = await repository.loadByToken(TOKEN) as AccountModel;
+            const result = await repository.loadByToken(TOKEN);
 
-            expect(id).toBeTruthy();
-            expect(account).toEqual(otherAccountProps);
+            expect(result?.id).toBeTruthy();
         })
 
         it("Should return an account when loadByToken was called with role", async () => {
@@ -81,10 +96,9 @@ describe("AccountMongoDBRepository", () => {
 
             await collection.insertOne(copy(account))
 
-            const { id, ...otherAccountProps } = await repository.loadByToken(TOKEN, ROLE) as AccountModel;
+            const result = await repository.loadByToken(TOKEN, ROLE);
 
-            expect(id).toBeTruthy();
-            expect(account).toEqual(otherAccountProps);
+            expect(result?.id).toBeTruthy();
         })
 
         it("Should return null when loadByToken was called with an invalid role", async () => {
@@ -92,7 +106,7 @@ describe("AccountMongoDBRepository", () => {
 
             await collection.insertOne(copy(account))
 
-            const response = await repository.loadByToken(TOKEN, ROLE) as AccountModel;
+            const response = await repository.loadByToken(TOKEN, ROLE);
 
             expect(response).toBeNull();
         })
@@ -102,16 +116,15 @@ describe("AccountMongoDBRepository", () => {
 
             await collection.insertOne(copy(account))
 
-            const { id, ...otherAccountProps } = await repository.loadByToken(TOKEN) as AccountModel;
+            const result = await repository.loadByToken(TOKEN);
 
-            expect(id).toBeTruthy();
-            expect(account).toEqual(otherAccountProps);
+            expect(result?.id).toBeTruthy();
         })
 
         it("Should return null if loadByToken fails when decrypt was called", async () => {
-            const account = await repository.loadByToken(TOKEN, ROLE)
+            const result = await repository.loadByToken(TOKEN, ROLE)
 
-            expect(account).toBeNull()
+            expect(result).toBeNull()
         })
     })
 });

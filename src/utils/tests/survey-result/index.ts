@@ -1,5 +1,5 @@
 import { SurveyResultModel } from "@/domain/models/survey-result";
-import { SaveSurveyResult, SaveSurveyResultParams } from "@/domain/use-cases/survey-result/save-survey-result";
+import { SaveSurveyResult } from "@/domain/use-cases/survey-result/save-survey-result";
 import { SaveSurveyResultRepository } from "@/data/protocols/db/survey-result/save-survey-result-repository";
 import { LoadSurveyResultRepository } from "@/data/protocols/db/survey-result/load-survey-result-repository";
 import { ObjectId } from "mongodb";
@@ -40,7 +40,7 @@ export const mockSaveSurveyResultParams = (
     surveyId: string | ObjectId = "surveyId",
     accountId: string | ObjectId = "accountId",
     answer = "answer"
-): SaveSurveyResultParams => ({
+): SaveSurveyResult.Params => ({
     surveyId,
     accountId,
     answer,
@@ -49,7 +49,7 @@ export const mockSaveSurveyResultParams = (
 
 export const mockSaveSurveyResultRepository = (): SaveSurveyResultRepository => {
     class SaveSurveyResultRepositoryStub implements SaveSurveyResultRepository{
-        async save(data: SaveSurveyResultParams): Promise<void>{
+        async save(data: SaveSurveyResultRepository.Params): Promise<void>{
             console.log(data)
         }
     }
@@ -59,7 +59,7 @@ export const mockSaveSurveyResultRepository = (): SaveSurveyResultRepository => 
 
 export const mockSaveSurveyResult = (surveyId: string): SaveSurveyResult => {
     class SaveSurveyResultStub implements SaveSurveyResult{
-        async save(params: SaveSurveyResultParams): Promise<SurveyResultModel | null> {
+        async save(params: SaveSurveyResult.Params): Promise<SaveSurveyResult.Result> {
             console.log(params)
 
             return mockSurveyResultModel(surveyId);
@@ -71,7 +71,7 @@ export const mockSaveSurveyResult = (surveyId: string): SaveSurveyResult => {
 
 export const mockLoadSurveyResultRepository = (): LoadSurveyResultRepository => {
     class LoadSurveyResultRepositoryStub implements LoadSurveyResultRepository{
-        async loadBySurveyId(surveyId: string | ObjectId, accountId: string | ObjectId): Promise<SurveyResultModel | null>{
+        async loadBySurveyId(surveyId: string | ObjectId, accountId: string | ObjectId): Promise<LoadSurveyResultRepository.Result>{
             console.log(accountId)
 
             return mockSurveyResultModel(surveyId);
@@ -83,7 +83,7 @@ export const mockLoadSurveyResultRepository = (): LoadSurveyResultRepository => 
 
 export const mockLoadSurveyResult = (): LoadSurveyResult => {
     class LoadSurveyResultStub implements LoadSurveyResult{
-        async load(surveyId: string, accountId: string): Promise<SurveyResultModel>{
+        async load(surveyId: string, accountId: string): Promise<LoadSurveyResult.Result>{
             console.log(accountId)
 
             return mockSurveyResultModel(surveyId)

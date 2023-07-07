@@ -3,7 +3,7 @@ import { MongodbHelper } from "../helpers";
 import { Collection } from "mongodb";
 import { SurveyModel } from "@/domain/models/survey";
 import * as MockDate from "mockdate";
-import { mockAddAccountParams, mockAddSurveyParams, mockSaveSurveyResultParams } from "@/utils/tests";
+import { mockAddAccountParams, mockAddSurveyParams, mockSaveSurveyResultParams, MONGO_OBJECT_ID } from "@/utils/tests";
 
 let repository: SurveyMongoRepository
 let collection: Collection
@@ -48,14 +48,12 @@ describe(SurveyMongoRepository.name, () => {
     })
 
     describe("loadAll()", () => {
-        const ACCOUNT_ID = "6348acd2e1a47ca32e79f46f"
-
         it("Should call loadAll with correct values", async () => {
             const loadAllSpy = jest.spyOn(repository, "loadAll")
 
-            await repository.loadAll(ACCOUNT_ID)
+            await repository.loadAll(MONGO_OBJECT_ID)
 
-            expect(loadAllSpy).toHaveBeenCalledWith(ACCOUNT_ID)
+            expect(loadAllSpy).toHaveBeenCalledWith(MONGO_OBJECT_ID)
         })
 
         it("Should get all surveys when loadAll was called", async () => {
@@ -77,7 +75,7 @@ describe(SurveyMongoRepository.name, () => {
         })
 
         it("Should get an empty list of surveys when loadAll was called", async () => {
-            const surveys = await repository.loadAll(ACCOUNT_ID)
+            const surveys = await repository.loadAll(MONGO_OBJECT_ID)
 
             expect(surveys.length).toBe(0)
         })
@@ -96,9 +94,41 @@ describe(SurveyMongoRepository.name, () => {
         })
 
         it("Should return null if survey id is invalid", async () => {
-            const survey = await repository.loadById("6348acd2e1a47ca32e79f46f")
+            const survey = await repository.loadById(MONGO_OBJECT_ID)
 
             expect(survey).toBeNull()
+        })
+    })
+
+    describe("loadAnswers()", () => {
+        it("Should load answers on success", async () => {
+            const surveyData = mockAddSurveyParams()
+            const { insertedId } = await collection.insertOne(surveyData)
+            const answers = await repository.loadAnswers(insertedId)
+
+            expect(answers).toEqual(surveyData.answers.map(({ answer }) => answer))
+        })
+
+        it("Should return an empty array if survey id is invalid", async () => {
+            const answers = await repository.loadAnswers(MONGO_OBJECT_ID)
+
+            expect(answers).toEqual([])
+        })
+    })
+
+    describe("checkById()", () => {
+        it("Should check survey by id on success", async () => {
+            const surveyData = mockAddSurveyParams()
+            const { insertedId } = await collection.insertOne(surveyData)
+            const result = await repository.checkById(insertedId)
+
+            expect(result).toBe(true)
+        })
+
+        it("Should return false if survey id is invalid", async () => {
+            const result = await repository.checkById(MONGO_OBJECT_ID)
+
+            expect(result).toBe(false)
         })
     })
 })

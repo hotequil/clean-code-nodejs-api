@@ -1,28 +1,44 @@
 import { AddAccountRepository } from "@/data/protocols/db/account/add-account-repository";
-import { AddAccountParams } from "@/domain/use-cases/account/add-account";
-import { AccountModel } from "@/domain/models/account";
+import { AddAccount } from "@/domain/use-cases/account/add-account";
 import { MongodbHelper } from "../helpers";
 import { LoadAccountByEmailRepository } from "@/data/protocols/db/account/load-account-by-email-repository";
 import { UpdateAccessTokenRepository } from "@/data/protocols/db/account/update-access-token-repository";
 import { LoadAccountByTokenRepository } from "@/data/protocols/db/account/load-account-by-token-repository";
 import { AccountType } from "@/utils/enums";
+import { CheckAccountByEmailRepository } from "@/data/protocols/db/account/check-account-by-email-repository";
 
-export class AccountMongoRepository implements AddAccountRepository, LoadAccountByEmailRepository, UpdateAccessTokenRepository, LoadAccountByTokenRepository {
-    async add (account: AddAccountParams): Promise<AccountModel> {
+export class AccountMongoRepository implements AddAccountRepository, LoadAccountByEmailRepository, UpdateAccessTokenRepository, LoadAccountByTokenRepository, CheckAccountByEmailRepository {
+    async add (account: AddAccount.Params): Promise<AddAccount.Result> {
         const collection = await MongodbHelper.collection("accounts");
         const { insertedId } = await collection.insertOne(account);
         const response = await collection.findOne({ _id: insertedId });
 
-        return MongodbHelper.map<AccountModel>(response);
+        return !!MongodbHelper.map(response);
     }
 
-    async loadByEmail (email: string): Promise<AccountModel|null> {
+    async loadByEmail (email: string): Promise<LoadAccountByEmailRepository.Result> {
         const collection = await MongodbHelper.collection("accounts");
-        const account = await collection.findOne<AccountModel>({ email });
+        const account = await collection.findOne(
+            { email },
+            {
+                projection: {
+                    _id: 1,
+                    name: 1,
+                    password: 1,
+                }
+            }
+        );
 
-        if (account) return MongodbHelper.map<AccountModel>(account);
+        if (account) return await MongodbHelper.map(account);
 
         return null;
+    }
+
+    async checkByEmail (email: string): Promise<CheckAccountByEmailRepository.Result> {
+        const collection = await MongodbHelper.collection("accounts");
+        const result = await collection.findOne({ email }, { projection: { _id: 1 } });
+
+        return !!result;
     }
 
     async updateAccessToken (id: any, token: string): Promise<void> {
@@ -31,17 +47,28 @@ export class AccountMongoRepository implements AddAccountRepository, LoadAccount
         await collection.updateOne({ _id: id }, { $set: { accessToken: token } });
     }
 
-    async loadByToken (accessToken: string, role?: AccountType): Promise<AccountModel | null> {
+    async loadByToken (accessToken: string, role?: AccountType): Promise<LoadAccountByTokenRepository.Result> {
         const collection = await MongodbHelper.collection("accounts")
 
-        const account = await collection.findOne<AccountModel>({
-            accessToken,
-            $or: [
-                { role },
-                { role: AccountType.ADMIN },
-            ]
-        })
+        const account = await collection.findOne(
+            {
+                accessToken,
+                $or: [
+                    { role },
+                    { role: AccountType.ADMIN },
+                ]
+            },
+            {
+                projection: { _id: 1 }
+            }
+        )
 
-        return account ? MongodbHelper.map<AccountModel>(account) : null
+        if(account){
+            const { id } = MongodbHelper.map(account)
+
+            return { id }
+        }
+
+        return null
     }
 }
