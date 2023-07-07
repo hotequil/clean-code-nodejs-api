@@ -9,11 +9,11 @@ const convertResponseToAccount = ({ token }: any): { accessToken: string, name: 
 
 export default {
     Query: {
-        login: async (parent: any, args: any) =>
-            convertResponseToAccount(await adaptResolver(makeLoginController(), args))
+        login: async (parent: any, args: any, context: any) =>
+            convertResponseToAccount(await adaptResolver(makeLoginController(), args, context))
     },
     Mutation: {
-        signUp: async (parent: any, args: any) =>
-            convertResponseToAccount(await adaptResolver(makeSignUpController(), args))
+        signUp: async (parent: any, args: any, context: any) =>
+            convertResponseToAccount(await adaptResolver(makeSignUpController(), args, context))
     }
 }

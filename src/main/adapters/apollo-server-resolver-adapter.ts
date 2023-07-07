@@ -2,8 +2,8 @@ import { Controller } from "@/presentation/protocols";
 import { ApolloError, AuthenticationError, ForbiddenError, UserInputError } from "apollo-server-express";
 import StatusCode from "status-code-enum";
 
-export const adaptResolver = async(controller: Controller, args?: any): Promise<any> => {
-    const { body, statusCode } = await controller.handle(args || {})
+export const adaptResolver = async(controller: Controller, args?: any, context?: any): Promise<any> => {
+    const { body, statusCode } = await controller.handle(Object.assign({}, args || {}, { accountId: context?.req?.accountId || null }))
 
     switch (statusCode) {
         case StatusCode.SuccessOK:
