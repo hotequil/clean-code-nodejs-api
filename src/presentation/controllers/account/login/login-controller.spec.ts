@@ -2,7 +2,7 @@ import StatusCode from "status-code-enum";
 import { LoginController } from "./login-controller";
 import { badRequest, serverError, success, unauthorized } from "../../../helpers/http-helper";
 import { MissingParamsError, ServerError } from "../../../errors";
-import { HttpResponse, Authentication, Validation } from "./login-controller-protocols";
+import { type HttpResponse, type Authentication, type Validation } from "./login-controller-protocols";
 import { mockValidation, throwError } from "@/utils/tests";
 import { mockAuthentication } from "@/utils/tests/authentication";
 

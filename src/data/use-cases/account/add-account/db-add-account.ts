@@ -1,8 +1,8 @@
 import {
-    AddAccount,
-    AddAccountRepository,
-    Hasher,
-    CheckAccountByEmailRepository,
+    type AddAccount,
+    type AddAccountRepository,
+    type Hasher,
+    type CheckAccountByEmailRepository
 } from "./db-add-account-protocols";
 
 export class DbAddAccount implements AddAccount {

@@ -4,5 +4,5 @@ import { makeLoadSurveysController } from "@/main/factories/controllers/survey/l
 export default {
     Query: {
         surveys: async () => await adaptResolver(makeLoadSurveysController())
-    },
+    }
 }

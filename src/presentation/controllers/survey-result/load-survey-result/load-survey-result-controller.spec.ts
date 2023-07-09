@@ -1,5 +1,5 @@
 import { LoadSurveyResultController } from "./load-survey-result-controller";
-import { CheckSurveyById, LoadSurveyResult } from "./load-survey-result-protocols";
+import { type CheckSurveyById, type LoadSurveyResult } from "./load-survey-result-protocols";
 import { mockCheckSurveyById, mockLoadSurveyResult, mockSurveyResultModel, throwError } from "@/utils/tests";
 import StatusCode from "status-code-enum";
 import { forbidden, serverError, success } from "@/presentation/helpers/http-helper";
@@ -14,7 +14,7 @@ const ACCOUNT_ID = "account-id"
 
 const mockRequest = (): LoadSurveyResultController.Request => ({
     surveyId: SURVEY_ID,
-    accountId: ACCOUNT_ID,
+    accountId: ACCOUNT_ID
 })
 
 describe(LoadSurveyResultController.name, () => {

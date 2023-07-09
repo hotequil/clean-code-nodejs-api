@@ -12,7 +12,7 @@ export const signUpSchema = {
         },
         passwordConfirmation: {
             type: "string"
-        },
+        }
     },
     required: ["name", "email", "password", "passwordConfirmation"]
 }

@@ -1,10 +1,10 @@
 import { DbAuthentication } from "./db-authentication";
 import {
-    Authentication,
-    LoadAccountByEmailRepository,
-    HashComparer,
-    Encrypter,
-    UpdateAccessTokenRepository
+    type Authentication,
+    type LoadAccountByEmailRepository,
+    type HashComparer,
+    type Encrypter,
+    type UpdateAccessTokenRepository
 } from "./db-authentication-protocols";
 import {
     mockAuthenticationParams,

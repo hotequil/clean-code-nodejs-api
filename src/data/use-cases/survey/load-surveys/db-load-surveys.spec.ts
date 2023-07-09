@@ -1,5 +1,5 @@
 import { DbLoadSurveys } from "./db-load-surveys";
-import { LoadSurveysRepository } from "./db-load-surveys-protocols";
+import { type LoadSurveysRepository } from "./db-load-surveys-protocols";
 import * as MockDate from "mockdate";
 import { mockLoadSurveysRepository, mockSurveysModel, throwError } from "@/utils/tests";
 
@@ -8,8 +8,8 @@ let loadSurveysRepositoryStub: LoadSurveysRepository
 const ACCOUNT_ID = "id"
 
 describe(DbLoadSurveys.name, () => {
-    beforeAll(() => MockDate.set(new Date()))
-    afterAll(() => MockDate.reset())
+    beforeAll(() => { MockDate.set(new Date()); })
+    afterAll(() => { MockDate.reset(); })
 
     beforeEach(() => {
         loadSurveysRepositoryStub = mockLoadSurveysRepository()

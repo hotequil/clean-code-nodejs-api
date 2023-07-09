@@ -1,18 +1,18 @@
 import {
-    AddSurvey,
+    type AddSurvey,
     badRequest,
-    Controller,
-    HttpResponse,
+    type Controller,
+    type HttpResponse,
     noContent,
     serverError,
-    Validation,
-    SurveyAnswersModel
+    type Validation,
+    type SurveyAnswersModel
 } from "./add-survey-controller-protocols";
 
-export class AddSurveyController implements Controller{
-    constructor(private readonly validation: Validation, private readonly addSurvey: AddSurvey){}
+export class AddSurveyController implements Controller {
+    constructor(private readonly validation: Validation, private readonly addSurvey: AddSurvey) {}
 
-    async handle(request: AddSurveyController.Request): Promise<HttpResponse>{
+    async handle(request: AddSurveyController.Request): Promise<HttpResponse> {
         try{
             const error = this.validation.validate(request)
 
@@ -23,7 +23,7 @@ export class AddSurveyController implements Controller{
             await this.addSurvey.add({ question, answers, date: new Date() })
 
             return noContent()
-        } catch(error){
+        } catch(error) {
             return serverError(error as Error);
         }
     }

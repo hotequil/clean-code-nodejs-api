@@ -18,7 +18,7 @@ export const loadSurveyResultPath = {
                 required: true,
                 schema: {
                     type: "string"
-                },
+                }
             }
         ],
         responses: {
@@ -40,7 +40,7 @@ export const loadSurveyResultPath = {
             },
             [StatusCode.ServerErrorInternal]: {
                 $ref: "#/components/serverError"
-            },
+            }
         }
     }
 }

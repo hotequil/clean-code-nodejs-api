@@ -1,12 +1,12 @@
 import { AccessDeniedError } from "../errors";
 import { forbidden, serverError, success } from "../helpers/http-helper";
-import { AccountType, Header } from "@/utils/enums";
-import { HttpResponse, LoadAccountByToken, Middleware } from "./auth-middleware-protocols";
+import { type AccountType, Header } from "@/utils/enums";
+import { type HttpResponse, type LoadAccountByToken, type Middleware } from "./auth-middleware-protocols";
 
-export class AuthMiddleware implements Middleware{
-    constructor(private readonly loadAccountByToken: LoadAccountByToken, private readonly role?: AccountType){}
+export class AuthMiddleware implements Middleware {
+    constructor(private readonly loadAccountByToken: LoadAccountByToken, private readonly role?: AccountType) {}
 
-    async handle(request: AuthMiddleware.Request): Promise<HttpResponse>{
+    async handle(request: AuthMiddleware.Request): Promise<HttpResponse> {
         try{
             const token = request[Header.X_ACCESS_TOKEN]
 
@@ -17,7 +17,7 @@ export class AuthMiddleware implements Middleware{
             }
 
             return forbidden(new AccessDeniedError())
-        } catch(error: any){
+        } catch(error: any) {
             return serverError(error)
         }
     }

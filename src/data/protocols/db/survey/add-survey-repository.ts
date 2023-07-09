@@ -1,6 +1,6 @@
-import { AddSurvey } from "@/domain/use-cases/survey/add-survey";
+import { type AddSurvey } from "@/domain/use-cases/survey/add-survey";
 
-export interface AddSurveyRepository{
+export interface AddSurveyRepository {
     add: (model: AddSurveyRepository.Params) => Promise<AddSurveyRepository.Result>
 }
 

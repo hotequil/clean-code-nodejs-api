@@ -1,5 +1,5 @@
 import { DbLoadAccountByToken } from "./db-load-account-by-token";
-import { Decrypter, LoadAccountByTokenRepository } from "./db-load-account-by-token-protocols";
+import { type Decrypter, type LoadAccountByTokenRepository } from "./db-load-account-by-token-protocols";
 import { AccountType } from "@/utils/enums";
 import { mockAccountModel, mockDecrypter, mockLoadAccountByTokenRepository, throwError } from "@/utils/tests";
 

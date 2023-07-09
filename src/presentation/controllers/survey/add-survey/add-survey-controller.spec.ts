@@ -1,5 +1,5 @@
 import { AddSurveyController } from "./add-survey-controller";
-import { Validation, MissingParamsError, AddSurvey } from "./add-survey-controller-protocols";
+import { type Validation, MissingParamsError, type AddSurvey } from "./add-survey-controller-protocols";
 import StatusCode from "status-code-enum";
 import * as MockDate from "mockdate";
 import { mockAddSurvey, mockAddSurveyParams, mockValidation, throwError } from "@/utils/tests";
@@ -11,8 +11,8 @@ let addSurveyStub: AddSurvey
 const mockRequest = (): AddSurveyController.Request => mockAddSurveyParams()
 
 describe(AddSurveyController.name, () => {
-    beforeAll(() => MockDate.set(new Date()))
-    afterAll(() => MockDate.reset())
+    beforeAll(() => { MockDate.set(new Date()); })
+    afterAll(() => { MockDate.reset(); })
 
     beforeEach(() => {
         validationStub = mockValidation()

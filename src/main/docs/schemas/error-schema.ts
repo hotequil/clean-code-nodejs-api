@@ -4,5 +4,5 @@ export const errorSchema = {
         error: {
             type: "string"
         }
-    },
+    }
 }

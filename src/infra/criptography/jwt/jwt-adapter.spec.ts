@@ -12,11 +12,11 @@ jest.mock("jsonwebtoken", () => ({
     sign () {
         return TOKEN;
     },
-    verify(token: string){
+    verify(token: string) {
         console.log(token)
 
         return TOKEN
-    },
+    }
 }));
 
 describe("JwtAdapter", () => {

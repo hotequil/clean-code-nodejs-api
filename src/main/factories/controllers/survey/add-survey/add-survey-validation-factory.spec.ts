@@ -9,7 +9,7 @@ describe("AddSurveyValidationComposite", () => {
 
         expect(ValidationComposite).toHaveBeenCalledWith([
             new RequiredFieldValidation("question"),
-            new RequiredFieldValidation("answers"),
+            new RequiredFieldValidation("answers")
         ]);
     });
 });

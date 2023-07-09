@@ -1,4 +1,4 @@
-import { DbLoadAnswersBySurvey, LoadAnswersBySurveyRepository } from "./db-load-answers-by-survey-protocols";
+import { DbLoadAnswersBySurvey, type LoadAnswersBySurveyRepository } from "./db-load-answers-by-survey-protocols";
 import { mockAnswers, mockLoadAnswersBySurvey, throwError } from "@/utils/tests";
 
 let dbLoadAnswersBySurvey: DbLoadAnswersBySurvey

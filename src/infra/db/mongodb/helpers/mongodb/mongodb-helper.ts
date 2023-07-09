@@ -1,7 +1,7 @@
-import { MongoClient, Collection, Db } from "mongodb";
+import { MongoClient, type Collection, type Db } from "mongodb";
 import env from "../../../../../main/config/env";
 
-type Client = MongoClient|null;
+type Client = MongoClient | null;
 
 let client: Client = null;
 
@@ -35,7 +35,7 @@ export class MongodbHelper {
         return { id: _id, ...newItem };
     }
 
-    static mapAll<T = any[]>(items: any[]): T[]{
+    static mapAll<T = any[]>(items: any[]): T[] {
         return items.map(MongodbHelper.map)
     }
 }

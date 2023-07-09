@@ -6,6 +6,6 @@ export const accountSchema = {
         },
         name: {
             type: "string"
-        },
+        }
     }
 }

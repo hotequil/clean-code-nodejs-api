@@ -18,7 +18,7 @@ export const saveSurveyResultPath = {
                 required: true,
                 schema: {
                     type: "string"
-                },
+                }
             }
         ],
         requestBody: {
@@ -43,7 +43,7 @@ export const saveSurveyResultPath = {
             },
             [StatusCode.ServerErrorInternal]: {
                 $ref: "#/components/serverError"
-            },
+            }
         }
     }
 }

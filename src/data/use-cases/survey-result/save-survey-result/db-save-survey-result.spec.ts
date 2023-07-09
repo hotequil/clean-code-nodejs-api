@@ -1,15 +1,15 @@
-import { DbSaveSurveyResult, SaveSurveyResultRepository } from "./db-save-survey-result-protocols";
+import { DbSaveSurveyResult, type SaveSurveyResultRepository } from "./db-save-survey-result-protocols";
 import * as MockDate from "mockdate";
 import { mockLoadSurveyResultRepository, mockSaveSurveyResultParams, mockSaveSurveyResultRepository, mockSurveyResultModel, throwError } from "@/utils/tests";
-import { LoadSurveyResultRepository } from "@/data/protocols/db/survey-result/load-survey-result-repository";
+import { type LoadSurveyResultRepository } from "@/data/protocols/db/survey-result/load-survey-result-repository";
 
 let dbSaveSurveyResult: DbSaveSurveyResult
 let saveSurveyResultRepositoryStub: SaveSurveyResultRepository
 let loadSurveyResultRepositoryStub: LoadSurveyResultRepository
 
 describe(DbSaveSurveyResult.name, () => {
-    beforeAll(() => MockDate.set(new Date()))
-    afterAll(() => MockDate.reset())
+    beforeAll(() => { MockDate.set(new Date()); })
+    afterAll(() => { MockDate.reset(); })
 
     beforeEach(() => {
         saveSurveyResultRepositoryStub = mockSaveSurveyResultRepository()

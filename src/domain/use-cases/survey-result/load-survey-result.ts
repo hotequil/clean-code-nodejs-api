@@ -1,6 +1,6 @@
-import { SurveyResultModel } from "@/domain/models/survey-result";
+import { type SurveyResultModel } from "@/domain/models/survey-result";
 
-export interface LoadSurveyResult{
+export interface LoadSurveyResult {
     load: (surveyId: string, accountId: string) => Promise<LoadSurveyResult.Result>
 }
 

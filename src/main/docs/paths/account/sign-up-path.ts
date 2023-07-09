@@ -37,7 +37,7 @@ export const signUpPath = {
             },
             [StatusCode.ServerErrorInternal]: {
                 $ref: "#/components/serverError"
-            },
+            }
         }
     }
 }

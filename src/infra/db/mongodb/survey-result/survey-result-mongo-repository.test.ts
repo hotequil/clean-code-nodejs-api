@@ -1,8 +1,8 @@
 import { SurveyResultMongoRepository } from "@/infra/db/mongodb/survey-result/survey-result-mongo-repository";
 import { MongodbHelper } from "@/infra/db/mongodb/helpers";
-import { Collection, ObjectId } from "mongodb";
+import { type Collection, type ObjectId } from "mongodb";
 import * as MockDate from "mockdate";
-import { SurveyResultModel } from "@/domain/models/survey-result";
+import { type SurveyResultModel } from "@/domain/models/survey-result";
 import { mockAddAccountParams, mockAddSurveyParams } from "@/utils/tests";
 
 let repository: SurveyResultMongoRepository
@@ -86,7 +86,7 @@ describe(SurveyResultMongoRepository.name, () => {
                 { surveyId, accountId, answer: FIRST_ANSWER, date: new Date() },
                 { surveyId, accountId, answer: FIRST_ANSWER, date: new Date() },
                 { surveyId, otherAccountId, answer: SECOND_ANSWER, date: new Date() },
-                { surveyId, otherAccountId, answer: SECOND_ANSWER, date: new Date() },
+                { surveyId, otherAccountId, answer: SECOND_ANSWER, date: new Date() }
             ])
 
             const result = await repository.loadBySurveyId(surveyId, accountId) as SurveyResultModel

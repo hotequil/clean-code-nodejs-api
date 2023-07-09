@@ -1,6 +1,6 @@
-import { Collection } from "mongodb";
+import { type Collection } from "mongodb";
 import { MongodbHelper } from "@/infra/db/mongodb/helpers";
-import { Express } from "express";
+import { type Express } from "express";
 import request from "supertest";
 import { makeApp } from "@/main/graphql/tests/helper";
 import StatusCode from "status-code-enum";

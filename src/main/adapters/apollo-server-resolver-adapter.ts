@@ -1,4 +1,4 @@
-import { Controller } from "@/presentation/protocols";
+import { type Controller } from "@/presentation/protocols";
 import { ApolloError, AuthenticationError, ForbiddenError, UserInputError } from "apollo-server-express";
 import StatusCode from "status-code-enum";
 

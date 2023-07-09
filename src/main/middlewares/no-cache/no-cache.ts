@@ -1,4 +1,4 @@
-import { NextFunction, Request, Response } from "express";
+import { type NextFunction, type Request, type Response } from "express";
 
 export const noCache = (request: Request, response: Response, next: NextFunction): void => {
     response.set("cache-control", "no-store, no-cache, must-revalidate, proxy-revalidate")

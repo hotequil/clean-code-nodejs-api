@@ -1,5 +1,5 @@
 import { SaveSurveyResultController } from "./save-survey-result-controller";
-import { LoadAnswersBySurvey, SaveSurveyResult } from "./save-survey-result-protocols";
+import { type LoadAnswersBySurvey, type SaveSurveyResult } from "./save-survey-result-protocols";
 import * as MockDate from "mockdate";
 import StatusCode from "status-code-enum";
 import { forbidden, serverError, success } from "@/presentation/helpers/http-helper";
@@ -16,12 +16,12 @@ const ACCOUNT_ID = "accountId"
 const mockRequest = (): SaveSurveyResultController.Request => ({
     surveyId: SURVEY_ID,
     answer: VALID_ANSWER,
-    accountId: ACCOUNT_ID,
+    accountId: ACCOUNT_ID
 })
 
 describe(SaveSurveyResultController.name, () => {
-    beforeAll(() => MockDate.set(new Date()))
-    afterAll(() => MockDate.reset())
+    beforeAll(() => { MockDate.set(new Date()); })
+    afterAll(() => { MockDate.reset(); })
 
     beforeEach(() => {
         loadAnswersBySurveyStub = mockLoadAnswersBySurvey(SURVEY_ID, VALID_ANSWER)

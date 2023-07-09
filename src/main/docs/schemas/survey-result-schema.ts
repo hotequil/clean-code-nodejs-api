@@ -15,6 +15,6 @@ export const surveyResultSchema = {
         },
         date: {
             type: "string"
-        },
-    },
+        }
+    }
 }

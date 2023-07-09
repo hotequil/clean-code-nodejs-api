@@ -14,7 +14,7 @@ export const surveyAnswerResultSchema = {
             type: "number"
         },
         isCurrentAccountAnswer: {
-            type: "boolean",
-        },
-    },
+            type: "boolean"
+        }
+    }
 }

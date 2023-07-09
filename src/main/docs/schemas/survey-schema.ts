@@ -17,7 +17,7 @@ export const surveySchema = {
             type: "string"
         },
         didAnswer: {
-            type: "boolean",
+            type: "boolean"
         }
     }
 }

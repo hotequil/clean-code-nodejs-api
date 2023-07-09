@@ -35,7 +35,7 @@ export const addSurveyPath = {
             },
             [StatusCode.ServerErrorInternal]: {
                 $ref: "#/components/serverError"
-            },
+            }
         }
     }
 }

@@ -29,7 +29,7 @@ export const loadSurveysPath = {
             },
             [StatusCode.ServerErrorInternal]: {
                 $ref: "#/components/serverError"
-            },
+            }
         }
     }
 }

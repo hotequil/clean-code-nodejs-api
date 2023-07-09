@@ -1,4 +1,4 @@
-import { CheckSurveyByIdRepository, mockCheckSurveyByIdRepository, throwError } from "./db-check-survey-by-id-protocols";
+import { type CheckSurveyByIdRepository, mockCheckSurveyByIdRepository, throwError } from "./db-check-survey-by-id-protocols";
 import { DbCheckSurveyById } from "@/data/use-cases/survey/check-survey-by-id/db-check-survey-by-id";
 
 let dbCheckSurveyById: DbCheckSurveyById

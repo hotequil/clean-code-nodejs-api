@@ -1,10 +1,10 @@
-import { Validation } from "@/presentation/protocols";
-import { AnyObject } from "@/utils/helpers";
+import { type Validation } from "@/presentation/protocols";
+import { type AnyObject } from "@/utils/helpers";
 
 export class ValidationComposite implements Validation {
     constructor (private readonly validations: Validation[]) {}
 
-    validate (value: AnyObject): Error|null {
+    validate (value: AnyObject): Error | null {
         for (const validation of this.validations) {
             const error = validation.validate(value);
 

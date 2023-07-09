@@ -1,7 +1,7 @@
-import { ObjectId } from "mongodb";
-import { CheckSurveyById } from "@/domain/use-cases/survey/check-survey-by-id";
+import { type ObjectId } from "mongodb";
+import { type CheckSurveyById } from "@/domain/use-cases/survey/check-survey-by-id";
 
-export interface CheckSurveyByIdRepository{
+export interface CheckSurveyByIdRepository {
     checkById: (id: string | ObjectId) => Promise<CheckSurveyByIdRepository.Result>
 }
 

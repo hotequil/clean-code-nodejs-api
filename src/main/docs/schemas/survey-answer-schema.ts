@@ -6,6 +6,6 @@ export const surveyAnswerSchema = {
         },
         answer: {
             type: "string"
-        },
-    },
+        }
+    }
 }

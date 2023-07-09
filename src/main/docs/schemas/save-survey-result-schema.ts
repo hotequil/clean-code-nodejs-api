@@ -3,7 +3,7 @@ export const saveSurveyResultSchema = {
     properties: {
         answer: {
             type: "string"
-        },
+        }
     },
     required: ["answer"]
 }

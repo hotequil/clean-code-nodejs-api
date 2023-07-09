@@ -21,16 +21,16 @@ export default {
     info: {
         title: name,
         description,
-        version,
+        version
     },
     license: {
         name: "CC0 1.0 Universal",
-        url: "https://creativecommons.org/publicdomain/zero/1.0",
+        url: "https://creativecommons.org/publicdomain/zero/1.0"
     },
     servers: [
         {
             url: "/api"
-        },
+        }
     ],
     tags: [
         {
@@ -41,19 +41,19 @@ export default {
         },
         {
             name: SwaggerTags.SURVEY_RESULT
-        },
+        }
     ],
     paths: {
         "/login": loginPath,
         "/surveys": {
             ...loadSurveysPath,
-            ...addSurveyPath,
+            ...addSurveyPath
         },
         "/sign-up": signUpPath,
         "/surveys/{surveyId}/results": {
             ...saveSurveyResultPath,
-            ...loadSurveyResultPath,
-        },
+            ...loadSurveyResultPath
+        }
     },
     schemas: {
         account: accountSchema,
@@ -66,7 +66,7 @@ export default {
         addSurvey: addSurveySchema,
         saveSurveyResult: saveSurveyResultSchema,
         surveyResult: surveyResultSchema,
-        surveyAnswerResult: surveyAnswerResultSchema,
+        surveyAnswerResult: surveyAnswerResultSchema
     },
     components: {
         securitySchemes: {
@@ -76,6 +76,6 @@ export default {
         serverError: serverErrorComponent,
         unauthorized: unauthorizedComponent,
         notFound: notFoundComponent,
-        forbidden: forbiddenComponent,
-    },
+        forbidden: forbiddenComponent
+    }
 }

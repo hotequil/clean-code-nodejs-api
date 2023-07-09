@@ -1,4 +1,4 @@
-import { Router } from "express"
+import { type Router } from "express"
 import { adaptRoute } from "../adapters/express-route-adapter"
 import { defaultAuth } from "../middlewares";
 import { makeSaveSurveyResultController } from "@/main/factories/controllers/survey-result/save-survey-result/save-survey-result-controller-factory";

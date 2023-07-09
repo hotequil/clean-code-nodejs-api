@@ -1,16 +1,16 @@
 import {
-    LoadSurveyResult,
-    LoadSurveyResultRepository,
-    LoadSurveyByIdRepository,
-    SurveyModel,
-    SurveyAnswersResultModel
+    type LoadSurveyResult,
+    type LoadSurveyResultRepository,
+    type LoadSurveyByIdRepository,
+    type SurveyModel,
+    type SurveyAnswersResultModel
 } from "./db-load-survey-result-protocols";
 
-export class DbLoadSurveyResult implements LoadSurveyResult{
+export class DbLoadSurveyResult implements LoadSurveyResult {
     constructor(
         private readonly loadSurveyResultRepository: LoadSurveyResultRepository,
-        private readonly loadSurveyByIdRepository: LoadSurveyByIdRepository,
-    ){}
+        private readonly loadSurveyByIdRepository: LoadSurveyByIdRepository
+    ) {}
 
     async load(surveyId: string, accountId: string): Promise<LoadSurveyResult.Result> {
         const surveyResult = await this.loadSurveyResultRepository.loadBySurveyId(surveyId, accountId)

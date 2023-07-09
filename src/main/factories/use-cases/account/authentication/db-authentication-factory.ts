@@ -3,7 +3,7 @@ import { AccountMongoRepository } from "@/infra/db/mongodb/account/account-mongo
 import env from "../../../../config/env";
 import { JwtAdapter } from "@/infra/criptography/jwt/jwt-adapter";
 import { BcryptAdapter } from "@/infra/criptography/bcrypt/bcrypt-adapter";
-import { Authentication } from "@/domain/use-cases/account/authentication";
+import { type Authentication } from "@/domain/use-cases/account/authentication";
 
 export const makeDbAuthentication = (): Authentication => {
     const SALT = 12;

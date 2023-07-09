@@ -1,9 +1,9 @@
-import { SurveyResultModel } from "@/domain/models/survey-result";
-import { SaveSurveyResult } from "@/domain/use-cases/survey-result/save-survey-result";
-import { SaveSurveyResultRepository } from "@/data/protocols/db/survey-result/save-survey-result-repository";
-import { LoadSurveyResultRepository } from "@/data/protocols/db/survey-result/load-survey-result-repository";
-import { ObjectId } from "mongodb";
-import { LoadSurveyResult } from "@/domain/use-cases/survey-result/load-survey-result";
+import { type SurveyResultModel } from "@/domain/models/survey-result";
+import { type SaveSurveyResult } from "@/domain/use-cases/survey-result/save-survey-result";
+import { type SaveSurveyResultRepository } from "@/data/protocols/db/survey-result/save-survey-result-repository";
+import { type LoadSurveyResultRepository } from "@/data/protocols/db/survey-result/load-survey-result-repository";
+import { type ObjectId } from "mongodb";
+import { type LoadSurveyResult } from "@/domain/use-cases/survey-result/load-survey-result";
 
 export const mockSurveyResultModel = (
     surveyId: string | ObjectId,
@@ -22,17 +22,17 @@ export const mockSurveyResultModel = (
                 answer: "answer",
                 count: value ?? 1,
                 percent: value ?? 50,
-                isCurrentAccountAnswer: false,
+                isCurrentAccountAnswer: false
             },
             {
                 image: "image",
                 answer: "other-answer",
                 count: value ?? 10,
                 percent: value ?? 80,
-                isCurrentAccountAnswer: secondIsCurrentAccountAnswer,
+                isCurrentAccountAnswer: secondIsCurrentAccountAnswer
             }
         ],
-        date: new Date(),
+        date: new Date()
     }
 }
 
@@ -44,12 +44,12 @@ export const mockSaveSurveyResultParams = (
     surveyId,
     accountId,
     answer,
-    date: new Date(),
+    date: new Date()
 })
 
 export const mockSaveSurveyResultRepository = (): SaveSurveyResultRepository => {
-    class SaveSurveyResultRepositoryStub implements SaveSurveyResultRepository{
-        async save(data: SaveSurveyResultRepository.Params): Promise<void>{
+    class SaveSurveyResultRepositoryStub implements SaveSurveyResultRepository {
+        async save(data: SaveSurveyResultRepository.Params): Promise<void> {
             console.log(data)
         }
     }
@@ -58,7 +58,7 @@ export const mockSaveSurveyResultRepository = (): SaveSurveyResultRepository => 
 }
 
 export const mockSaveSurveyResult = (surveyId: string): SaveSurveyResult => {
-    class SaveSurveyResultStub implements SaveSurveyResult{
+    class SaveSurveyResultStub implements SaveSurveyResult {
         async save(params: SaveSurveyResult.Params): Promise<SaveSurveyResult.Result> {
             console.log(params)
 
@@ -70,8 +70,8 @@ export const mockSaveSurveyResult = (surveyId: string): SaveSurveyResult => {
 }
 
 export const mockLoadSurveyResultRepository = (): LoadSurveyResultRepository => {
-    class LoadSurveyResultRepositoryStub implements LoadSurveyResultRepository{
-        async loadBySurveyId(surveyId: string | ObjectId, accountId: string | ObjectId): Promise<LoadSurveyResultRepository.Result>{
+    class LoadSurveyResultRepositoryStub implements LoadSurveyResultRepository {
+        async loadBySurveyId(surveyId: string | ObjectId, accountId: string | ObjectId): Promise<LoadSurveyResultRepository.Result> {
             console.log(accountId)
 
             return mockSurveyResultModel(surveyId);
@@ -82,8 +82,8 @@ export const mockLoadSurveyResultRepository = (): LoadSurveyResultRepository => 
 }
 
 export const mockLoadSurveyResult = (): LoadSurveyResult => {
-    class LoadSurveyResultStub implements LoadSurveyResult{
-        async load(surveyId: string, accountId: string): Promise<LoadSurveyResult.Result>{
+    class LoadSurveyResultStub implements LoadSurveyResult {
+        async load(surveyId: string, accountId: string): Promise<LoadSurveyResult.Result> {
             console.log(accountId)
 
             return mockSurveyResultModel(surveyId)

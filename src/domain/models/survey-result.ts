@@ -1,4 +1,4 @@
-import { ObjectId } from "mongodb";
+import { type ObjectId } from "mongodb";
 
 type SurveyAnswerResultModel = {
     answer: string

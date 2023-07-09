@@ -1,14 +1,14 @@
-import { AddSurveyRepository } from "@/data/protocols/db/survey/add-survey-repository";
+import { type AddSurveyRepository } from "@/data/protocols/db/survey/add-survey-repository";
 import { MongodbHelper, QueryBuilderHelper } from "../helpers";
-import { LoadSurveysRepository } from "@/data/protocols/db/survey/load-surveys-repository";
-import { SurveyModel, SurveysModel } from "@/domain/models/survey";
-import { Collection, ObjectId } from "mongodb";
-import { LoadSurveyByIdRepository } from "@/data/protocols/db/survey/load-survey-by-id-repository";
-import { CheckSurveyByIdRepository } from "@/data/protocols/db/survey/check-survey-by-id-repository";
-import { LoadAnswersBySurveyRepository } from "@/data/protocols/db/survey/load-answers-by-survey-repository";
+import { type LoadSurveysRepository } from "@/data/protocols/db/survey/load-surveys-repository";
+import { type SurveyModel, type SurveysModel } from "@/domain/models/survey";
+import { type Collection, ObjectId } from "mongodb";
+import { type LoadSurveyByIdRepository } from "@/data/protocols/db/survey/load-survey-by-id-repository";
+import { type CheckSurveyByIdRepository } from "@/data/protocols/db/survey/check-survey-by-id-repository";
+import { type LoadAnswersBySurveyRepository } from "@/data/protocols/db/survey/load-answers-by-survey-repository";
 
-export class SurveyMongoRepository implements AddSurveyRepository, LoadSurveysRepository, LoadSurveyByIdRepository, CheckSurveyByIdRepository, LoadAnswersBySurveyRepository{
-    async add(model: AddSurveyRepository.Params): Promise<AddSurveyRepository.Result>{
+export class SurveyMongoRepository implements AddSurveyRepository, LoadSurveysRepository, LoadSurveyByIdRepository, CheckSurveyByIdRepository, LoadAnswersBySurveyRepository {
+    async add(model: AddSurveyRepository.Params): Promise<AddSurveyRepository.Result> {
         const collection = await MongodbHelper.collection("surveys")
 
         await collection.insertOne(model)
@@ -23,7 +23,7 @@ export class SurveyMongoRepository implements AddSurveyRepository, LoadSurveysRe
                                                   from: "surveyResults",
                                                   foreignField: "surveyId",
                                                   localField: "_id",
-                                                  as: "result",
+                                                  as: "result"
                                               })
                                               .project({
                                                   _id: 1,
@@ -39,7 +39,7 @@ export class SurveyMongoRepository implements AddSurveyRepository, LoadSurveysRe
                                                                       as: "item",
                                                                       cond: {
                                                                           $eq: ["$$item.accountId", accountId]
-                                                                      },
+                                                                      }
                                                                   }
                                                               }
                                                           },
@@ -67,7 +67,7 @@ export class SurveyMongoRepository implements AddSurveyRepository, LoadSurveysRe
         const query = new QueryBuilderHelper().match({ _id: typeof id === "string" ? new ObjectId(id) : id })
                                               .project({
                                                   _id: 0,
-                                                  answers: "$answers.answer",
+                                                  answers: "$answers.answer"
                                               })
                                               .build()
 

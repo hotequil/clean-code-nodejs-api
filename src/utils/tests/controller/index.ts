@@ -1,4 +1,4 @@
-import { Controller, HttpResponse } from "@/presentation/protocols";
+import { type Controller, type HttpResponse } from "@/presentation/protocols";
 
 export const mockController = (response: HttpResponse): Controller => {
     class ControllerStub implements Controller {

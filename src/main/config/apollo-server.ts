@@ -1,8 +1,8 @@
-import { Express } from "express";
+import { type Express } from "express";
 import { ApolloServer } from "apollo-server-express";
 import typeDefs from "@/main/graphql/type-defs";
 import resolvers from "@/main/graphql/resolvers";
-import { GraphQLError } from "graphql";
+import { type GraphQLError } from "graphql";
 import StatusCode from "status-code-enum";
 import { makeExecutableSchema } from "graphql-tools";
 import directives from "@/main/graphql/directives";
@@ -19,7 +19,7 @@ const applyGraphQLErrorResponse = (statusCode: StatusCode, response: any): void 
 
 let schema = makeExecutableSchema({
     resolvers,
-    typeDefs,
+    typeDefs
 })
 
 schema = directives.auth(schema)

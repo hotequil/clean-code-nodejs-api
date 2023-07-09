@@ -1,8 +1,8 @@
-import { SurveyResultModel } from "@/domain/models/survey-result";
+import { type SurveyResultModel } from "@/domain/models/survey-result";
 import { MongodbHelper, QueryBuilderHelper } from "@/infra/db/mongodb/helpers";
 import { ObjectId } from "mongodb";
-import { LoadSurveyResultRepository } from "@/data/protocols/db/survey-result/load-survey-result-repository";
-import { SaveSurveyResultRepository } from "@/data/protocols/db/survey-result/save-survey-result-repository";
+import { type LoadSurveyResultRepository } from "@/data/protocols/db/survey-result/load-survey-result-repository";
+import { type SaveSurveyResultRepository } from "@/data/protocols/db/survey-result/save-survey-result-repository";
 
 export class SurveyResultMongoRepository implements SaveSurveyResultRepository, LoadSurveyResultRepository {
     async save(data: SaveSurveyResultRepository.Params): Promise<void> {
@@ -53,7 +53,7 @@ export class SurveyResultMongoRepository implements SaveSurveyResultRepository, 
                                                       date: "$survey.date",
                                                       total: "$total",
                                                       answer: "$data.answer",
-                                                      answers: "$survey.answers",
+                                                      answers: "$survey.answers"
                                                   },
                                                   count: {
                                                       $sum: 1
@@ -71,7 +71,7 @@ export class SurveyResultMongoRepository implements SaveSurveyResultRepository, 
                                                               null
                                                           ]
                                                       }
-                                                  },
+                                                  }
                                               })
                                               .project({
                                                   _id: 0,
@@ -125,7 +125,7 @@ export class SurveyResultMongoRepository implements SaveSurveyResultRepository, 
                                                   _id: {
                                                       surveyId: "$surveyId",
                                                       question: "$question",
-                                                      date: "$date",
+                                                      date: "$date"
                                                   },
                                                   answers: {
                                                       $push: "$answers"
@@ -156,7 +156,7 @@ export class SurveyResultMongoRepository implements SaveSurveyResultRepository, 
                                                       date: "$date",
                                                       answer: "$answers.answer",
                                                       image: "$answers.image",
-                                                      isCurrentAccountAnswer: "$answers.isCurrentAccountAnswer",
+                                                      isCurrentAccountAnswer: "$answers.isCurrentAccountAnswer"
                                                   },
                                                   count: {
                                                       $sum: "$answers.count"
@@ -175,7 +175,7 @@ export class SurveyResultMongoRepository implements SaveSurveyResultRepository, 
                                                       image: "$_id.image",
                                                       count: { $multiply: [{ $trunc: { $multiply: ["$count", 100] } }, 0.01] },
                                                       percent: { $multiply: [{ $trunc: { $multiply: ["$percent", 100] } }, 0.01] },
-                                                      isCurrentAccountAnswer: "$_id.isCurrentAccountAnswer",
+                                                      isCurrentAccountAnswer: "$_id.isCurrentAccountAnswer"
                                                   }
                                               })
                                               .sort({

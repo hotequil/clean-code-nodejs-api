@@ -1,7 +1,7 @@
 import { StatusCode } from "status-code-enum";
 import { InvalidParamsError } from "@/presentation/errors";
 import { EmailValidation } from "./email-validation";
-import { EmailValidator } from "../protocols/email-validator";
+import { type EmailValidator } from "../protocols/email-validator";
 import { mockEmailValidator } from "@/utils/tests";
 
 let controller: EmailValidation;

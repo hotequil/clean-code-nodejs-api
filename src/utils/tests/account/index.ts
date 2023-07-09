@@ -1,12 +1,12 @@
-import { AccountModel } from "@/domain/models/account";
-import { AddAccount } from "@/domain/use-cases/account/add-account";
-import { AddAccountRepository } from "@/data/protocols/db/account/add-account-repository";
-import { LoadAccountByEmailRepository } from "@/data/protocols/db/account/load-account-by-email-repository";
-import { LoadAccountByTokenRepository } from "@/data/protocols/db/account/load-account-by-token-repository";
-import { AccountType } from "@/utils/enums";
-import { UpdateAccessTokenRepository } from "@/data/protocols/db/account/update-access-token-repository";
-import { Authentication } from "@/domain/use-cases/account/authentication";
-import { CheckAccountByEmailRepository } from "@/data/protocols/db/account/check-account-by-email-repository";
+import { type AccountModel } from "@/domain/models/account";
+import { type AddAccount } from "@/domain/use-cases/account/add-account";
+import { type AddAccountRepository } from "@/data/protocols/db/account/add-account-repository";
+import { type LoadAccountByEmailRepository } from "@/data/protocols/db/account/load-account-by-email-repository";
+import { type LoadAccountByTokenRepository } from "@/data/protocols/db/account/load-account-by-token-repository";
+import { type AccountType } from "@/utils/enums";
+import { type UpdateAccessTokenRepository } from "@/data/protocols/db/account/update-access-token-repository";
+import { type Authentication } from "@/domain/use-cases/account/authentication";
+import { type CheckAccountByEmailRepository } from "@/data/protocols/db/account/check-account-by-email-repository";
 import { MongodbHelper } from "@/infra/db/mongodb/helpers";
 import { sign } from "jsonwebtoken";
 import env from "@/main/config/env";
@@ -16,18 +16,18 @@ export const mockAccountModel = (): AccountModel => ({
     name: "name",
     email: "email@test.com",
     password: "password",
-    accessToken: "accessToken",
+    accessToken: "accessToken"
 })
 
 export const mockAddAccountParams = (password = "password"): AddAccount.Params => ({
     name: "name",
     email: "email@email.email",
-    password,
+    password
 })
 
 export const mockAuthenticationParams = (email: string, password: string): Authentication.Params => ({
     email,
-    password,
+    password
 });
 
 export const mockAccessToken = async (): Promise<string> => {
@@ -77,8 +77,8 @@ export const mockCheckAccountByEmailRepository = (): CheckAccountByEmailReposito
 }
 
 export const mockLoadAccountByTokenRepository = (): LoadAccountByTokenRepository => {
-    class LoadAccountByTokenRepositoryStub implements LoadAccountByTokenRepository{
-        async loadByToken(token: string, role?: AccountType): Promise<LoadAccountByTokenRepository.Result>{
+    class LoadAccountByTokenRepositoryStub implements LoadAccountByTokenRepository {
+        async loadByToken(token: string, role?: AccountType): Promise<LoadAccountByTokenRepository.Result> {
             console.log(token, role)
 
             const { id } = mockAccountModel()

@@ -4,7 +4,7 @@ import { makeSignUpController } from "@/main/factories/controllers/account/sign-
 
 const convertResponseToAccount = ({ token }: any): { accessToken: string, name: string } => ({
     accessToken: token.token,
-    name: token.name,
+    name: token.name
 })
 
 export default {

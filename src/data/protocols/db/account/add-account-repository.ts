@@ -1,4 +1,4 @@
-import { AddAccount } from "@/domain/use-cases/account/add-account";
+import { type AddAccount } from "@/domain/use-cases/account/add-account";
 
 export interface AddAccountRepository {
     add: (account: AddAccountRepository.Params) => Promise<AddAccountRepository.Result>

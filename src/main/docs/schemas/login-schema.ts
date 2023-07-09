@@ -6,7 +6,7 @@ export const loginSchema = {
         },
         password: {
             type: "string"
-        },
+        }
     },
     required: ["email", "password"]
 }

@@ -1,6 +1,6 @@
-import { AccountType } from "@/utils/enums";
+import { type AccountType } from "@/utils/enums";
 
-export interface LoadAccountByToken{
+export interface LoadAccountByToken {
     loadByToken: (token: string, role?: AccountType) => Promise<LoadAccountByToken.Result>
 }
 

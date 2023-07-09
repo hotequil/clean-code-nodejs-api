@@ -1,6 +1,6 @@
-import { SurveysModel } from "@/domain/models/survey";
-import { ObjectId } from "mongodb";
+import { type SurveysModel } from "@/domain/models/survey";
+import { type ObjectId } from "mongodb";
 
-export interface LoadSurveysRepository{
+export interface LoadSurveysRepository {
     loadAll: (accountId: string | ObjectId) => Promise<SurveysModel>
 }

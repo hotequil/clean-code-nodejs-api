@@ -1,9 +1,9 @@
 import { StatusCode } from "status-code-enum";
 import { SignUpController } from "./sign-up-controller";
-import { AddAccount, Authentication, HttpResponse } from "./sign-up-controller-protocols";
+import { type AddAccount, type Authentication, type HttpResponse } from "./sign-up-controller-protocols";
 import { MissingParamsError, ServerError } from "../../../errors";
 import { badRequest, forbidden, serverError, success } from "../../../helpers/http-helper";
-import { Validation } from "@/presentation/protocols";
+import { type Validation } from "@/presentation/protocols";
 import { EmailInUseError } from "../../../errors/email-in-use/email-in-use-error";
 import { mockAddAccount, mockAddAccountParams, mockValidation, throwError } from "@/utils/tests";
 import { mockAuthentication } from "@/utils/tests/authentication";
@@ -17,7 +17,7 @@ let authenticationStub: Authentication;
 
 const mockRequest = (): SignUpController.Request => ({
     ...mockAddAccountParams("passwordAndConfirmation"),
-    passwordConfirmation: "passwordAndConfirmation",
+    passwordConfirmation: "passwordAndConfirmation"
 });
 
 describe("SignUpController", () => {

@@ -3,7 +3,7 @@ import StatusCode from "status-code-enum";
 import { forbidden, serverError, success } from "../helpers/http-helper";
 import { AccessDeniedError } from "../errors";
 import { AccountType, Header } from "@/utils/enums";
-import { LoadAccountByToken } from "./auth-middleware-protocols";
+import { type LoadAccountByToken } from "./auth-middleware-protocols";
 import { mockAccountModel, mockLoadAccountByTokenRepository, throwError } from "@/utils/tests";
 
 let middleware: AuthMiddleware;

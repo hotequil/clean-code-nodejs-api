@@ -1,5 +1,5 @@
 import { LoadSurveysController } from "./load-surveys-controller";
-import { LoadSurveys } from "./load-surveys-controller-protocols";
+import { type LoadSurveys } from "./load-surveys-controller-protocols";
 import * as MockDate from "mockdate";
 import StatusCode from "status-code-enum";
 import { badRequest, noContent, success } from "../../../helpers/http-helper";
@@ -11,8 +11,8 @@ const ACCOUNT_ID = "id"
 const mockRequest = (): LoadSurveysController.Request => ({ accountId: ACCOUNT_ID })
 
 describe(LoadSurveysController.name, () => {
-    beforeAll(() => MockDate.set(new Date()))
-    afterAll(() => MockDate.reset())
+    beforeAll(() => { MockDate.set(new Date()); })
+    afterAll(() => { MockDate.reset(); })
 
     beforeEach(() => {
         loadSurveysStub = mockLoadSurveys()

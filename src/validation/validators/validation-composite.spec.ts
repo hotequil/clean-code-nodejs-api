@@ -1,6 +1,6 @@
 import { ValidationComposite } from "./validation-composite";
 import { InvalidParamsError, MissingParamsError } from "@/presentation/errors";
-import { Validation } from "@/presentation/protocols";
+import { type Validation } from "@/presentation/protocols";
 import { mockValidation } from "@/utils/tests";
 
 let validation: ValidationComposite;

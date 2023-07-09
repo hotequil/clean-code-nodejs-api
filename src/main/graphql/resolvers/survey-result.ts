@@ -8,5 +8,5 @@ export default {
     },
     Mutation: {
         saveSurveyResult: async (parent: any, args: any, context: any) => await adaptResolver(makeSaveSurveyResultController(), args, context)
-    },
+    }
 }

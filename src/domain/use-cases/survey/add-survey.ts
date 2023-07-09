@@ -1,6 +1,6 @@
-import { SurveyModel } from "../../models/survey";
+import { type SurveyModel } from "../../models/survey";
 
-export interface AddSurvey{
+export interface AddSurvey {
     add: (model: AddSurvey.Params) => Promise<AddSurvey.Result>
 }
 

@@ -1,11 +1,11 @@
-import { AddAccountRepository } from "@/data/protocols/db/account/add-account-repository";
-import { AddAccount } from "@/domain/use-cases/account/add-account";
+import { type AddAccountRepository } from "@/data/protocols/db/account/add-account-repository";
+import { type AddAccount } from "@/domain/use-cases/account/add-account";
 import { MongodbHelper } from "../helpers";
-import { LoadAccountByEmailRepository } from "@/data/protocols/db/account/load-account-by-email-repository";
-import { UpdateAccessTokenRepository } from "@/data/protocols/db/account/update-access-token-repository";
-import { LoadAccountByTokenRepository } from "@/data/protocols/db/account/load-account-by-token-repository";
+import { type LoadAccountByEmailRepository } from "@/data/protocols/db/account/load-account-by-email-repository";
+import { type UpdateAccessTokenRepository } from "@/data/protocols/db/account/update-access-token-repository";
+import { type LoadAccountByTokenRepository } from "@/data/protocols/db/account/load-account-by-token-repository";
 import { AccountType } from "@/utils/enums";
-import { CheckAccountByEmailRepository } from "@/data/protocols/db/account/check-account-by-email-repository";
+import { type CheckAccountByEmailRepository } from "@/data/protocols/db/account/check-account-by-email-repository";
 
 export class AccountMongoRepository implements AddAccountRepository, LoadAccountByEmailRepository, UpdateAccessTokenRepository, LoadAccountByTokenRepository, CheckAccountByEmailRepository {
     async add (account: AddAccount.Params): Promise<AddAccount.Result> {
@@ -24,7 +24,7 @@ export class AccountMongoRepository implements AddAccountRepository, LoadAccount
                 projection: {
                     _id: 1,
                     name: 1,
-                    password: 1,
+                    password: 1
                 }
             }
         );
@@ -55,7 +55,7 @@ export class AccountMongoRepository implements AddAccountRepository, LoadAccount
                 accessToken,
                 $or: [
                     { role },
-                    { role: AccountType.ADMIN },
+                    { role: AccountType.ADMIN }
                 ]
             },
             {
@@ -63,7 +63,7 @@ export class AccountMongoRepository implements AddAccountRepository, LoadAccount
             }
         )
 
-        if(account){
+        if(account) {
             const { id } = MongodbHelper.map(account)
 
             return { id }

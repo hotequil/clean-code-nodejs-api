@@ -1,4 +1,4 @@
-import { Collection } from "mongodb";
+import { type Collection } from "mongodb";
 import { MongodbHelper } from "../helpers";
 import { LogMongoRepository } from "./log-mongo-repository";
 
@@ -6,8 +6,8 @@ describe("LogMongoRepository", () => {
     let repository: LogMongoRepository;
     let errors: Collection;
 
-    beforeAll(async () => await MongodbHelper.connect());
-    afterAll(async () => await MongodbHelper.disconnect());
+    beforeAll(async () => { await MongodbHelper.connect(); });
+    afterAll(async () => { await MongodbHelper.disconnect(); });
 
     beforeEach(async () => {
         errors = await MongodbHelper.collection("errors");

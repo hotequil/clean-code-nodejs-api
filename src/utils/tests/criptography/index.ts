@@ -1,7 +1,7 @@
-import { Hasher } from "@/data/protocols/criptography/hasher";
-import { Decrypter } from "@/data/protocols/criptography/decrypter";
-import { Encrypter } from "@/data/protocols/criptography/encrypter";
-import { HashComparer } from "@/data/protocols/criptography/hash-comparer";
+import { type Hasher } from "@/data/protocols/criptography/hasher";
+import { type Decrypter } from "@/data/protocols/criptography/decrypter";
+import { type Encrypter } from "@/data/protocols/criptography/encrypter";
+import { type HashComparer } from "@/data/protocols/criptography/hash-comparer";
 
 export const mockHasher = (result: string): Hasher => {
     class HasherStub implements Hasher {
@@ -16,7 +16,7 @@ export const mockHasher = (result: string): Hasher => {
 }
 
 export const mockDecrypter = (result: string): Decrypter => {
-    class DecrypterStub implements Decrypter{
+    class DecrypterStub implements Decrypter {
         async decrypt(value: string): Promise<string | null> {
             console.log(value)
 

@@ -1,7 +1,7 @@
-import { ObjectId } from "mongodb";
-import { SurveyResultModel } from "@/domain/models/survey-result";
+import { type ObjectId } from "mongodb";
+import { type SurveyResultModel } from "@/domain/models/survey-result";
 
-export interface SaveSurveyResult{
+export interface SaveSurveyResult {
     save: (data: SaveSurveyResult.Params) => Promise<SaveSurveyResult.Result>
 }
 

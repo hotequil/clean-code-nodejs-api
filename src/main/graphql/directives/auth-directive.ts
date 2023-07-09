@@ -1,5 +1,5 @@
 import { getDirective, MapperKind, mapSchema } from "@graphql-tools/utils";
-import { defaultFieldResolver, GraphQLSchema } from "graphql";
+import { defaultFieldResolver, type GraphQLSchema } from "graphql";
 import StatusCode from "status-code-enum";
 import { makeAuthMiddleware } from "@/main/factories/middlewares/auth-middleware-factory";
 import { ForbiddenError } from "apollo-server-express";
@@ -18,7 +18,7 @@ export const authDirectiveTransformer = (schema: GraphQLSchema): GraphQLSchema =
                         const request = context?.req
                         const { statusCode, body } = await makeAuthMiddleware().handle(request?.headers || {});
 
-                        if(statusCode === StatusCode.SuccessOK){
+                        if(statusCode === StatusCode.SuccessOK) {
                             Object.assign(request, body)
 
                             return resolve(source, args, context, info);
@@ -29,6 +29,6 @@ export const authDirectiveTransformer = (schema: GraphQLSchema): GraphQLSchema =
 
                     return fieldConfig;
                 }
-            },
+            }
         }
     );

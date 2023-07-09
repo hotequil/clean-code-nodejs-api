@@ -1,5 +1,5 @@
 import { DbAddSurvey } from "./db-add-survey";
-import { AddSurveyRepository } from "./db-add-survey-protocols";
+import { type AddSurveyRepository } from "./db-add-survey-protocols";
 import { mockAddSurveyParams, mockAddSurveyRepository, throwError } from "@/utils/tests";
 
 let db: DbAddSurvey

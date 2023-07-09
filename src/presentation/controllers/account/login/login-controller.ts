@@ -1,4 +1,4 @@
-import { Controller, HttpResponse, Authentication, Validation } from "./login-controller-protocols";
+import { type Controller, type HttpResponse, type Authentication, type Validation } from "./login-controller-protocols";
 import { badRequest, serverError, success, unauthorized } from "../../../helpers/http-helper";
 
 export class LoginController implements Controller {
@@ -7,7 +7,7 @@ export class LoginController implements Controller {
     async handle (request: LoginController.Request): Promise<HttpResponse> {
         try {
             const { password, email } = request;
-            const error: Error|null = this.validation.validate({ password, email });
+            const error: Error | null = this.validation.validate({ password, email });
 
             if (error) return badRequest(error);
 

@@ -1,8 +1,8 @@
-import { Collection } from "mongodb";
+import { type Collection } from "mongodb";
 import { MongodbHelper } from "../helpers";
 import { AccountMongoRepository } from "./account-mongo-repository";
 import { copy } from "@/presentation/helpers/manipulator-helper";
-import { AccountModel } from "@/domain/models/account";
+import { type AccountModel } from "@/domain/models/account";
 import { AccountType } from "@/utils/enums";
 import { mockAddAccountParams } from "@/utils/tests";
 
@@ -14,9 +14,9 @@ describe("AccountMongoDBRepository", () => {
     let repository: AccountMongoRepository;
     let collection: Collection;
 
-    beforeAll(async () => await MongodbHelper.connect());
+    beforeAll(async () => { await MongodbHelper.connect(); });
 
-    afterAll(async () => await MongodbHelper.disconnect());
+    afterAll(async () => { await MongodbHelper.disconnect(); });
 
     beforeEach(async () => {
         collection = await MongodbHelper.collection("accounts");

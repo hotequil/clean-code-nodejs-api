@@ -1,8 +1,8 @@
 import StatusCode from "status-code-enum";
-import { Controller } from "@/presentation/protocols";
+import { type Controller } from "@/presentation/protocols";
 import { LogDecorator } from "./log-controller-decorator";
 import { serverError } from "@/presentation/helpers/http-helper";
-import { LogErrorRepository } from "@/data/protocols/db/log/log-error-repository";
+import { type LogErrorRepository } from "@/data/protocols/db/log/log-error-repository";
 import { mockController, mockLogErrorRepository } from "@/utils/tests";
 
 const RESPONSE_MOCK = {

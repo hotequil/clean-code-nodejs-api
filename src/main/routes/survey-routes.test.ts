@@ -52,8 +52,7 @@ describe("SurveyRoutes", () => {
         it(`Should return code ${StatusCode.SuccessOK} or ${StatusCode.SuccessNoContent} when GET in /api/surveys was called with a valid accessToken`, async () => {
             await request(app).get("/api/surveys")
                               .set(Header.X_ACCESS_TOKEN, await mockAccessToken())
-                              .then(({ statusCode }) =>
-                                  expect(statusCode === StatusCode.SuccessOK || statusCode === StatusCode.SuccessNoContent).toBe(true)
+                              .then(({ statusCode }) => { expect(statusCode === StatusCode.SuccessOK || statusCode === StatusCode.SuccessNoContent).toBe(true); }
                               )
         })
     })

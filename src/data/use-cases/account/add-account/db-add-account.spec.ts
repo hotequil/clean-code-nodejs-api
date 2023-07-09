@@ -1,5 +1,5 @@
 import { DbAddAccount } from "./db-add-account";
-import { AddAccount, AddAccountRepository, CheckAccountByEmailRepository, Hasher } from "./db-add-account-protocols";
+import { type AddAccount, type AddAccountRepository, type CheckAccountByEmailRepository, type Hasher } from "./db-add-account-protocols";
 import {
     mockAccountModel,
     mockAddAccountParams,
