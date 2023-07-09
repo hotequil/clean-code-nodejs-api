@@ -71,7 +71,7 @@ describe("SurveyResult GraphQL", () => {
             expect(surveyResult.answers[1].percent).toBe(0)
             expect(surveyResult.answers[1].count).toBe(0)
             expect(surveyResult.answers[1].isCurrentAccountAnswer).toBe(false)
-            expect(new Date(surveyResult.date).toLocaleDateString()).toBe(survey.date.toLocaleDateString())
+            expect(surveyResult.date).toBe(survey.date.toISOString().slice(0, 10))
             expect(statusCode).toBe(StatusCode.SuccessOK)
         })
 
@@ -114,7 +114,7 @@ describe("SurveyResult GraphQL", () => {
 
             expect(saveSurveyResult.surveyId).toBe(surveyId.toJSON())
             expect(saveSurveyResult.question).toBe(survey.question)
-            expect(new Date(saveSurveyResult.date).toLocaleDateString()).toBe(survey.date.toLocaleDateString())
+            expect(saveSurveyResult.date).toBe(survey.date.toISOString().slice(0, 10))
             expect(saveSurveyResult.answers[0].answer).toBe(survey.answers[0].answer)
             expect(saveSurveyResult.answers[0].image).toBe(null)
             expect(saveSurveyResult.answers[0].percent).toBe(100)
